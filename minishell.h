@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/09 18:11:39 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:25:13 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@ typedef enum s_token_type
 	TOKEN_SIMPLE_QUOTE,
 	TOKEN_DOUBLE_QUOTE,
 	TOKEN_REDIRECTION,
-	TOKEN_PIPE
+	TOKEN_PIPE,
+	TOKEN_PATH
 }	t_token_type;
 
 typedef struct s_token
 {
 	t_token_type			type;
+	int						is_fullstring;
 	char					*value;
 	struct s_token			*next;
 }	t_token;
@@ -44,7 +46,6 @@ typedef struct s_pipe
 }	t_pipe;
 
 char	*ft_strchr(const char *s, int c);
-char	**ft_split(const char *s, char c);
 size_t	ft_strcpy(char *dst, const char *src);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlen(const char *s);
@@ -56,7 +57,7 @@ int		ft_isalpha(char *s);
 t_token	*ft_lstnew(char *value);
 t_token	*ft_lstlast(t_token *lst);
 void	ft_lstadd_back(t_token **lst, t_token *new);
-void 	add_token(t_token **head, char *value, t_token_type type);
+void 	add_token(t_token **head, char *value, t_token_type type, int is_full);
 char	*substrdup(int start, int end, char	*str);
 int		is_cmds_var(t_token **tokens, t_token_type type, int i, char *line);
 int		is_simple_quote(t_token *tokens, t_token_type type, int i, char *line);
@@ -64,6 +65,7 @@ int		is_double_quote(t_token *tokens, t_token_type type, int i, char *line);
 int		is_directions(t_token *tokens, t_token_type type, int i, char *line);
 int		is_pipe(t_token *tokens, t_token_type type, int i, char *line);
 int		is_word(t_token *tokens, t_token_type type, int i, char *line);
-int		after_quote(int i, char *line, char *value, char **fullvalue);
+void	is_path(t_pipe *pipe);
+void	free_tokens(t_token *tokens);
 
 #endif

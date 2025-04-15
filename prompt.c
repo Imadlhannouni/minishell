@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/09 18:24:15 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:27:13 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,9 @@ char	*readline_func(char *line)
 	else if (*line)
 		add_history(line);
 	return (line);
-	//printf("%s\n", line);
 }
 
-void add_token(t_token **head, char *value, t_token_type type)
+void add_token(t_token **head, char *value, t_token_type type, int is_full)
 {
 	t_token *new;
 	t_token *tmp;
@@ -31,6 +30,7 @@ void add_token(t_token **head, char *value, t_token_type type)
 	new = malloc(sizeof(t_token));
 	new->type = type;
 	new->value = value;
+	new->is_fullstring = is_full;
 	new->next = NULL;
 	if (!*head)
 		*head = new;
@@ -102,7 +102,7 @@ void print_pipes(t_pipe *pipes)
 		curr_token = curr_pipe->full_cmd;
 		while (curr_token)
 		{
-			printf("%s : %d\n", curr_token->value, curr_token->type);
+			printf("%s : %d : %d\n", curr_token->value, curr_token->type, curr_token->is_fullstring);
 			curr_token = curr_token->next;
 		}
 		curr_pipe = curr_pipe->nextpipe;
@@ -173,7 +173,10 @@ void	parsing(char *line)
 	
 	pipes = NULL;
 	tokens = smart_split(line, pipes);
+	if (!tokens)
+		free_tokens(tokens);
 	pipes = group_tokens_into_pipes(tokens);
+	is_path(pipes);
 	print_pipes(pipes);
 	return ;
 }
