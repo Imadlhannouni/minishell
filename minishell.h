@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/15 16:25:13 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:30:15 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <readline/history.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef enum s_token_type
 {
@@ -28,8 +31,16 @@ typedef enum s_token_type
 	TOKEN_DOUBLE_QUOTE,
 	TOKEN_REDIRECTION,
 	TOKEN_PIPE,
-	TOKEN_PATH
+	TOKEN_PATH,
+	TOKEN_OPTION
 }	t_token_type;
+
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
 typedef struct s_token
 {
@@ -65,7 +76,12 @@ int		is_double_quote(t_token *tokens, t_token_type type, int i, char *line);
 int		is_directions(t_token *tokens, t_token_type type, int i, char *line);
 int		is_pipe(t_token *tokens, t_token_type type, int i, char *line);
 int		is_word(t_token *tokens, t_token_type type, int i, char *line);
+int		is_option(t_token *tokens, t_token_type type, int i, char *line);
 void	is_path(t_pipe *pipe);
 void	free_tokens(t_token *tokens);
+void	add_env(t_env **head, char *value, char *key);
+int		is_env(t_env **env, int i, char *line);
+char	**ft_split(const char *s, char c);
+void	ft_free_split(char **split, int j);
 
 #endif

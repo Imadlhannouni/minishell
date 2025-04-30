@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/15 16:34:15 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/04/30 15:36:28 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,49 @@
 
 int	is_cmds_var(t_token **tokens, t_token_type type, int i, char *line)
 {
-	int	start;
-	int	is_var;
-	int	end;
+	char	*value;
+	char	*part;
+	int		start;
+	char	quote;
 
-	is_var = 0;
+	value = NULL;
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
-	start = i;
-	while (line[i] != ' ' && line[i] != '\t' && line[i] != '\0')
+
+	while (line[i] && line[i] != ' ' && line[i] != '\t' &&
+		   line[i] != '|' && line[i] != '<' && line[i] != '>')
 	{
-		type = TOKEN_CMD;
-		if (line[i] == '=')
-			is_var = 1;
-		i++;
+		if (line[i] == '"' || line[i] == '\'')
+		{
+			quote = line[i++];
+			start = i;
+			while (line[i] && line[i] != quote)
+				i++;
+			part = substrdup(start, i, line);
+			i++;
+		}
+		else
+		{
+			start = i;
+			while (line[i] && line[i] != ' ' && line[i] != '\t' &&
+				   line[i] != '|' && line[i] != '<' && line[i] != '>' &&
+				   line[i] != '"' && line[i] != '\'')
+				i++;
+			part = substrdup(start, i, line);
+		}
+		char *tmp = value;
+		if (!value)
+			value = ft_strdup(part);
+		else
+		{
+			char *tmp = value;
+			value = ft_strjoin(value, part);
+			free(tmp);
+		}
+		free(part);
 	}
-	end = i;
-	if (is_var == 1)
-		add_token(tokens, substrdup(start, end, line), TOKEN_VAR, 0);
-	else
-		add_token(tokens, substrdup(start, end, line), type, 0);
-	return (end);
+	add_token(tokens, value, TOKEN_CMD, 0);
+	return (i);
 }
 
 void	is_path(t_pipe *pipe)
@@ -63,4 +85,20 @@ void	is_path(t_pipe *pipe)
 		}
 		curr_pipe = curr_pipe->nextpipe;
 	}
+}
+
+int	is_option(t_token *tokens, t_token_type type, int i, char *line)
+{
+	int	start;
+	int	end;
+
+	type = TOKEN_OPTION;
+	start = i;
+	if (line[i] == '-')
+		i++;
+	if (line[i] == 'n')
+		i++;
+	end = i;
+	add_token(&tokens, substrdup(start, end, line), type, 0);
+	return (i);
 }

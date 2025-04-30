@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/15 21:30:18 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/04/26 13:43:55 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	is_word(t_token *tokens, t_token_type type, int i, char *line)
 
 	type = TOKEN_WORD;
 	start = i;
-	while (line[i] && line[i] != ' ' && line[i] != '\t' && line[i] != '\'' && line[i] != '"' && line[i] != '|' && line[i] != '\0')
+	while (line[i] && line[i] != ' ' && line[i] != '\t' && line[i] != '\'' && line[i] != '"' && line[i] != '|' && line[i] != '<' && line[i] != '>' && line[i] != '\0')
 		i++;
 	end = i;
 	if (line[i] != ' ' && line[i] != '\t' &&
