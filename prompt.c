@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/30 16:07:40 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/09 22:01:57 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,19 +75,82 @@ void	add_env(t_env **head, char *value, char *key)
 	}
 }
 
-void add_pipe(t_pipe **head, t_token *fullcmd)
+t_token	*concat_fullstring(t_token *start, t_token **next)
 {
-	t_pipe *new;
-	t_pipe *tmp;
+	char	*joined;
+	char	*tmp;
+	t_token	*curr;
+	t_token	*to_free;
+
+	curr = start;
+	joined = ft_strdup(curr->value);
+	while (curr->is_fullstring == 1)
+	{
+		curr = curr->next;
+		tmp = joined;
+		joined = ft_strjoin(tmp, curr->value);
+		free(tmp);
+	}
+	curr = start->next;
+	while (curr && curr->is_fullstring == 1)
+	{
+		to_free = curr;
+		curr = curr->next;
+		free(to_free->value);
+		free(to_free);
+	}
+	if (curr && curr->is_fullstring == 0)
+	{
+		to_free = curr;
+		curr = curr->next;
+		free(to_free->value);
+		free(to_free);
+	}
+	free(start->value);
+	start->value = joined;
+	start->next = curr;
+	if (next)
+		*next = curr;
+	return (start);
+}
+
+void	add_pipe(t_pipe **head, t_token *fullcmd)
+{
+	t_pipe	*new;
+	t_pipe	*tmp;
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*compact;
 
 	new = malloc(sizeof(t_pipe));
 	if (!new)
-		return;
+		return ;
+	curr = fullcmd;
+	prev = NULL;
+	while (curr)
+	{
+		if (curr->is_fullstring == 1)
+		{
+			compact = concat_fullstring(curr, &curr);
+			compact->type = 9;
+			if (prev)
+				prev->next = compact;
+			else
+				fullcmd = compact;
+			prev = compact;
+		}
+		else
+		{
+			prev = curr;
+			curr = curr->next;
+		}
+	}
 	new->full_cmd = fullcmd;
 	new->nextpipe = NULL;
 	if (!*head)
 		*head = new;
-	else {
+	else
+	{
 		tmp = *head;
 		while (tmp->nextpipe)
 			tmp = tmp->nextpipe;

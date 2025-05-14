@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/30 15:30:15 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/09 19:18:52 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ typedef enum s_token_type
 	TOKEN_REDIRECTION,
 	TOKEN_PIPE,
 	TOKEN_PATH,
-	TOKEN_OPTION
+	TOKEN_OPTION,
+	TOKEN_LINKEDSTRING
 }	t_token_type;
 
 typedef struct s_env
