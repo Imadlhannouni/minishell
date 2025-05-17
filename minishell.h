@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/09 19:18:52 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/17 15:50:09 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ typedef struct s_token
 {
 	t_token_type			type;
 	int						is_fullstring;
+	int						inp_red;
+	int						out_red;
+	int						inp_app;
+	int						out_app;
 	char					*value;
 	struct s_token			*next;
 }	t_token;
@@ -84,5 +88,6 @@ void	add_env(t_env **head, char *value, char *key);
 int		is_env(t_env **env, int i, char *line);
 char	**ft_split(const char *s, char c);
 void	ft_free_split(char **split, int j);
+void	add_redirection(t_token **head, int	flag);
 
 #endif

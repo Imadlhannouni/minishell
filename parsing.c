@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/09 19:32:55 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/17 16:03:18 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,26 @@ int	is_double_quote(t_token *tokens, t_token_type type, int i, char *line)
 
 int	is_directions(t_token *tokens, t_token_type type, int i, char *line)
 {
-	int	start;
-	int	end;
-
-	type = TOKEN_REDIRECTION;
-	start = i;
-	end = i + 1;
-	if ((line[i] == '<' && line[i + 1] == '<') || (line[i] == '>' && line[i + 1] == '>'))
+	if (line[i] == '>' && line[i + 1] != '>')
 	{
+		add_redirection(&tokens, 0);
 		i++;
-		end = i + 1;
 	}
-	i++;
-	add_token(&tokens, substrdup(start, end, line), type, 0);
+	else if (line[i] == '<' && line[i + 1] != '<')
+	{
+		add_redirection(&tokens, 1);
+		i++;
+	}
+	else if (line[i] == '>' && line[i + 1] == '>')
+	{
+		add_redirection(&tokens, 2);
+		i += 2;
+	}
+	else if (line[i] == '<' && line[i + 1] == '<')
+	{
+		add_redirection(&tokens, 3);
+		i += 2;
+	}
 	return (i);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/09 22:01:57 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/17 15:56:59 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	new = malloc(sizeof(t_token));
 	new->type = type;
 	new->value = value;
+	new->inp_app = 0;
+	new->inp_app = 0;
+	new->out_app = 0;
+	new->out_red = 0;
 	new->is_fullstring = is_full;
 	new->next = NULL;
 	if (!*head)
@@ -51,6 +55,23 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
+}
+
+void	add_redirection(t_token **head, int	flag)
+{
+	t_token *tmp;
+
+	tmp = *head;
+	while (tmp->next)
+		tmp = tmp->next;
+	if (flag == 0)
+		tmp->out_red = 1;
+	else if (flag == 1)
+		tmp->inp_red = 1;
+	else if (flag == 2)
+		tmp->out_app = 1;
+	else
+		tmp->inp_app = 1;
 }
 
 void	add_env(t_env **head, char *value, char *key)
@@ -199,7 +220,7 @@ void print_pipes(t_pipe *pipes)
 		curr_token = curr_pipe->full_cmd;
 		while (curr_token)
 		{
-			printf("%s : %d : %d\n", curr_token->value, curr_token->type, curr_token->is_fullstring);
+			printf("%s : %d : %d | inp_red : %d, out_red : %d,  inp_app : %d, out_app : %d\n", curr_token->value, curr_token->type, curr_token->is_fullstring, curr_token->inp_red, curr_token->out_red, curr_token->inp_app, curr_token->out_app);
 			curr_token = curr_token->next;
 		}
 		curr_pipe = curr_pipe->nextpipe;
