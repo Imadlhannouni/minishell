@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/17 15:56:59 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/19 17:23:01 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	new->type = type;
 	new->value = value;
 	new->inp_app = 0;
-	new->inp_app = 0;
+	new->inp_red = 0;
 	new->out_app = 0;
 	new->out_red = 0;
 	new->is_fullstring = is_full;
@@ -112,6 +112,14 @@ t_token	*concat_fullstring(t_token *start, t_token **next)
 		joined = ft_strjoin(tmp, curr->value);
 		free(tmp);
 	}
+	if (curr->out_red == 1)
+		start->out_red = 1;
+	else if (curr->inp_red == 1)
+		start->inp_red = 1;
+	else if (curr->out_app == 1)
+		start->out_app = 1;
+	else if (curr->inp_app == 1)
+		start->inp_app = 1;
 	curr = start->next;
 	while (curr && curr->is_fullstring == 1)
 	{
@@ -315,7 +323,7 @@ void	replace_env_variables(t_token *tokens, t_env *env)
 				{
 					i++;
 					start = i;
-					while (isalnum(tokens->value[i]) || tokens->value[i] == '_')
+					while (ft_isalnum(tokens->value[i]) || tokens->value[i] == '_')
 						i++;
 					key = substrdup(start, i, tokens->value);
 					curr_env = env;
