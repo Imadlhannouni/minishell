@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/19 17:13:38 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 22:14:36 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int		is_option(t_token *tokens, t_token_type type, int i, char *line);
 void	is_path(t_pipe *pipe);
 void	free_tokens(t_token *tokens);
 void	add_env(t_env **head, char *value, char *key);
-int		is_env(t_env **env, int i, char *line);
 char	**ft_split(const char *s, char c);
 void	ft_free_split(char **split, int j);
 void	add_redirection(t_token **head, int	flag);

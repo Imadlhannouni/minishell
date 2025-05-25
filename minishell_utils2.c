@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:01:45 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/09 15:18:54 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 22:13:57 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,20 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 
 int	character_count(char *s)
 {
-	int	i;
-	int	counter;
+	int	i = 0;
+	int	in_single = 0;
+	int	in_double = 0;
 
-	counter = 0;
-	i = 0;
 	while (s[i])
 	{
-		if (s[i] == 39)
-			counter++;
+		if (s[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (s[i] == '"' && !in_single)
+			in_double = !in_double;
 		i++;
 	}
-	return (counter);
+ 
+	return (!in_single && !in_double);
 }
 
 int	ft_isalpha(char *s)

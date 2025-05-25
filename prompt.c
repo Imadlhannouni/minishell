@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 20:46:13 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 22:15:59 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,13 +266,15 @@ t_token	*smart_split(char *line, t_pipe *pipe, t_env **env)
 	i = 0;
 	new_command = 1;
 	new_env = 1;
+	if (character_count(line) == 0)
+		return (tokens); // Error here
 	while (line[i] != '\0')
 	{
 		while (line[i] == ' ' || line[i] == '\t')
 			i++;
 		if (!line[i])
 			break ;
-		if (new_command && line[i] != '\'' && line[i] != '"' && line[i] != '>' && line[i] != '<' && line[i] != '|')
+		if (new_command && line[i] != '>' && line[i] != '<' && line[i] != '|')
 		{
 			i = is_cmds_var(&tokens, type, i, line);
 			new_command = 0;
