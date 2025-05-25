@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 22:15:59 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 22:33:47 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,19 +253,17 @@ char	*substrdup(int start, int end, char	*str)
 	return (new);
 }
 
-t_token	*smart_split(char *line, t_pipe *pipe, t_env **env)
+t_token	*smart_split(char *line, t_pipe *pipe)
 {
 	t_token			*tokens;
 	t_token_type	type;
 	t_token			*last;
 	int				i;
 	int				new_command;
-	int				new_env;
 
 	tokens = NULL;
 	i = 0;
 	new_command = 1;
-	new_env = 1;
 	if (character_count(line) == 0)
 		return (tokens); // Error here
 	while (line[i] != '\0')
@@ -290,7 +288,6 @@ t_token	*smart_split(char *line, t_pipe *pipe, t_env **env)
 			i = is_pipe(tokens, type, i, line);
 			add_pipe(&pipe, tokens);
 			new_command = 1;
-			new_env = 1;
 		}
 		else if (line[i] == '-' && line[i + 1] == 'n' && (line[i + 2] == ' ' || line[i + 2] == '\t' || line[i + 2] == '\0'))
 			i = is_option(tokens, type, i, line);
@@ -370,7 +367,7 @@ void	parsing(char *line, t_env **env)
 	t_pipe	*pipes;
 
 	pipes = NULL;
-	tokens = smart_split(line, pipes, env);
+	tokens = smart_split(line, pipes);
 	if (!tokens)
 		free_tokens(tokens);
 	replace_env_variables(tokens, *env);

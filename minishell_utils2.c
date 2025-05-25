@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:01:45 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 22:13:57 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 22:31:42 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ int	character_count(char *s)
 			in_double = !in_double;
 		i++;
 	}
- 
 	return (!in_single && !in_double);
 }
 
