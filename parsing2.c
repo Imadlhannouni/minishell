@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/17 15:42:35 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 21:46:12 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ int	is_cmds_var(t_token **tokens, t_token_type type, int i, char *line)
 	char	*part;
 	int		start;
 	char	quote;
+	char	*tmp
 
 	value = NULL;
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
-
 	while (line[i] && line[i] != ' ' && line[i] != '\t' &&
 		   line[i] != '|' && line[i] != '<' && line[i] != '>')
 	{
@@ -44,12 +44,12 @@ int	is_cmds_var(t_token **tokens, t_token_type type, int i, char *line)
 				i++;
 			part = substrdup(start, i, line);
 		}
-		char *tmp = value;
+		tmp = value;
 		if (!value)
 			value = ft_strdup(part);
 		else
 		{
-			char *tmp = value;
+			tmp = value;
 			value = ft_strjoin(value, part);
 			free(tmp);
 		}
