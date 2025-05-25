@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/20 15:08:13 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 20:41:49 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	is_simple_quote(t_token *tokens, t_token_type type, int i, char *line)
 	type = TOKEN_SIMPLE_QUOTE;
 	i++;
 	start = i;
-	while (line[i] && line[i] != '\'')
+	while (line[i] && line[i] != '\'' && line[i + 1] != '\0')
 		i++;
 	end = i;
 	if (line[i] == '\'')

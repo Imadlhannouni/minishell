@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/19 17:23:01 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/05/25 20:46:13 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	add_redirection(t_token **head, int	flag)
 	t_token *tmp;
 
 	tmp = *head;
+	if (!tmp)
+		return ;
 	while (tmp->next)
 		tmp = tmp->next;
 	if (flag == 0)
@@ -270,7 +272,7 @@ t_token	*smart_split(char *line, t_pipe *pipe, t_env **env)
 			i++;
 		if (!line[i])
 			break ;
-		if (new_command)
+		if (new_command && line[i] != '\'' && line[i] != '"' && line[i] != '>' && line[i] != '<' && line[i] != '|')
 		{
 			i = is_cmds_var(&tokens, type, i, line);
 			new_command = 0;
