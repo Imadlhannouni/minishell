@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 20:41:49 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:49:06 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,14 +113,14 @@ int	is_word(t_token *tokens, t_token_type type, int i, char *line)
 		add_token(&tokens, substrdup(start, end, line), type, 0);
 	last = ft_lstlast(tokens);
 	if (last && (
-		ft_strncmp(last->value, "echo", 4) == 0 ||
-		ft_strncmp(last->value, "cd", 3) == 0 ||
-		ft_strncmp(last->value, "ls", 3) == 0 ||
-		ft_strncmp(last->value, "pwd", 4) == 0 ||
-		ft_strncmp(last->value, "export", 7) == 0 ||
-		ft_strncmp(last->value, "unset", 6) == 0 ||
-		ft_strncmp(last->value, "env", 4) == 0 ||
-		ft_strncmp(last->value, "exit", 5) == 0
+		ft_strcmp(last->value, "echo") == 0 ||
+		ft_strcmp(last->value, "cd") == 0 ||
+		ft_strcmp(last->value, "ls") == 0 ||
+		ft_strcmp(last->value, "pwd") == 0 ||
+		ft_strcmp(last->value, "export") == 0 ||
+		ft_strcmp(last->value, "unset") == 0 ||
+		ft_strcmp(last->value, "env") == 0 ||
+		ft_strcmp(last->value, "exit") == 0
 	))
 		last->type = TOKEN_CMD;
 	return (i);
