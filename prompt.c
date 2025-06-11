@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 22:33:47 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:50:11 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,7 +286,6 @@ t_token	*smart_split(char *line, t_pipe *pipe)
 		else if (line[i] == '|')
 		{
 			i = is_pipe(tokens, type, i, line);
-			add_pipe(&pipe, tokens);
 			new_command = 1;
 		}
 		else if (line[i] == '-' && line[i + 1] == 'n' && (line[i + 2] == ' ' || line[i + 2] == '\t' || line[i + 2] == '\0'))
