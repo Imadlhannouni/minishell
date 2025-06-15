@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:27:58 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 22:29:36 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/14 17:19:59 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,30 +59,30 @@ static char	**allocate(const char *s, char c)
 {
 	char	**arr;
 	int		i;
-	int		j;
-	int		start;
 
 	i = 0;
-	j = 0;
-	start = 0;
-	arr = malloc((ft_count(s, c) + 1) * sizeof(char *));
+	arr = malloc(sizeof(char *) * 3);
 	if (!arr)
 		return (NULL);
-	while (s[i])
-	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
-			start = i;
-		if (s[i] != c && (s[i + 1] == c || s[i + 1] == '\0'))
-		{
-			arr[j++] = allocate_word(s, start, i);
-			if (!arr[j - 1])
-				return (ft_free_split(arr, j - 2), NULL);
-		}
+	while (s[i] && s[i] != c)
 		i++;
+	arr[0] = allocate_word(s, 0, i - 1);
+	if (!arr[0])
+		return (free(arr), NULL);
+	if (s[i] == c)
+		arr[1] = allocate_word(s, i + 1, ft_strlen(s) - 1);
+	else
+		arr[1] = ft_strdup("");
+	if (!arr[1])
+	{
+		free(arr[0]);
+		free(arr);
+		return (NULL);
 	}
-	arr[j] = NULL;
+	arr[2] = NULL;
 	return (arr);
 }
+
 
 char	**ft_split(const char *s, char c)
 {
