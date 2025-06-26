@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipes_parse.c                                      :+:      :+:    :+:   */
+/*   group_to_pipes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/15 16:41:07 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/22 13:10:27 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	add_pipe(t_pipe **head, t_token *fullcmd)
+static void	compact_fullstrings(t_token **fullcmd)
 {
-	t_pipe	*new;
-	t_pipe	*tmp;
 	t_token	*curr;
 	t_token	*prev;
 	t_token	*compact;
 
-	new = malloc(sizeof(t_pipe));
-	if (!new)
-		return ;
-	curr = fullcmd;
+	curr = *fullcmd;
 	prev = NULL;
 	while (curr)
 	{
@@ -34,7 +29,7 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 			if (prev)
 				prev->next = compact;
 			else
-				fullcmd = compact;
+				*fullcmd = compact;
 			prev = compact;
 		}
 		else
@@ -43,6 +38,17 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 			curr = curr->next;
 		}
 	}
+}
+
+void	add_pipe(t_pipe **head, t_token *fullcmd)
+{
+	t_pipe	*new;
+	t_pipe	*tmp;
+
+	new = malloc(sizeof(t_pipe));
+	if (!new)
+		return ;
+	compact_fullstrings(&fullcmd);
 	new->full_cmd = fullcmd;
 	new->nextpipe = NULL;
 	if (!*head)
@@ -85,20 +91,22 @@ t_pipe	*group_tokens_into_pipes(t_token *tokens)
 	return (pipes);
 }
 
-
-void print_pipes(t_pipe *pipes)
+void	print_pipes(t_pipe *pipes)
 {
-	t_pipe *curr_pipe = pipes;
-	t_token *curr_token;
-	int i;
+	t_pipe	*curr_pipe;
+	t_token	*curr_token;
+	int		i;
 
+	curr_pipe = pipes;
 	while (curr_pipe)
 	{
 		printf("=== New Pipe Command ===\n");
 		curr_token = curr_pipe->full_cmd;
 		while (curr_token)
 		{
-			printf("%s : %d : %d | inp_red : %d, out_red : %d,  inp_app : %d, out_app : %d\n", curr_token->value, curr_token->type, curr_token->is_fullstring, curr_token->inp_red, curr_token->out_red, curr_token->inp_app, curr_token->out_app);
+			printf("%s : %d : %d | inp_red : %d, out_red : %d,  inp_app : %d, out_app : %d\n", curr_token->value, curr_token->type,
+				curr_token->is_fullstring, curr_token->inp_red,
+				curr_token->out_red, curr_token->inp_app, curr_token->out_app);
 			curr_token = curr_token->next;
 		}
 		curr_pipe = curr_pipe->nextpipe;

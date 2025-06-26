@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/15 16:49:24 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:14:36 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 {
-	t_token *new;
-	t_token *tmp;
+	t_token	*new;
+	t_token	*tmp;
 
 	new = malloc(sizeof(t_token));
 	new->type = type;
@@ -28,7 +28,8 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	new->next = NULL;
 	if (!*head)
 		*head = new;
-	else {
+	else
+	{
 		tmp = *head;
 		while (tmp->next)
 			tmp = tmp->next;
@@ -36,9 +37,9 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	}
 }
 
-void	add_redirection(t_token **head, int	flag)
+void	add_redirection(t_token **head, int flag)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	tmp = *head;
 	if (!tmp)
@@ -55,22 +56,8 @@ void	add_redirection(t_token **head, int	flag)
 		tmp->inp_app = 1;
 }
 
-t_token	*concat_fullstring(t_token *start, t_token **next)
+static void	concat_fullstring_flags(t_token *start, t_token *curr)
 {
-	char	*joined;
-	char	*tmp;
-	t_token	*curr;
-	t_token	*to_free;
-
-	curr = start;
-	joined = ft_strdup(curr->value);
-	while (curr->is_fullstring == 1)
-	{
-		curr = curr->next;
-		tmp = joined;
-		joined = ft_strjoin(tmp, curr->value);
-		free(tmp);
-	}
 	if (curr->out_red == 1)
 		start->out_red = 1;
 	else if (curr->inp_red == 1)
@@ -79,7 +66,12 @@ t_token	*concat_fullstring(t_token *start, t_token **next)
 		start->out_app = 1;
 	else if (curr->inp_app == 1)
 		start->inp_app = 1;
-	curr = start->next;
+}
+
+static t_token	*free_fullstring_tokens(t_token *curr)
+{
+	t_token	*to_free;
+
 	while (curr && curr->is_fullstring == 1)
 	{
 		to_free = curr;
@@ -94,6 +86,27 @@ t_token	*concat_fullstring(t_token *start, t_token **next)
 		free(to_free->value);
 		free(to_free);
 	}
+	return (curr);
+}
+
+t_token	*concat_fullstring(t_token *start, t_token **next)
+{
+	char	*joined;
+	char	*tmp;
+	t_token	*curr;
+
+	curr = start;
+	joined = ft_strdup(curr->value);
+	while (curr->is_fullstring == 1)
+	{
+		curr = curr->next;
+		tmp = joined;
+		joined = ft_strjoin(tmp, curr->value);
+		free(tmp);
+	}
+	concat_fullstring_flags(start, curr);
+	curr = start->next;
+	curr = free_fullstring_tokens(curr);
 	free(start->value);
 	start->value = joined;
 	start->next = curr;

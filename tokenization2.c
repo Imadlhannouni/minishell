@@ -1,48 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing2.c                                         :+:      :+:    :+:   */
+/*   tokenization2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/12 16:14:26 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:13:22 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	handle_quoted_part(int *i, char *line, char **part)
+{
+	char	quote;
+	int		start;
+
+	quote = line[(*i)++];
+	start = *i;
+	while (line[*i] && line[*i] != quote)
+		(*i)++;
+	*part = substrdup(start, *i, line);
+	(*i)++;
+	return (*i);
+}
+
+static int	handle_unquoted_part(int *i, char *line, char **part)
+{
+	int	start;
+
+	start = *i;
+	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '|'
+		&& line[*i] != '<' && line[*i] != '>' && line[*i] != '"'
+		&& line[*i] != '\'')
+		(*i)++;
+	*part = substrdup(start, *i, line);
+	return (*i);
+}
+
 int	is_cmds_var(t_token **tokens, t_token_type type, int i, char *line)
 {
 	char	*value;
 	char	*part;
-	int		start;
-	char	quote;
 
 	value = NULL;
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
-	while (line[i] && line[i] != ' ' && line[i] != '\t' &&
-		   line[i] != '|' && line[i] != '<' && line[i] != '>')
+	while (line[i] && line[i] != ' ' && line[i] != '\t' && line[i] != '|'
+		&& line[i] != '<' && line[i] != '>')
 	{
 		if (line[i] == '"' || line[i] == '\'')
-		{
-			quote = line[i++];
-			start = i;
-			while (line[i] && line[i] != quote)
-				i++;
-			part = substrdup(start, i, line);
-			i++;
-		}
+			handle_quoted_part(&i, line, &part);
 		else
-		{
-			start = i;
-			while (line[i] && line[i] != ' ' && line[i] != '\t' &&
-				   line[i] != '|' && line[i] != '<' && line[i] != '>' &&
-				   line[i] != '"' && line[i] != '\'')
-				i++;
-			part = substrdup(start, i, line);
-		}
+			handle_unquoted_part(&i, line, &part);
 		if (!value)
 			value = ft_strdup(part);
 		else
@@ -64,8 +75,9 @@ void	is_path(t_pipe *pipe)
 		curr_token = curr_pipe->full_cmd;
 		while (curr_token)
 		{
-			if (((curr_token->type == TOKEN_CMD && ft_strcmp(curr_token->value, "cd") == 0) 
-				|| curr_token->type == TOKEN_REDIRECTION) 
+			if (((curr_token->type == TOKEN_CMD && ft_strcmp(curr_token->value,
+							"cd") == 0)
+					|| curr_token->type == TOKEN_REDIRECTION)
 				&& curr_token->next != NULL)
 			{
 				if (curr_token->next->type == TOKEN_WORD

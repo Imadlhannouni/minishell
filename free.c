@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 15:11:46 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 22:27:33 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/22 13:31:49 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,41 @@
 
 void	free_tokens(t_token *tokens)
 {
-	while (tokens)
-	{
-		if (tokens->value)
-		{
-			free(tokens->value);
-		}
-		tokens = tokens->next;
-	}
-	free(tokens);
+    t_token	*tmp;
+
+    while (tokens)
+    {
+        tmp = tokens;
+        if (tokens->value)
+            free(tokens->value);
+        tokens = tokens->next;
+        free(tmp);
+    }
+}
+
+void	free_pipes(t_pipe **pipes)
+{
+    t_pipe	*tmp;
+
+    while (*pipes)
+    {
+        tmp = *pipes;
+        *pipes = (*pipes)->nextpipe;
+        free_tokens(tmp->full_cmd);
+        free(tmp);
+    }
+}
+
+void	free_env(t_env *env)
+{
+    t_env	*tmp;
+
+    while (env)
+    {
+        tmp = env;
+        free(env->key);
+        free(env->value);
+        env = env->next;
+        free(tmp);
+    }
 }

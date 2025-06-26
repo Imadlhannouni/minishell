@@ -21,7 +21,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	{
 		i++;
 	}
-	return ((unsigned char) s1[i] - (unsigned char) s2[i]);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -34,16 +34,19 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		i++;
 	}
 	if (i < n)
-		return ((unsigned char) s1[i] - (unsigned char) s2[i]);
+		return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 	return (0);
 }
 
 int	character_count(char *s)
 {
-	int	i = 0;
-	int	in_single = 0;
-	int	in_double = 0;
+	int	i;
+	int	in_single;
+	int	in_double;
 
+	i = 0;
+	in_single = 0;
+	in_double = 0;
 	while (s[i])
 	{
 		if (s[i] == '\'' && !in_double)

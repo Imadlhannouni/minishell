@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:27:58 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/14 17:19:59 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:21:04 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ static char	**allocate(const char *s, char c)
 	arr[2] = NULL;
 	return (arr);
 }
-
 
 char	**ft_split(const char *s, char c)
 {
