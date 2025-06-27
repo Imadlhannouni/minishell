@@ -107,4 +107,13 @@ void				main_parsing(char *line, t_env **env, t_pipe **pipes);
 void				print_cmd_not_found(char *cmd);
 void				print_syntax_error(char *token);
 
+void	cd(char *path, char ***env);
+void	pwd(void);
+char **clone_env(char **env);
+void print_env(char **env);
+char *retreive_var(char **env, char *var);
+void	export(char ***env, char *full_arg);
+size_t var_num(char **arr);
+void	free_arr(char **arr, int j);
+void	unset(char ***env, char *arg);
 #endif

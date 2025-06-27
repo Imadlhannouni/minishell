@@ -69,7 +69,7 @@ t_token	*smart_split(char *line, t_pipe *pipe)
 	}
 	while (line[i] != '\0')
 	{
-		while (line[i] == ' ' || line[i] == '\t')
+ 		while (line[i] == ' ' || line[i] == '\t')
 			i++;
 		if (!line[i])
 			break ;

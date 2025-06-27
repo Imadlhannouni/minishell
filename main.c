@@ -46,37 +46,74 @@ int	main(int argc, char **argv, char **envp)
     signal(SIGINT, sighandler);
     signal(SIGQUIT, SIG_IGN);
     line = NULL;
+	char **clone = clone_env(envp);
     while (1)
     {
         line = readline_func(line);
         if (!line)
             break ;
+		if (strncmp(line, "cd", 2) == 0)
+		{
+			char *arg = line + 2;
+			while (*arg == ' ' || *arg == '\t')
+				arg++;
+			if (*arg == '\0' || *arg == '\n')
+				cd(NULL,&clone);
+			else
+			{
+				cd(arg, &clone);
+				char *old = retreive_var(clone,"OLDPWD");
+				printf("%s\n",old);
+			}
+		}
+		else if(strncmp(line, "pwd", 4) == 0)
+			pwd();
+		else if(strncmp(line, "env", 4) == 0)
+			print_env(clone);
+		else if (strncmp(line, "export", 6) == 0)
+		{
+			char *arg = line + 6;
+			while (*arg == ' ' || *arg == '\t')
+				arg++;
+			export(&clone,arg);
+		}
+		else if (strncmp(line, "unset", 5) == 0)
+		{
+			char *arg = line + 5;
+			while (*arg == ' ' || *arg == '\t')
+				arg++;
+			unset(&clone, arg);
+		}
+		else if (strncmp(line, "exit", 4) == 0)
+		{
+			exit(0);
+		}
         pipes = NULL;
         main_parsing(line, &env, &pipes);
-		while (pipes)
-		{
-			if (pipes->full_cmd)
-			{
-				if (pipes->full_cmd->type == TOKEN_CMD)
-				{
-					if (pipes->full_cmd->value)
-					{
-						if (!(ft_strcmp(pipes->full_cmd->value, "echo") == 0 || ft_strcmp(pipes->full_cmd->value,
-				"cd") == 0 || ft_strcmp(pipes->full_cmd->value, "ls") == 0
-			|| ft_strcmp(pipes->full_cmd->value, "pwd") == 0 || ft_strcmp(pipes->full_cmd->value,
-				"export") == 0 || ft_strcmp(pipes->full_cmd->value, "unset") == 0
-			|| ft_strcmp(pipes->full_cmd->value, "env") == 0 || ft_strcmp(pipes->full_cmd->value,
-				"exit") == 0)) // replace with our own command execution logic
-						{
-							print_cmd_not_found(pipes->full_cmd->value);
-						}
-					}
-				}
-			}
-			pipes = pipes->nextpipe;
-		}
-        free(line);
-        free_pipes(&pipes);
+	// 	while (pipes)
+	// 	{
+	// 		if (pipes->full_cmd)
+	// 		{
+	// 			if (pipes->full_cmd->type == TOKEN_CMD)
+	// 			{
+	// 				if (pipes->full_cmd->value)
+	// 				{
+	// 					if (!(ft_strcmp(pipes->full_cmd->value, "echo") == 0 || ft_strcmp(pipes->full_cmd->value,
+	// 			"cd") == 0 || ft_strcmp(pipes->full_cmd->value, "ls") == 0
+	// 		|| ft_strcmp(pipes->full_cmd->value, "pwd") == 0 || ft_strcmp(pipes->full_cmd->value,
+	// 			"export") == 0 || ft_strcmp(pipes->full_cmd->value, "unset") == 0
+	// 		|| ft_strcmp(pipes->full_cmd->value, "env") == 0 || ft_strcmp(pipes->full_cmd->value,
+	// 			"exit") == 0)) // replace with our own command execution logic
+	// 					{
+	// 						print_cmd_not_found(pipes->full_cmd->value);
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 		pipes = pipes->nextpipe;
+	// 	}
+    //     free(line);
+    //     free_pipes(&pipes);
     }
 	free_env(env);
     return (0);
