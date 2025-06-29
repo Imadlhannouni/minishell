@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/22 13:10:27 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/29 13:57:40 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,9 @@ void	print_pipes(t_pipe *pipes)
 		curr_token = curr_pipe->full_cmd;
 		while (curr_token)
 		{
-			printf("%s : %d : %d | inp_red : %d, out_red : %d,  inp_app : %d, out_app : %d\n", curr_token->value, curr_token->type,
+			printf("%s : %d : %d | inp_red : %d, out_red : %d,  heredoc : %d, out_app : %d\n", curr_token->value, curr_token->type,
 				curr_token->is_fullstring, curr_token->inp_red,
-				curr_token->out_red, curr_token->inp_app, curr_token->out_app);
+				curr_token->out_red, curr_token->heredoc, curr_token->out_app);
 			curr_token = curr_token->next;
 		}
 		curr_pipe = curr_pipe->nextpipe;

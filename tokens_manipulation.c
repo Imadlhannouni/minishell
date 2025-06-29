@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/18 16:14:36 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:23:25 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	new = malloc(sizeof(t_token));
 	new->type = type;
 	new->value = value;
-	new->inp_app = 0;
+	new->heredoc = 0;
 	new->inp_red = 0;
 	new->out_app = 0;
 	new->out_red = 0;
@@ -52,8 +52,6 @@ void	add_redirection(t_token **head, int flag)
 		tmp->inp_red = 1;
 	else if (flag == 2)
 		tmp->out_app = 1;
-	else
-		tmp->inp_app = 1;
 }
 
 static void	concat_fullstring_flags(t_token *start, t_token *curr)
@@ -64,8 +62,8 @@ static void	concat_fullstring_flags(t_token *start, t_token *curr)
 		start->inp_red = 1;
 	else if (curr->out_app == 1)
 		start->out_app = 1;
-	else if (curr->inp_app == 1)
-		start->inp_app = 1;
+	else if (curr->heredoc == 1)
+		start->heredoc = 1;
 }
 
 static t_token	*free_fullstring_tokens(t_token *curr)

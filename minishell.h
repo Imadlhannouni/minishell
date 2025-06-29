@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/22 13:41:08 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:35:44 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_token
 	int				is_fullstring;
 	int				inp_red;
 	int				out_red;
-	int				inp_app;
+	int				heredoc;
 	int				out_app;
 	char			*value;
 	struct s_token	*next;
@@ -76,19 +76,19 @@ void				ft_lstadd_back(t_token **lst, t_token *new);
 void				add_token(t_token **head, char *value, t_token_type type,
 						int is_full);
 char				*substrdup(int start, int end, char *str);
-int					is_cmds_var(t_token **tokens, t_token_type type, int i,
+int					is_cmds_var(t_token **tokens, int i,
+						char *line, int *flag);
+int					is_simple_quote(t_token *tokens, int i,
+						char *line, int *flag);
+int					is_double_quote(t_token *tokens, int i,
+						char *line, int *flag);
+int					is_directions(t_token *tokens, int i, char *line,
+						int *flag);
+int					is_pipe(t_token *tokens, int i,
 						char *line);
-int					is_simple_quote(t_token *tokens, t_token_type type, int i,
-						char *line);
-int					is_double_quote(t_token *tokens, t_token_type type, int i,
-						char *line);
-int					is_directions(t_token *tokens, t_token_type type, int i,
-						char *line);
-int					is_pipe(t_token *tokens, t_token_type type, int i,
-						char *line);
-int					is_word(t_token *tokens, t_token_type type, int i,
-						char *line);
-int					is_option(t_token *tokens, t_token_type type, int i,
+int					is_word(t_token *tokens, int i,
+						char *line, int *flag);
+int					is_option(t_token *tokens, int i,
 						char *line);
 void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);

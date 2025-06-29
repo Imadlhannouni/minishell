@@ -6,18 +6,20 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/18 16:07:04 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:48:24 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_simple_quote(t_token *tokens, t_token_type type, int i, char *line)
+int	is_simple_quote(t_token *tokens, int i, char *line, int *flag)
 {
-	int		start;
-	int		end;
-	char	*value;
-	char	*fullvalue;
+	int				start;
+	int				end;
+	char			*value;
+	char			*fullvalue;
+	t_token			*last;
+	t_token_type	type;
 
 	type = TOKEN_SIMPLE_QUOTE;
 	i++;
@@ -33,13 +35,21 @@ int	is_simple_quote(t_token *tokens, t_token_type type, int i, char *line)
 		add_token(&tokens, value, type, 1);
 	else
 		add_token(&tokens, value, type, 0);
+	last = ft_lstlast(tokens);
+	if (*flag == 1)
+	{
+		*flag = 0;
+		last->heredoc = 1;
+	}
 	return (i);
 }
 
-int	is_double_quote(t_token *tokens, t_token_type type, int i, char *line)
+int	is_double_quote(t_token *tokens, int i, char *line, int *flag)
 {
-	int	start;
-	int	end;
+	int				start;
+	int				end;
+	t_token_type	type;
+	t_token			*last;
 
 	type = TOKEN_DOUBLE_QUOTE;
 	i++;
@@ -54,10 +64,16 @@ int	is_double_quote(t_token *tokens, t_token_type type, int i, char *line)
 		add_token(&tokens, substrdup(start, end, line), type, 1);
 	else
 		add_token(&tokens, substrdup(start, end, line), type, 0);
+	last = ft_lstlast(tokens);
+	if (*flag == 1)
+	{
+		*flag = 0;
+		last->heredoc = 1;
+	}
 	return (i);
 }
 
-int	is_directions(t_token *tokens, t_token_type type, int i, char *line)
+int	is_directions(t_token *tokens, int i, char *line, int *flag)
 {
 	if (line[i] == '>' && line[i + 1] != '>')
 	{
@@ -76,16 +92,17 @@ int	is_directions(t_token *tokens, t_token_type type, int i, char *line)
 	}
 	else if (line[i] == '<' && line[i + 1] == '<')
 	{
-		add_redirection(&tokens, 3);
+		*flag = 1;
 		i += 2;
 	}
 	return (i);
 }
 
-int	is_pipe(t_token *tokens, t_token_type type, int i, char *line)
+int	is_pipe(t_token *tokens, int i, char *line)
 {
-	int	start;
-	int	end;
+	int				start;
+	int				end;
+	t_token_type	type;
 
 	type = TOKEN_PIPE;
 	start = i;
@@ -95,11 +112,12 @@ int	is_pipe(t_token *tokens, t_token_type type, int i, char *line)
 	return (i);
 }
 
-int	is_word(t_token *tokens, t_token_type type, int i, char *line)
+int	is_word(t_token *tokens, int i, char *line, int *flag)
 {
-	t_token	*last;
-	int		start;
-	int		end;
+	t_token			*last;
+	int				start;
+	int				end;
+	t_token_type	type;
 
 	type = TOKEN_WORD;
 	start = i;
@@ -114,12 +132,10 @@ int	is_word(t_token *tokens, t_token_type type, int i, char *line)
 	else
 		add_token(&tokens, substrdup(start, end, line), type, 0);
 	last = ft_lstlast(tokens);
-	if (last && (ft_strcmp(last->value, "echo") == 0 || ft_strcmp(last->value,
-				"cd") == 0 || ft_strcmp(last->value, "ls") == 0
-			|| ft_strcmp(last->value, "pwd") == 0 || ft_strcmp(last->value,
-				"export") == 0 || ft_strcmp(last->value, "unset") == 0
-			|| ft_strcmp(last->value, "env") == 0 || ft_strcmp(last->value,
-				"exit") == 0))
-		last->type = TOKEN_CMD;
+	if (*flag == 1)
+	{
+		*flag = 0;
+		last->heredoc = 1;
+	}
 	return (i);
 }
