@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/22 13:57:11 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:26:08 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,8 @@ int	main(int argc, char **argv, char **envp)
             break ;
         pipes = NULL;
         main_parsing(line, &env, &pipes);
-		while (pipes)
-		{
-			if (pipes->full_cmd)
-			{
-				if (pipes->full_cmd->type == TOKEN_CMD)
-				{
-					if (pipes->full_cmd->value)
-					{
-						if (!(ft_strcmp(pipes->full_cmd->value, "echo") == 0 || ft_strcmp(pipes->full_cmd->value,
-				"cd") == 0 || ft_strcmp(pipes->full_cmd->value, "ls") == 0
-			|| ft_strcmp(pipes->full_cmd->value, "pwd") == 0 || ft_strcmp(pipes->full_cmd->value,
-				"export") == 0 || ft_strcmp(pipes->full_cmd->value, "unset") == 0
-			|| ft_strcmp(pipes->full_cmd->value, "env") == 0 || ft_strcmp(pipes->full_cmd->value,
-				"exit") == 0)) // replace with our own command execution logic
-						{
-							print_cmd_not_found(pipes->full_cmd->value);
-						}
-					}
-				}
-			}
-			pipes = pipes->nextpipe;
-		}
-        free(line);
-        free_pipes(&pipes);
+        // free(line);
+        // free_pipes(&pipes);
     }
 	free_env(env);
     return (0);

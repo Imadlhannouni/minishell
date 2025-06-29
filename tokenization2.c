@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/18 16:13:22 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:38:56 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,13 @@ static int	handle_unquoted_part(int *i, char *line, char **part)
 	return (*i);
 }
 
-int	is_cmds_var(t_token **tokens, t_token_type type, int i, char *line)
+int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 {
-	char	*value;
-	char	*part;
+	char			*value;
+	char			*part;
+	t_token_type	type;
 
+	part = NULL;
 	value = NULL;
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
@@ -61,6 +63,11 @@ int	is_cmds_var(t_token **tokens, t_token_type type, int i, char *line)
 		free(part);
 	}
 	add_token(tokens, value, TOKEN_CMD, 0);
+	if (*flag == 1)
+	{
+		*flag = 0;
+		(*tokens)->heredoc = 1;
+	}
 	return (i);
 }
 
@@ -93,10 +100,11 @@ void	is_path(t_pipe *pipe)
 	}
 }
 
-int	is_option(t_token *tokens, t_token_type type, int i, char *line)
+int	is_option(t_token *tokens, int i, char *line)
 {
-	int	start;
-	int	end;
+	int				start;
+	int				end;
+	t_token_type	type;
 
 	type = TOKEN_OPTION;
 	start = i;
