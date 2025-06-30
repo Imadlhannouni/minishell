@@ -97,7 +97,7 @@ void				free_env(t_env *env);
 void				add_env(t_env **head, char *value, char *key);
 void				replace_env_variables(t_token *tokens, t_env *env);
 t_env				*init_env(char **envp, t_env **env);
-char				**ft_split(const char *s, char c);
+char				**ft_split(char *s, char c);
 void				ft_free_split(char **split, int j);
 void				add_redirection(t_token **head, int flag);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
@@ -116,4 +116,8 @@ void	export(char ***env, char *full_arg);
 size_t var_num(char **arr);
 void	free_arr(char **arr, int j);
 void	unset(char ***env, char *arg);
+void	print_sorted(char **env);
+void	free_2d_arr(char **arr);
+char	**spec_split(char *s);
+
 #endif

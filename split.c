@@ -1,34 +1,37 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   split.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/25 22:27:58 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/18 16:21:04 by ilhannou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-static int	ft_count(const char *s, char c)
+static int	count_word(char *s, char c)
 {
-	size_t	i;
-	int		count;
+	int	count;
+	int	in_word;
 
-	i = 0;
 	count = 0;
-	while (s[i])
+	in_word = 0;
+	while (*s)
 	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
+		if ((*s != c && *s != '\t') && in_word == 0)
+		{
+			in_word = 1;
 			count++;
-		i++;
+		}
+		else if (*s == c || *s == '\t')
+			in_word = 0;
+		s++;
 	}
 	return (count);
 }
 
-static char	*allocate_word(const char *s, int start, int end)
+static void	free_all(char **arr, int j)
+{
+	while (j >= 0)
+	{
+		free(arr[j]);
+		j--;
+	}
+	free(arr);
+}
+
+static char	*allocate_word(char *s, int start, int end)
 {
 	int		len;
 	char	*word;
@@ -45,47 +48,37 @@ static char	*allocate_word(const char *s, int start, int end)
 	return (word);
 }
 
-void	ft_free_split(char **split, int j)
-{
-	while (j > 0)
-	{
-		j--;
-		free(split[j]);
-	}
-	free(split);
-}
-
-static char	**allocate(const char *s, char c)
+static char	**allocate(char *s, char c)
 {
 	char	**arr;
-	int		i;
 
-	i = 0;
-	arr = malloc(sizeof(char *) * 3);
+	int (i), (j), (start);
+	i = -1;
+	j = 0;
+	start = -1;
+	arr = (char **)malloc((count_word(s, c) + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);
-	while (s[i] && s[i] != c)
-		i++;
-	arr[0] = allocate_word(s, 0, i - 1);
-	if (!arr[0])
-		return (free(arr), NULL);
-	if (s[i] == c)
-		arr[1] = allocate_word(s, i + 1, ft_strlen(s) - 1);
-	else
-		arr[1] = ft_strdup("");
-	if (!arr[1])
+	while (s[++i])
 	{
-		free(arr[0]);
-		free(arr);
-		return (NULL);
+		if ((s[i] != c && s[i] != '\t') && start == -1)
+			start = i;
+		if ((s[i] != c && s[i] != '\t')
+			&& (s[i + 1] == c || s[i + 1] == '\t' || s[i + 1] == '\0'))
+		{
+			arr[j++] = allocate_word(s, start, i);
+			if (!arr[j - 1])
+				return (free_all(arr, j - 2), NULL);
+			start = -1;
+		}
 	}
-	arr[2] = NULL;
+	arr[j] = NULL;
 	return (arr);
 }
 
-char	**ft_split(const char *s, char c)
+char	**ft_split(char *s, char c)
 {
 	if (!s)
 		return (NULL);
-	return (allocate(s, c));
+	return (allocate((char *)s, c));
 }

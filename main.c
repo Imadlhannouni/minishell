@@ -75,7 +75,10 @@ int	main(int argc, char **argv, char **envp)
 			char *arg = line + 6;
 			while (*arg == ' ' || *arg == '\t')
 				arg++;
-			export(&clone,arg);
+			if (*arg == '\0')
+				export(&clone,NULL);
+			else
+				export(&clone,arg);
 		}
 		else if (strncmp(line, "unset", 5) == 0)
 		{
@@ -90,31 +93,33 @@ int	main(int argc, char **argv, char **envp)
 		}
         pipes = NULL;
         main_parsing(line, &env, &pipes);
-	// 	while (pipes)
-	// 	{
-	// 		if (pipes->full_cmd)
-	// 		{
-	// 			if (pipes->full_cmd->type == TOKEN_CMD)
-	// 			{
-	// 				if (pipes->full_cmd->value)
-	// 				{
-	// 					if (!(ft_strcmp(pipes->full_cmd->value, "echo") == 0 || ft_strcmp(pipes->full_cmd->value,
-	// 			"cd") == 0 || ft_strcmp(pipes->full_cmd->value, "ls") == 0
-	// 		|| ft_strcmp(pipes->full_cmd->value, "pwd") == 0 || ft_strcmp(pipes->full_cmd->value,
-	// 			"export") == 0 || ft_strcmp(pipes->full_cmd->value, "unset") == 0
-	// 		|| ft_strcmp(pipes->full_cmd->value, "env") == 0 || ft_strcmp(pipes->full_cmd->value,
-	// 			"exit") == 0)) // replace with our own command execution logic
-	// 					{
-	// 						print_cmd_not_found(pipes->full_cmd->value);
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		pipes = pipes->nextpipe;
-	// 	}
-    //     free(line);
-    //     free_pipes(&pipes);
+		while (pipes)
+		{
+			if (pipes->full_cmd)
+			{
+				if (pipes->full_cmd->type == TOKEN_CMD)
+				{
+					if (pipes->full_cmd->value)
+					{
+						if (!(ft_strcmp(pipes->full_cmd->value, "echo") == 0 || ft_strcmp(pipes->full_cmd->value,
+				"cd") == 0 || ft_strcmp(pipes->full_cmd->value, "ls") == 0
+			|| ft_strcmp(pipes->full_cmd->value, "pwd") == 0 || ft_strcmp(pipes->full_cmd->value,
+				"export") == 0 || ft_strcmp(pipes->full_cmd->value, "unset") == 0
+			|| ft_strcmp(pipes->full_cmd->value, "env") == 0 || ft_strcmp(pipes->full_cmd->value,
+				"exit") == 0)) // replace with our own command execution logic
+						{
+							print_cmd_not_found(pipes->full_cmd->value);
+						}
+					}
+				}
+			}
+			pipes = pipes->nextpipe;
+		}
+        free(line);
+        free_pipes(&pipes);
     }
 	free_env(env);
     return (0);
 }
+
+

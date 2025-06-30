@@ -28,7 +28,7 @@ void	print_sorted(char **env)
 	int len = var_num(env);
 	while (i < len - 1)
 	{
-		if (env[i][0] > env[i + 1][0])
+		if (strcmp(env[i] ,env[i + 1]) > 0)
 		{
 			temp = env[i];
 			env[i] = env[i + 1];
@@ -39,30 +39,6 @@ void	print_sorted(char **env)
 			i++;
 	}
 	print_env(env);
-}
-
-void sort(char **arr, int pos)
-{
-	int i = 0, j = 0;
-	char *temp;
-	
-	while (i < var_num(arr))
-	{
-		if (arr[i][0] == arr[i + 1][0])
-		{
-			while (j < pos)
-			{
-				if (arr[i][j] > arr[i + 1][j])
-					break;
-				j++;
-			}
-			temp = arr[i];
-			arr[i] = arr[i + 1];
-			arr[i + 1] = temp;
-			i++;
-		}
-	}
-	
 }
 
 // int	main(void)
@@ -97,7 +73,9 @@ void sort(char **arr, int pos)
 // 	"WATERMELON=green",
 // 	"XIGUA=red",
 // 	"YAM=purple",
-// 	"ZUCCHINI=green"
+// 	"ZUCCHINI=green",
+// 	"MOCO",
+// 	"FA"
 // };
 
 // 	int		count = sizeof(values) / sizeof(values[0]);

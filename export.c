@@ -67,19 +67,78 @@ char	**add_var(char **env, char **arg)
 	free(env);
 	return clone;
 }
+void	free_2d_arr(char **arr)
+{
+	int i = 0;
+
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+static char *fill_word(int start, int end, char *str)
+{
+	char *s;
+	int i = 0;
+	s = malloc((end - start + 1) * sizeof(char));
+	if (!s)
+		return NULL;
+	while (i < end - start)
+	{
+		s[i] = str[start + i];
+		i++;
+	}
+	s[i] = '\0';
+	return s;
+}
+
+char **spec_split(char *str)
+{
+	char **arr = NULL;
+	int i = 0;
+
+	arr = malloc(3 * sizeof(char*));
+	if (!arr)
+		return NULL;
+	while (str[i] != '=')
+		i++;
+	arr[0] = fill_word(0, i, str);
+	if (!arr[0])
+		return (NULL);
+	arr[1] = fill_word(++i, ft_strlen(str), str);
+	if (!arr[1])
+		return (free(arr[0]), NULL);
+	arr[2] = NULL;
+	return arr;
+}
 
 void	export(char ***env, char *full_arg)
 {
-	char **arg;
+	char **arg = NULL;
+	char **args = NULL;
+	static char **no_val = NULL;
+	int i = 0;
 
-	if (full_arg == NULL) 
+	if (full_arg == NULL)
+	{
+		char **clone = clone_env(*env);
+		print_sorted(clone);
+		free_2d_arr(clone);
 		return;
-	arg = ft_split(full_arg, '=');
-	if (check_existence(*env, arg[0]))
-		replace_variable(env, arg);
-	else
-		*env = add_var(*env, arg);
-	free(arg[0]);
-	free(arg[1]);
-	free(arg);
+	}
+	args = ft_split(full_arg, ' ');
+	while (args[i])
+	{
+		int j =0;
+		arg = spec_split(args[i]);
+		if (check_existence(*env, arg[0]))
+			replace_variable(env, arg);
+		else
+			*env = add_var(*env, arg);
+		free_2d_arr(arg);
+		i++;
+	}
+	free_2d_arr(args);
 }
