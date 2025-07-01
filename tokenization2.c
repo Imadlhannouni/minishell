@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/29 14:38:56 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/01 13:55:19 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
 	while (line[i] && line[i] != ' ' && line[i] != '\t' && line[i] != '|'
-		&& line[i] != '<' && line[i] != '>')
+		&& line[i] != '<' && line[i] != '>' && line[i] != '\0')
 	{
 		if (line[i] == '"' || line[i] == '\'')
 			handle_quoted_part(&i, line, &part);
@@ -62,6 +62,8 @@ int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 			value = ft_strjoin(value, part);
 		free(part);
 	}
+	if (value == NULL)
+		return (i); // error here
 	add_token(tokens, value, TOKEN_CMD, 0);
 	if (*flag == 1)
 	{
