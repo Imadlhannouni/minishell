@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/01 13:55:19 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:34:26 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	is_path(t_pipe *pipe)
 		{
 			if (((curr_token->type == TOKEN_CMD && ft_strcmp(curr_token->value,
 							"cd") == 0)
-					|| curr_token->type == TOKEN_REDIRECTION)
+					|| curr_token->out_app == 1 || curr_token->inp_red == 1 || curr_token->out_red == 1)
 				&& curr_token->next != NULL)
 			{
 				if (curr_token->next->type == TOKEN_WORD

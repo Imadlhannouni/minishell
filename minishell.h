@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/29 14:35:44 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:30:08 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void				add_env(t_env **head, char *value, char *key);
 void				replace_env_variables(t_token *tokens, t_env *env);
 t_env				*init_env(char **envp, t_env **env);
 char				**ft_split(const char *s, char c);
-void				ft_free_split(char **split, int j);
+char				**ft_split_env(const char *s, char c);
 void				add_redirection(t_token **head, int flag);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
 void				print_pipes(t_pipe *pipes);
