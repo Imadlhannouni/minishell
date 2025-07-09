@@ -99,6 +99,6 @@ void	main_parsing(char *line, t_env **env, t_pipe **pipes)
 	replace_env_variables(tokens, *env);
 	*pipes = group_tokens_into_pipes(tokens);
 	is_path(*pipes);
-	print_pipes(*pipes);
+	//print_pipes(*pipes);
 	return ;
 }

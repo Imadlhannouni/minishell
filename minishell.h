@@ -19,6 +19,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <unistd.h>
+#include <sys/wait.h>
 
 typedef enum s_token_type
 {
@@ -58,6 +60,14 @@ typedef struct s_pipe
 	t_token			*full_cmd;
 	struct s_pipe	*nextpipe;
 }					t_pipe;
+
+typedef struct s_vars
+{
+	int i;
+	int pipe_num;
+	int **fd;
+	__pid_t *pid;
+}	t_vars;
 
 char				*ft_strchr(const char *s, int c);
 size_t				ft_strcpy(char *dst, const char *src);
@@ -107,4 +117,15 @@ void				main_parsing(char *line, t_env **env, t_pipe **pipes);
 void				print_cmd_not_found(char *cmd);
 void				print_syntax_error(char *token);
 
+size_t var_num(char **arr);
+void	free_arr(char **arr, int j);
+char **clone_env(char **env);
+void	execute(t_pipe *pipes, char **env);
+
+char	*ft_strjoin_v2(char *s1, char *s2, int flag);
+char	*retrieve_path(char *cmd, char **env);
+void	free_all(char ***arr);
+void	free_them(char **arr);
+void exec_pipe(char ***args, char **envp);
+void	print_3d_arr(char ***arr);
 #endif
