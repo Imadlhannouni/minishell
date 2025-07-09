@@ -162,6 +162,6 @@ void	execute(t_pipe *pipes, char **env)
 	{
 		char **arg = group_2d_arr(pipes->full_cmd);
 		exec_command(arg, env);
-		free_them(arg);
+		free_2d_arr(arg);
 	}
 }
