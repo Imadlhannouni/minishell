@@ -28,7 +28,7 @@ t_env	*init_env(char **envp, t_env **env)
 			else
 				add_env(env, "", split[0]);
 		}
-		ft_free_split(split, 2);
+		free_arr(split, 2);
 		i++;
 	}
 	return (*env);

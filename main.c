@@ -53,6 +53,7 @@ int	main(int argc, char **argv, char **envp)
             break ;
         pipes = NULL;
         main_parsing(line, &env, &pipes);
+		execute(pipes,envp);
         // free(line);
         // free_pipes(&pipes);
     }
