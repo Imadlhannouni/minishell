@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/18 16:30:58 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:29:58 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_env	*init_env(char **envp, t_env **env)
 	i = 0;
 	while (envp[i])
 	{
-		split = ft_split(envp[i], '=');
+		split = ft_split_env(envp[i], '=');
 		if (split && split[0])
 		{
 			if (split[1])
