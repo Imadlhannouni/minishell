@@ -115,16 +115,15 @@ void exec_pipe(char ***args, char **envp)
 		var.pid[var.i] = helper(args[var.i], envp, var);
     	var.i++;
 	}
-
 	var.i = 0;
 	while(var.i < var.pipe_num)	
 	{
 		close(var.fd[var.i][0]);
 		close(var.fd[var.i++][1]);
 	}
-		var.i = 0;
-	// waitpid(var.pid[var.pipe_num],NULL,0);
-	while (var.i < var.pipe_num)
+	var.i = 0;
+	int ec = waitpid(var.pid[var.pipe_num],NULL,0);
+	while (var.i < var.pipe_num - 1)
 	{
 		wait(NULL);
 		var.i++;

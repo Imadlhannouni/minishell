@@ -36,14 +36,18 @@ void	sighandler(int signum)
 int	main(int argc, char **argv, char **envp)
 {
     char	*line;
-    t_env	*env;
-    t_pipe	*pipes;
+    // t_env	*env;
+	char **env_clone;
+	t_pipe	*pipes;
 
     (void)argc;
     (void)argv;
-    env = NULL;
-    init_env(envp, &env);
-    signal(SIGINT, sighandler);
+    //env = NULL;
+    // init_env(envp, &env);
+    
+	env_clone = clone_env(envp);
+	
+	signal(SIGINT, sighandler);
     signal(SIGQUIT, SIG_IGN);
     line = NULL;
     while (1)
@@ -53,10 +57,10 @@ int	main(int argc, char **argv, char **envp)
             break ;
         pipes = NULL;
         main_parsing(line, &env, &pipes);
-		execute(pipes,envp);
+		execute(pipes,env_clone);
         // free(line);
         // free_pipes(&pipes);
     }
-	free_env(env);
+	free_2d_arr(env_clone);
     return (0);
 }

@@ -125,7 +125,7 @@ void	execute(t_pipe *pipes, char **env);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env);
 void	free_all(char ***arr);
-void	free_them(char **arr);
+void	free_2d_arr(char **arr);
 void exec_pipe(char ***args, char **envp);
 void	print_3d_arr(char ***arr);
 #endif

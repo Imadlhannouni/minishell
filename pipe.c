@@ -22,16 +22,16 @@ char	*retrieve_path(char *cmd, char **env)
 		path = ft_strjoin_v2(paths[i], "/", 0);
 		path = ft_strjoin_v2(path, cmd, 1);
 		if (access(path,F_OK | X_OK) == 0)
-			return (free_them(paths),path);
+			return (free_2d_arr(paths),path);
 		else
 			free(path);
 		i++;
 	}
-	free_them(paths);
+	free_2d_arr(paths);
 	return (NULL);
 }
 
-void	free_them(char **arr)
+void	free_2d_arr(char **arr)
 {
 	int i = 0;
 
