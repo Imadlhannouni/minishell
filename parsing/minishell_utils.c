@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:41:38 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/22 13:44:59 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:50:44 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*ft_strchr(const char *s, int c)
 {

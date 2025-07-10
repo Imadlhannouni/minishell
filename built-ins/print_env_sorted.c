@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 char **merge_arr(char **env, char **arr)
 {

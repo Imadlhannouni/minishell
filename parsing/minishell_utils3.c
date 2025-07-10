@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:45:00 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/22 13:51:47 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:50:42 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*substrdup(int start, int end, char *str)
 {

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void close_fd(int **fd, int i, int total)
 {
@@ -122,7 +122,7 @@ void exec_pipe(char ***args, char **envp)
 		close(var.fd[var.i++][1]);
 	}
 	var.i = 0;
-	int ec = waitpid(var.pid[var.pipe_num],NULL,0);
+	//int ec = waitpid(var.pid[var.pipe_num],NULL,0);
 	while (var.i < var.pipe_num - 1)
 	{
 		wait(NULL);

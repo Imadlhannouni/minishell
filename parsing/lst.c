@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:02:02 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/04/07 17:59:09 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:50:45 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 t_token	*ft_lstnew(char *value)
 {

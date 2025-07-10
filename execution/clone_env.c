@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <dirent.h>
-#include "minishell.h"
+#include "../minishell.h"
 
 size_t var_num(char **arr)
 {

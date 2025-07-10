@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/18 16:30:58 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:51:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 t_env	*init_env(char **envp, t_env **env)
 {

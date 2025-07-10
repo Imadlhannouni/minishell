@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 static char	*allocate(size_t size)
 {

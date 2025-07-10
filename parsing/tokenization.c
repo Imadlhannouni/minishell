@@ -6,18 +6,17 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/29 14:48:24 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:56:54 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	is_simple_quote(t_token *tokens, int i, char *line, int *flag)
 {
 	int				start;
 	int				end;
 	char			*value;
-	char			*fullvalue;
 	t_token			*last;
 	t_token_type	type;
 

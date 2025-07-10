@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:01:45 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/05/25 22:31:42 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:50:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
