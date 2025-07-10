@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/01 13:54:03 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:56:42 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static int	handle_new_command(t_token **tokens, int i, char *line,
 		int *new_command, int *flag)
@@ -33,8 +33,6 @@ static int	handle_new_command(t_token **tokens, int i, char *line,
 static int	handle_token_cases(t_token **tokens, int i, char *line,
 		int *new_command, int *flag)
 {
-	t_token_type	type;
-
 	if (line[i] == '\'')
 		i = is_simple_quote(*tokens, i, line, flag);
 	else if (line[i] == '"')
@@ -58,7 +56,7 @@ static int	handle_token_cases(t_token **tokens, int i, char *line,
 	return (i);
 }
 
-t_token	*smart_split(char *line, t_pipe *pipe)
+t_token	*smart_split(char *line)
 {
 	t_token	*tokens;
 	int		i;
@@ -93,7 +91,7 @@ void	main_parsing(char *line, t_env **env, t_pipe **pipes)
 	t_token	*tokens;
 
 	*pipes = NULL;
-	tokens = smart_split(line, *pipes);
+	tokens = smart_split(line);
 	if (!tokens)
 		free_tokens(tokens);
 	replace_env_variables(tokens, *env);

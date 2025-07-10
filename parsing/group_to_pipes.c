@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/29 13:57:40 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:55:54 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static void	compact_fullstrings(t_token **fullcmd)
 {
@@ -95,7 +95,6 @@ void	print_pipes(t_pipe *pipes)
 {
 	t_pipe	*curr_pipe;
 	t_token	*curr_token;
-	int		i;
 
 	curr_pipe = pipes;
 	while (curr_pipe)

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 int check_existence(char **env, char *name)
 {
@@ -67,17 +67,7 @@ char	**add_var(char **env, char **arg)
 	free(env);
 	return clone;
 }
-void	free_2d_arr(char **arr)
-{
-	int i = 0;
 
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
 static char *fill_word(int start, int end, char *str)
 {
 	char *s;
@@ -174,8 +164,6 @@ void store_no_val(char ***args, char ***env, char *arg)
 	i = 0;
 }
 
-
-
 void	export(char ***env, char *full_arg, char ***no_val)
 {
 	char **arg = NULL;
@@ -190,7 +178,6 @@ void	export(char ***env, char *full_arg, char ***no_val)
 	args = ft_split(full_arg, ' ');
 	while (args[i])
 	{
-		int j =0;
 		if (check(args[i]) == 0)
 			store_no_val(no_val, env, args[i]);
 		else

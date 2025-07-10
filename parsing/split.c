@@ -1,32 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_env.c                                        :+:      :+:    :+:   */
+/*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/09 14:27:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/09 14:27:57 by ilhannou         ###   ########.fr       */
+/*   Created: 2025/07/10 21:58:55 by ilhannou          #+#    #+#             */
+/*   Updated: 2025/07/10 22:02:16 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-static int	ft_count(const char *s, char c)
-{
-	size_t	i;
-	int		count;
-
-	i = 0;
-	count = 0;
-	while (s[i])
-	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
-			count++;
-		i++;
-	}
-	return (count);
-}
+#include "../minishell.h"
 
 static char	*allocate_word(const char *s, int start, int end)
 {
@@ -43,16 +27,6 @@ static char	*allocate_word(const char *s, int start, int end)
 		word[i++] = s[start++];
 	word[i] = '\0';
 	return (word);
-}
-
-static void	ft_free_split(char **split, int j)
-{
-	while (j > 0)
-	{
-		j--;
-		free(split[j]);
-	}
-	free(split);
 }
 
 static char	**allocate(const char *s, char c)

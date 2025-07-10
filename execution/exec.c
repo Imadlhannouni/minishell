@@ -1,5 +1,5 @@
 #include <dirent.h>
-#include "minishell.h"
+#include "../minishell.h"
 
 int	count_args(t_token *tok)
 {

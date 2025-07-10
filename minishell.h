@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/09 14:30:08 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:55:07 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,4 +128,14 @@ void	free_all(char ***arr);
 void	free_2d_arr(char **arr);
 void exec_pipe(char ***args, char **envp);
 void	print_3d_arr(char ***arr);
+
+void	print_sorted(char **env, char **arr);
+void	cd(char *path, char ***env);
+char *retreive_var(char **env, char *var);
+void	pwd(void);
+void	print_env(char **env);
+void	export(char ***env, char *full_arg, char ***no_val);
+void	unset(char ***env, char *var);
+char **spec_split(char *str);
+
 #endif

@@ -6,11 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/01 13:55:19 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/10 21:57:03 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static int	handle_quoted_part(int *i, char *line, char **part)
 {
@@ -43,7 +43,6 @@ int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 {
 	char			*value;
 	char			*part;
-	t_token_type	type;
 
 	part = NULL;
 	value = NULL;
