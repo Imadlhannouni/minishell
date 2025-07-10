@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 22:27:58 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/06/18 16:21:04 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:33:42 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	count_word(char *s, char c)
 	return (count);
 }
 
- void	free_arr(char **arr, int j)
+void	free_arr(char **arr, int j)
 {
 	while (j >= 0)
 	{
