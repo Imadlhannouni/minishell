@@ -9,7 +9,7 @@ char	*retrieve_path(char *cmd, char **env)
 	paths = NULL;
 	while (env[i])
 	{
-		if (strncmp(env[i],"PATH=",5) == 0)
+		if (ft_strncmp(env[i],"PATH=",5) == 0)
 		{
 			path = strdup(env[i] + 5);
 			paths = ft_split(path, ':');

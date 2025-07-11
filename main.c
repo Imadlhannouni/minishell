@@ -45,6 +45,7 @@ int	main(int argc, char **argv, char **envp)
     init_env(envp, &env);
     signal(SIGINT, sighandler);
     signal(SIGQUIT, SIG_IGN);
+	char **clone = clone_env(envp);
     line = NULL;
     while (1)
     {
@@ -53,7 +54,7 @@ int	main(int argc, char **argv, char **envp)
             break ;
         pipes = NULL;
         main_parsing(line, &env, &pipes);
-		execute(pipes,envp);
+		execute(pipes,&clone);
         // free(line);
         // free_pipes(&pipes);
     }

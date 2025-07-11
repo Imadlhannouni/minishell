@@ -8,7 +8,7 @@ int check_existence(char **env, char *name)
 	len = ft_strlen((const char*)name);
 	while (env[i])
 	{
-		if (strncmp(env[i], name, len) == 0)
+		if (ft_strncmp(env[i], name, len) == 0)
 			return 1;
 		i++;
 	}
@@ -32,7 +32,7 @@ void replace_variable(char ***env, char **arg)
 
 	while ((*env)[i])
 	{
-		if (strncmp((*env)[i], arg[0], ft_strlen(arg[0])) == 0)
+		if (ft_strncmp((*env)[i], arg[0], ft_strlen(arg[0])) == 0)
 		{
 			free((*env)[i]);
 			(*env)[i] = join_strings(arg[0], "=", arg[1]);
