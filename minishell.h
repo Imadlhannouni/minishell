@@ -110,7 +110,7 @@ void				print_syntax_error(char *token);
 size_t var_num(char **arr);
 void	free_arr(char **arr, int j);
 char **clone_env(char **env);
-void	execute(t_pipe *pipes, char **env);
+void	execute(t_pipe *pipes, char ***env);
 
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env);
