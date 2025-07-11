@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/11 14:29:20 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/11 14:55:25 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	main(int argc, char **argv, char **envp)
             break ;
         pipes = NULL;
         main_parsing(line, clone_envi, &pipes);
-		execute(pipes,envp);
+		execute(pipes, &clone_envi);
         // free(line);
         // free_pipes(&pipes);
     }

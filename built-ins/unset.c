@@ -10,7 +10,7 @@ void	unset(char ***env, char *arg)
 
 	while ((*env)[i])
 	{
-		if (strncmp((*env)[i], arg, ft_strlen(arg)) != 0)
+		if (ft_strncmp((*env)[i], arg, ft_strlen(arg)) != 0)
 			clone[j++] = (*env)[i];
 		i++;
 	}
