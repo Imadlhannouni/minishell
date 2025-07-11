@@ -6,68 +6,36 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/10 21:51:02 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/11 14:35:57 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_env	*init_env(char **envp, t_env **env)
+
+static char	*get_env_value(const char *key, char **clone_envi)
 {
 	int		i;
-	char	**split;
+	char	**env_splited;
+	char	*value;
 
 	i = 0;
-	while (envp[i])
+	while (clone_envi[i] != NULL)
 	{
-		split = ft_split(envp[i], '=');
-		if (split && split[0])
+		if (ft_strncmp(clone_envi[i], key, ft_strlen(key)) == 0 && clone_envi[i][ft_strlen(key)] == '=')
 		{
-			if (split[1])
-				add_env(env, split[1], split[0]);
-			else
-				add_env(env, "", split[0]);
+			env_splited = ft_split_env(clone_envi[i], '=');
+			value = ft_strdup(env_splited[1]);
+			free(env_splited[0]);
+			free(env_splited[1]);
+			return (value);
 		}
-		free_arr(split, 2);
 		i++;
-	}
-	return (*env);
-}
-
-void	add_env(t_env **head, char *value, char *key)
-{
-	t_env	*new;
-	t_env	*tmp;
-
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return ;
-	new->value = ft_strdup(value);
-	new->key = ft_strdup(key);
-	new->next = NULL;
-	if (!*head)
-		*head = new;
-	else
-	{
-		tmp = *head;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = new;
-	}
-}
-
-static char	*get_env_value(const char *key, t_env *env)
-{
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env->value);
-		env = env->next;
 	}
 	return ("");
 }
 
-static int	append_env_or_chunk(char *str, int i, t_env *env,
+static int	append_env_or_chunk(char *str, int i, char **clone_envi,
 		char **result)
 {
 	int		start;
@@ -83,7 +51,7 @@ static int	append_env_or_chunk(char *str, int i, t_env *env,
 			i++;
 		key = substrdup(start, i, str);
 		tmp = *result;
-		*result = ft_strjoin(tmp, get_env_value(key, env));
+		*result = ft_strjoin(tmp, get_env_value(key, clone_envi));
 		free(tmp);
 		free(key);
 	}
@@ -101,7 +69,7 @@ static int	append_env_or_chunk(char *str, int i, t_env *env,
 	return (i);
 }
 
-void	replace_env_variables(t_token *tokens, t_env *env)
+void	replace_env_variables(t_token *tokens, char **clone_envi)
 {
 	char	*expanded;
 	int		i;
@@ -114,7 +82,7 @@ void	replace_env_variables(t_token *tokens, t_env *env)
 			i = 0;
 			expanded = ft_strdup("");
 			while (tokens->value[i])
-				i = append_env_or_chunk(tokens->value, i, env, &expanded);
+				i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded);
 			free(tokens->value);
 			tokens->value = expanded;
 		}

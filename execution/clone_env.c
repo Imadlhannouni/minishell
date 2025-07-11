@@ -43,5 +43,5 @@ char **clone_env(char **env)
 		i++;
 	}
 	clone[i] = NULL;
-	return clone;
+	return (clone);
 }
