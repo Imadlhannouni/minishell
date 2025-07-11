@@ -118,15 +118,16 @@ void exec_builtin(char **arg, char ***env, char ***no_val)
 	else if (strcmp(arg[0], "pwd") == 0)
 		pwd();
 	else if (strcmp(arg[0], "echo") == 0)
-		return;
+		echo(arg);
 	else if (strcmp(arg[0], "export") == 0)
-		return export(env, arg[1], no_val) ;
+		export(env, arg[1], no_val) ;
 	else if (strcmp(arg[0], "unset") == 0)
-		return unset(env, arg[1]);
+		unset(env, arg[1]);
 	else if (strcmp(arg[0], "exit") == 0)
-		return exit(1);
+		exit(1);
 	else if (strcmp(arg[0], "env") == 0)
-		return print_env(*env);	
+		print_env(*env);
+	exit(0);
 }
 
 void	execute(t_pipe *pipes, char ***env)
@@ -137,7 +138,7 @@ void	execute(t_pipe *pipes, char ***env)
 	if (count > 1)
 	{
 		char ***args=group_3d_arr(pipes);
-		exec_pipe(args, *env);
+		exec_pipe(args, env, &no_val);
 	}
 	else if (count == 1)
 	{

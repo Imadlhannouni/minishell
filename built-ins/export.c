@@ -15,7 +15,7 @@ int check_existence(char **env, char *name)
 	return 0;
 }
 
-static char *join_strings(char *s1, char *s2, char *s3)
+char *join_strings(char *s1, char *s2, char *s3)
 {
 	char *temp;
 	char *temp1;

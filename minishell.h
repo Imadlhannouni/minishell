@@ -109,23 +109,27 @@ void				print_syntax_error(char *token);
 
 size_t var_num(char **arr);
 void	free_arr(char **arr, int j);
-char **clone_env(char **env);
+char 	**clone_env(char **env);
 void	execute(t_pipe *pipes, char ***env);
 
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env);
 void	free_all(char ***arr);
 void	free_2d_arr(char **arr);
-void exec_pipe(char ***args, char **envp);
+void	exec_pipe(char ***args, char ***envp, char ***no_val);
 void	print_3d_arr(char ***arr);
 
 void	print_sorted(char **env, char **arr);
 void	cd(char *path, char ***env);
-char *retreive_var(char **env, char *var);
+char 	*retreive_var(char **env, char *var);
 void	pwd(void);
 void	print_env(char **env);
 void	export(char ***env, char *full_arg, char ***no_val);
 void	unset(char ***env, char *var);
-char **spec_split(char *str);
+char 	**spec_split(char *str);
+void 	echo(char **arg);
+char 	*join_strings(char *s1, char *s2, char *s3);
+int 	is_builtin(char *cmd);
+void 	exec_builtin(char **arg, char ***env, char ***no_val);
 
 #endif
