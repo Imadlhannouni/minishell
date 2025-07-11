@@ -5,6 +5,8 @@ char	*retrieve_path(char *cmd, char **env)
 	int i = 0;
 	char *path;
 	char **paths;
+
+	paths = NULL;
 	while (env[i])
 	{
 		if (strncmp(env[i],"PATH=",5) == 0)
