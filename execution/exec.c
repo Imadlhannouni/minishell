@@ -106,24 +106,46 @@ int is_builtin(char *cmd)
 		return 1;
 	else if (strcmp(cmd, "exit") == 0)
 		return 1;
+	else if (strcmp(cmd, "env") == 0)
+		return 1;
 	return 0;
 }
-void	execute(t_pipe *pipes, char **env)
+
+void exec_builtin(char **arg, char ***env, char ***no_val)
+{
+	if (strcmp(arg[0], "cd") == 0)
+		cd(arg[1], env);
+	else if (strcmp(arg[0], "pwd") == 0)
+		pwd();
+	else if (strcmp(arg[0], "echo") == 0)
+		return;
+	else if (strcmp(arg[0], "export") == 0)
+		return export(env, arg[1], no_val) ;
+	else if (strcmp(arg[0], "unset") == 0)
+		return unset(env, arg[1]);
+	else if (strcmp(arg[0], "exit") == 0)
+		return exit(1);
+	else if (strcmp(arg[0], "env") == 0)
+		return print_env(*env);	
+}
+
+void	execute(t_pipe *pipes, char ***env)
 {
 	int count = count_pipes(pipes);
+	static char **no_val = NULL;
 
 	if (count > 1)
 	{
 		char ***args=group_3d_arr(pipes);
-		exec_pipe(args, env);
+		exec_pipe(args, *env);
 	}
 	else if (count == 1)
 	{
 		char **arg = group_2d_arr(pipes->full_cmd);
 		if (!is_builtin(arg[0]))
-			exec_command(arg, env);
+			exec_command(arg, *env);
 		else
-			//exec_builtin();
+			exec_builtin(arg,env, &no_val);
 		free_2d_arr(arg);
 	}
 }
