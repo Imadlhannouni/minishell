@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/10 21:56:42 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/11 14:37:31 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_token	*smart_split(char *line)
 	return (tokens);
 }
 
-void	main_parsing(char *line, t_env **env, t_pipe **pipes)
+void	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 {
 	t_token	*tokens;
 
@@ -94,7 +94,7 @@ void	main_parsing(char *line, t_env **env, t_pipe **pipes)
 	tokens = smart_split(line);
 	if (!tokens)
 		free_tokens(tokens);
-	replace_env_variables(tokens, *env);
+	replace_env_variables(tokens, clone_envi);
 	*pipes = group_tokens_into_pipes(tokens);
 	is_path(*pipes);
 	//print_pipes(*pipes);
