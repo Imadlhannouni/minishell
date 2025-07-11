@@ -89,30 +89,40 @@ int	init_var(t_vars *var, char ***args)
 	return 1;
 }
 
-int helper(char **args ,char **env, t_vars var)
+int helper(char **args ,char ***env, char ***no_val, t_vars var)
 {
-	char *path = retrieve_path(args[0],env);
+	char *path;
+
+	if (!is_builtin(args[0]))
+		path = retrieve_path(args[0],*env);
 	int pid = fork();
 	if (pid == 0)
 	{
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num);
-		if (execve(path, args, env) == -1)
+		if (!is_builtin(args[0]))
 		{
-			exit(EXIT_FAILURE);
+			if (execve(path, args, *env) == -1)
+			{
+				exit(EXIT_FAILURE);
+			}
+		}
+		else
+		{
+			exec_builtin(args, env,no_val);
 		}
 	}
 	return pid;
 }
 
-void exec_pipe(char ***args, char **envp)
+void exec_pipe(char ***args, char ***envp, char ***no_val)
 {
 	t_vars var;
 
 	init_var(&var, args);
 	while (var.i < var.pipe_num) 
 	{
-		var.pid[var.i] = helper(args[var.i], envp, var);
+		var.pid[var.i] = helper(args[var.i], envp, no_val, var);
     	var.i++;
 	}
 	var.i = 0;
@@ -122,7 +132,7 @@ void exec_pipe(char ***args, char **envp)
 		close(var.fd[var.i++][1]);
 	}
 	var.i = 0;
-	//int ec = waitpid(var.pid[var.pipe_num],NULL,0);
+	waitpid(var.pid[var.pipe_num],NULL,0);
 	while (var.i < var.pipe_num - 1)
 	{
 		wait(NULL);

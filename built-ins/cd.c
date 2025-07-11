@@ -28,9 +28,10 @@ static char *get_pwd(void)
 void	cd(char *path, char ***env)
 {	
 	int i = 0;
-	char *buff;
+	static char *buff = NULL;
 
-	buff = get_pwd();
+	if (!buff)
+		buff = get_pwd();
 	if (chdir(path) != 0)
 		perror("no such a directory");	
 	else
@@ -51,6 +52,7 @@ void	cd(char *path, char ***env)
 			i++;
 		}
 	}
+	buff = get_pwd();
 }
 
 

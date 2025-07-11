@@ -18,7 +18,7 @@ $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBS)
 	@echo "Compilation terminée!"
 
-%.o: %.c
+%.o: %.c minishell.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
