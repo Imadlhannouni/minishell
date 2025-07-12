@@ -127,7 +127,6 @@ void exec_builtin(char **arg, char ***env, char ***no_val)
 		exit(1);
 	else if (strcmp(arg[0], "env") == 0)
 		print_env(*env);
-	exit(0);
 }
 
 void	execute(t_pipe *pipes, char ***env)

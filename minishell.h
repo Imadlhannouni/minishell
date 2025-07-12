@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/11 14:28:59 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/12 21:26:04 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h>
 # include <unistd.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 
 typedef enum s_token_type
 {
@@ -45,6 +46,7 @@ typedef struct s_token
 	int				heredoc;
 	int				out_app;
 	char			*value;
+	char			*heredoc_filename;
 	struct s_token	*next;
 }					t_token;
 
@@ -106,6 +108,9 @@ t_token				*concat_fullstring(t_token *start, t_token **next);
 void				main_parsing(char *line, char **clone_envi, t_pipe **pipes);
 void				print_cmd_not_found(char *cmd);
 void				print_syntax_error(char *token);
+char				*read_heredoc(char *delimiter);
+char				*ft_itoa(int n);
+char				*create_heredoc_file(char *content);
 
 size_t var_num(char **arr);
 void	free_arr(char **arr, int j);
