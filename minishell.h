@@ -129,12 +129,13 @@ void	cd(char *path, char ***env);
 char 	*retreive_var(char **env, char *var);
 void	pwd(void);
 void	print_env(char **env);
-void	export(char ***env, char *full_arg, char ***no_val);
+void	export(char ***env, char **args, char ***no_val);
 void	unset(char ***env, char *var);
 char 	**spec_split(char *str);
 void 	echo(char **arg);
 char 	*join_strings(char *s1, char *s2, char *s3);
 int 	is_builtin(char *cmd);
 void 	exec_builtin(char **arg, char ***env, char ***no_val);
+void free_3d_arr(char ***arr, int j);
 
 #endif
