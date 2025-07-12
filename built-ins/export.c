@@ -126,56 +126,48 @@ char **spec_split(char *str)
 	return arr;
 }
 
-void store_no_val(char ***args, char ***env, char *arg)
+void store_no_val(char ***no_val, char ***env, char *arg)
 {
 	int i = 0;
-	if (*args == NULL)
+	if (*no_val == NULL)
 	{
-		*args = malloc(2 * sizeof(char*));
-		if (!*args)
+		*no_val = malloc(2 * sizeof(char*));
+		if (!*no_val)
 			return;
-		(*args)[0] = ft_strdup(arg);
-		(*args)[1] = NULL;
+		(*no_val)[0] = ft_strdup(arg);
+		(*no_val)[1] = NULL;
 	}
 	else if (check_existence(*env, arg) == 1)
 		return;
 	else
 	{
 		char **new;
-		new = malloc((var_num(*args) + 2) * sizeof(char *));
+		new = malloc((var_num(*no_val) + 2) * sizeof(char *));
 		if (!new)
 			return;
-		while ((*args)[i])
+		while ((*no_val)[i])
 		{
-			new[i] = ft_strdup((*args)[i]);
+			new[i] = ft_strdup((*no_val)[i]);
 			i++;
 		}
 		new[i++] = ft_strdup(arg);
 		new[i] = NULL;
-		i = 0;
-		while ((*args)[i])
-		{
-			free((*args)[i]);
-			i++;
-		}
-		free(*args);
-		*args = new; 
+		free_2d_arr(*no_val);
+		*no_val = new; 
 	}
-	i = 0;
 }
 
-void	export(char ***env, char *full_arg, char ***no_val)
+void	export(char ***env, char **args, char ***no_val)
 {
-	char **arg = NULL;
-	char **args = NULL;
-	int i = 0;
+	char	**arg = NULL;
+	int		i;
 
-	if (full_arg == NULL)
+	i = 0;
+	if (*args == NULL)
 	{
 		print_sorted(*env, *no_val);
 		return;
 	}
-	args = ft_split(full_arg, ' ');
 	while (args[i])
 	{
 		if (check(args[i]) == 0)
@@ -191,5 +183,4 @@ void	export(char ***env, char *full_arg, char ***no_val)
 		}
 		i++;
 	}
-	free_2d_arr(args);
 }
