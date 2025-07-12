@@ -110,6 +110,7 @@ int helper(char **args ,char ***env, char ***no_val, t_vars var)
 		else
 		{
 			exec_builtin(args, env,no_val);
+			exit(0);
 		}
 	}
 	return pid;

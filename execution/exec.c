@@ -46,7 +46,7 @@ char	**group_2d_arr(t_token *tok)
 	{
 		arr[i++] = ft_strdup(temp->value);
 		if (!arr[i - 1])
-			return (free_arr(arr, i - 1),NULL);//need to free the arr
+			return (free_arr(arr, i - 1),NULL);
 		temp = temp->next;
 	}
 	arr[i] = NULL;
@@ -68,7 +68,7 @@ char	***group_3d_arr(t_pipe *pipes)
 	{
 		global[i++] = group_2d_arr(temp->full_cmd);
 		if (!global[i - 1])
-			return NULL;//need to free arr and global
+			return (free_3d_arr(global, i - 2),NULL);
 		temp = temp->nextpipe;
 	}
 	global[i] = NULL;
@@ -120,11 +120,11 @@ void exec_builtin(char **arg, char ***env, char ***no_val)
 	else if (strcmp(arg[0], "echo") == 0)
 		echo(arg);
 	else if (strcmp(arg[0], "export") == 0)
-		export(env, arg[1], no_val) ;
+		export(env, &arg[1], no_val) ;
 	else if (strcmp(arg[0], "unset") == 0)
 		unset(env, arg[1]);
 	else if (strcmp(arg[0], "exit") == 0)
-		exit(1);
+		exit(0);
 	else if (strcmp(arg[0], "env") == 0)
 		print_env(*env);
 }
@@ -145,7 +145,9 @@ void	execute(t_pipe *pipes, char ***env)
 		if (!is_builtin(arg[0]))
 			exec_command(arg, *env);
 		else
+		{
 			exec_builtin(arg,env, &no_val);
+		}
 		free_2d_arr(arg);
 	}
 }

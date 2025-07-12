@@ -65,3 +65,12 @@ void	free_all(char ***arr)
 	}
 	free(arr);
 }
+void free_3d_arr(char ***arr, int j)
+{
+	while (j >= 0)
+	{
+		free_2d_arr(arr[j]);
+		j--;
+	}
+	free(arr);
+}
