@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/11 14:37:31 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/12 21:42:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,46 @@ t_token	*smart_split(char *line)
 	return (tokens);
 }
 
+void	handle_heredocs(t_token *token)
+{
+	t_token	*current;
+	char	*content;
+
+	current = token;
+	while (current)
+	{
+		if (current->heredoc == 1)
+		{
+			content = read_heredoc(current->value);
+			if (content)
+			{
+				current->heredoc_filename = create_heredoc_file(content);
+				free(content);
+			}
+		}
+		current = current->next;
+	}
+}
+
 void	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 {
-	t_token	*tokens;
-
+	t_token		*tokens;
+	// t_token		*tmp;
+	
 	*pipes = NULL;
 	tokens = smart_split(line);
 	if (!tokens)
-		free_tokens(tokens);
+		return ;
+	handle_heredocs(tokens);
+	// tmp = tokens;
+	// while (tmp)
+	// {
+	// 	if (tmp->heredoc == 1)
+	// 	{
+	// 		printf("%s", tmp->heredoc_content);
+	// 	}
+	// 	tmp = tmp->next;
+	// }
 	replace_env_variables(tokens, clone_envi);
 	*pipes = group_tokens_into_pipes(tokens);
 	is_path(*pipes);
