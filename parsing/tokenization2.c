@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/10 21:57:03 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/14 13:59:51 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 {
 	char			*value;
 	char			*part;
+	t_token			*last_cmd;
 
 	part = NULL;
 	value = NULL;
@@ -64,10 +65,11 @@ int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 	if (value == NULL)
 		return (i); // error here
 	add_token(tokens, value, TOKEN_CMD, 0);
+	last_cmd = ft_lstlast(*tokens);
 	if (*flag == 1)
 	{
 		*flag = 0;
-		(*tokens)->heredoc = 1;
+		last_cmd->heredoc = 1;
 	}
 	return (i);
 }
