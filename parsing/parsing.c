@@ -129,6 +129,6 @@ void	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 	replace_env_variables(tokens, clone_envi);
 	*pipes = group_tokens_into_pipes(tokens);
 	is_path(*pipes);
-	print_pipes(*pipes);
+	//print_pipes(*pipes);
 	return ;
 }
