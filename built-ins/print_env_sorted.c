@@ -62,7 +62,7 @@ void	print_sorted(char **env, char **arr)
 		put_str("declare -x ");
 		if (var[0])
 			put_str(var[0]);
-		if (var[1])
+		if (*var[1])
 		{
 			write(1, "=\"", 2);
 			put_str(var[1]);
