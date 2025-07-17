@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/17 13:54:42 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/17 15:39:25 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char				**ft_split_env(const char *s, char c);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
 void				print_pipes(t_pipe *pipes);
 t_token				*concat_fullstring(t_token *start, t_token **next);
-void				main_parsing(char *line, char **clone_envi, t_pipe **pipes);
+int					main_parsing(char *line, char **clone_envi, t_pipe **pipes);
 void				print_cmd_not_found(char *cmd);
 void				print_syntax_error(char *token);
 char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type);
