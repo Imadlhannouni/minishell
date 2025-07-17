@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/12 21:40:39 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/17 13:53:32 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	new->out_app = 0;
 	new->out_red = 0;
 	new->is_fullstring = is_full;
-	new->heredoc_filename = NULL;
 	new->next = NULL;
 	if (!*head)
 		*head = new;
@@ -36,29 +35,6 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
-}
-
-void	add_redirection(t_token **head, int flag)
-{
-	t_token	*tmp;
-	t_token *last_cmd;
-
-	tmp = *head;
-	last_cmd = tmp;
-	while (tmp->next)
-	{
-		if (tmp->type == TOKEN_CMD)
-			last_cmd = tmp;
-		tmp = tmp->next;
-	}
-	if (!tmp)
-		return ;
-	if (flag == 0)
-		last_cmd->out_red = 1;
-	else if (flag == 1)
-		last_cmd->inp_red = 1;
-	else if (flag == 2)
-		last_cmd->out_app = 1;
 }
 
 static void	concat_fullstring_flags(t_token *start, t_token *curr)
