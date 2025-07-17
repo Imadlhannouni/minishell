@@ -145,9 +145,7 @@ void	execute(t_pipe *pipes, char ***env)
 		if (!is_builtin(arg[0]))
 			exec_command(arg, *env);
 		else
-		{
 			exec_builtin(arg,env, &no_val);
-		}
 		free_2d_arr(arg);
 	}
 }
