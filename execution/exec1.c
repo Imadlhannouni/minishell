@@ -2,8 +2,9 @@
 
 void close_fd(int **fd, int i, int total)
 {
-	int j = 0;
+	int	j;
 
+	j = 0;
 	if (i == 0)
 	{
 		close(fd[i][0]);
@@ -17,15 +18,14 @@ void close_fd(int **fd, int i, int total)
 	while (j < total)
 	{
 		if (j == i - 1)
-			close(fd[j][1]);
+			close(fd[j++][1]);
 		else if (j == i)
-			close(fd[j][0]);
+			close(fd[j++][0]);
 		else
 		{
 			close(fd[j][0]);
-			close(fd[j][1]);
+			close(fd[j++][1]);
 		}
-		j++;
 	}
 }
 
@@ -64,8 +64,9 @@ int	var_num_v2(char ***arr)
 
 int	init_var(t_vars *var, char ***args)
 {
-	int j = 0;
+	int j;
 
+	j = 0;
 	var->i = 0;
 	var->pipe_num = var_num_v2(args);
 	if (var->pipe_num > 1)
