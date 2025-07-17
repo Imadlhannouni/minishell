@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/15 12:05:22 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/17 13:55:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	handle_token_cases(t_token **tokens, int i, char *line,
 	else if (line[i] == '"')
 		i = is_double_quote(*tokens, i, line, flag);
 	else if (line[i] == '<' || line[i] == '>')
-		i = is_directions(*tokens, i, line, flag);
+		i = is_directions(i, line, flag);
 	else if (line[i] == '|')
 	{
 		i = is_pipe(*tokens, i, line);
@@ -86,24 +86,34 @@ t_token	*smart_split(char *line)
 	return (tokens);
 }
 
-void	handle_heredocs(t_token *token)
+void	handle_heredocs(t_pipe *pipe, char **clone_envi)
 {
-    t_token	*current;
+    t_pipe	*current;
+	t_token	*current_token;
     char	*content;
 
-    current = token;
+    current = pipe;
     while (current)
     {
-        if (current->heredoc == 1)
-        {
-            content = read_heredoc(current->value);
-            if (content)
-            {
-                current->heredoc_filename = create_heredoc_file(content);
-                free(content);
-            }
-        }
-        current = current->next;
+		current_token = current->full_cmd;
+		while (current_token)
+		{
+			if (current_token->heredoc == 1)
+			{
+				content = read_heredoc(current_token->value, clone_envi, current_token->type);
+				if (content)
+				{
+					free(current_token->value);
+					current_token->value = create_heredoc_file(content);
+					current_token->heredoc = 1;
+					free(content);
+				}
+			}
+			current_token = current_token->next;
+		}
+		if (current->nextpipe == NULL)
+			break ;
+        current = pipe->nextpipe;
     }
 }
 
@@ -115,9 +125,9 @@ void	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 	tokens = smart_split(line);
 	if (!tokens)
 		return ;
-	handle_heredocs(tokens);
 	replace_env_variables(tokens, clone_envi);
 	*pipes = group_tokens_into_pipes(tokens);
+	handle_heredocs(*pipes, clone_envi);
 	is_path(*pipes);
 	print_pipes(*pipes);
 	return ;

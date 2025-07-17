@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/11 14:35:57 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/15 14:47:22 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*get_env_value(const char *key, char **clone_envi)
 	return ("");
 }
 
-static int	append_env_or_chunk(char *str, int i, char **clone_envi,
+int	append_env_or_chunk(char *str, int i, char **clone_envi,
 		char **result)
 {
 	int		start;
@@ -77,7 +77,7 @@ void	replace_env_variables(t_token *tokens, char **clone_envi)
 	while (tokens)
 	{
 		if (tokens->value && tokens->type != TOKEN_SIMPLE_QUOTE
-			&& strchr(tokens->value, '$'))
+			&& strchr(tokens->value, '$') && tokens->heredoc == 0)
 		{
 			i = 0;
 			expanded = ft_strdup("");
