@@ -72,6 +72,7 @@ static char *fill_word(int start, int end, char *str)
 {
 	char *s;
 	int i = 0;
+
 	s = malloc((end - start + 1) * sizeof(char));
 	if (!s)
 		return NULL;
@@ -83,17 +84,17 @@ static char *fill_word(int start, int end, char *str)
 	s[i] = '\0';
 	return s;
 }
-int check(char *str)
-{
-	int i = 0;
-	while (str[i])
-	{
-		if (str[i] == '=')
-			return 1;
-		i++;
-	}
-	return 0;
-}
+// int check(char *str)
+// {
+// 	int i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '=')
+// 			return 1;
+// 		i++;
+// 	}
+// 	return 0;
+// }
 
 char **spec_split(char *str)
 {
@@ -102,19 +103,10 @@ char **spec_split(char *str)
 
 	if (!str)
 		return NULL;
-	if (!check(str))
-	{
-		arr = malloc(2 * sizeof(char *));
-		if (!arr)
-			return NULL;
-		arr[0] = ft_strdup(str);
-		arr[1] = NULL;
-		return arr;
-	}
 	arr = malloc(3 * sizeof(char*));
 	if (!arr)
 		return NULL;
-	while (str[i] != '=')
+	while (str[i] && str[i] != '=')
 		i++;
 	arr[0] = fill_word(0, i, str);
 	if (!arr[0])
@@ -157,6 +149,31 @@ void store_no_val(char ***no_val, char ***env, char *arg)
 	}
 }
 
+int	check_char(char c)
+{
+	if (!((c >= 48 && c <= 57) ||
+		(c >= 65 && c <= 90) ||
+		(c >= 97 && c <= 122) ||
+		c == 95 || c == '='))
+		return 0;
+	return 1; 
+}
+int check_var(char *str)
+{
+	int i = 0;
+	if (!((str[i] >= 65 && str[i] <= 90) ||
+		(str[i] >= 97 && str[i] <= 122) ||
+		str[i] == 95 || str[i] == '='))
+		return 0;
+	while (str[i])
+	{
+		if (!check_char(str[i]))
+			return 0;
+		i++;
+	}
+	return 1;
+}
+
 void	export(char ***env, char **args, char ***no_val)
 {
 	char	**arg = NULL;
@@ -164,17 +181,16 @@ void	export(char ***env, char **args, char ***no_val)
 
 	i = 0;
 	if (*args == NULL)
-	{
-		print_sorted(*env, *no_val);
-		return;
-	}
+		return print_sorted(*env, *no_val);
 	while (args[i])
 	{
-		if (check(args[i]) == 0)
+		arg = spec_split(args[i]);
+		if (!check_var(arg[0]))
+			printf("export : %s : not a valid identifier\n",args[i]);
+		if (!arg[1])
 			store_no_val(no_val, env, args[i]);
 		else
 		{
-			arg = spec_split(args[i]);
 			if (check_existence(*env, arg[0]))
 				replace_variable(env, arg);
 			else
