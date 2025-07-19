@@ -23,8 +23,8 @@ void	free_tokens(t_token *tokens)
         tmp = tokens;
         if (tokens->value)
             free(tokens->value);
-		if (tokens->heredoc_filename)
-			free(tokens->heredoc_filename);
+		// if (tokens->heredoc_filename)
+		// 	free(tokens->heredoc_filename);
         tokens = tokens->next;
         free(tmp);
     }
@@ -38,7 +38,7 @@ void	free_pipes(t_pipe *pipes)
     while (pipes)
     {
         tmp = pipes;
-        pipes = pipes->nextpipe;
+        pipes = (pipes)->nextpipe;
         free_tokens(tmp->full_cmd);
         free(tmp);
     }

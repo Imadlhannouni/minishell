@@ -33,7 +33,7 @@ char	*retrieve_path(char *cmd, char **env)
 	return (NULL);
 }
 
-void close_fd(int (*fd)[2], size_t i, size_t total)
+void close_fd(int (*fd)[2], size_t i, size_t total) 
 {
 	size_t	j;
 
@@ -45,16 +45,15 @@ void close_fd(int (*fd)[2], size_t i, size_t total)
 	}
 	else if (i == total - 1)
 	{
-		close(fd[i][1]);
-		total--;
+		close(fd[i - 1][1]);
 	}
-	while (j < total)
+	while (j < total - 1)
 	{
 		if (j == i - 1)
 			close(fd[j++][1]);
 		else if (j == i)
 			close(fd[j++][0]);
-		else
+		else if (j != i - 1 && j != i)
 		{
 			close(fd[j][0]);
 			close(fd[j++][1]);
@@ -69,12 +68,12 @@ void	switch_fd(int (*fd)[2], size_t i, size_t total)
 		dup2(fd[0][1], STDOUT_FILENO);
 		close(fd[0][1]);
 	}
-	else if (i == total - 1)
+	else if (i == total)
 	{
 		dup2(fd[i - 1][0], STDIN_FILENO);
 		close(fd[i - 1][0]);
 	}
-	else
+	else if (i < total)
 	{
 		dup2(fd[i - 1][0], STDIN_FILENO);
 		dup2(fd[i][1], STDOUT_FILENO);
