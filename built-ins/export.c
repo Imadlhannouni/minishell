@@ -84,17 +84,7 @@ static char *fill_word(int start, int end, char *str)
 	s[i] = '\0';
 	return s;
 }
-// int check(char *str)
-// {
-// 	int i = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '=')
-// 			return 1;
-// 		i++;
-// 	}
-// 	return 0;
-// }
+
 
 char **spec_split(char *str)
 {
