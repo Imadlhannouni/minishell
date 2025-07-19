@@ -31,14 +31,14 @@ void	free_tokens(t_token *tokens)
 }
 
 
-void	free_pipes(t_pipe *pipes)
+void	free_pipes(t_pipe **pipes)
 {
     t_pipe	*tmp;
 
-    while (pipes)
+    while (*pipes)
     {
-        tmp = pipes;
-        pipes = (pipes)->nextpipe;
+        tmp = *pipes;
+        *pipes = (*pipes)->nextpipe;
         free_tokens(tmp->full_cmd);
         free(tmp);
     }

@@ -69,6 +69,7 @@ int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 		exec_builtin(tmp->arr, env,no_val);
 		exit(0);
 	}
+	free(path);
 	return pid;
 }
 
@@ -101,4 +102,6 @@ void exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
 		wait(NULL);
 		var.i++;
 	}
+	free(var.pid);
+	free(var.fd);
 }
