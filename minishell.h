@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/12 21:26:04 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/17 15:39:25 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h>
 # include <unistd.h>
 #include <sys/wait.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <dirent.h>
 
@@ -47,7 +48,6 @@ typedef struct s_token
 	int				heredoc;
 	int				out_app;
 	char			*value;
-	char			*heredoc_filename;
 	struct s_token	*next;
 }					t_token;
 
@@ -97,7 +97,7 @@ int					is_simple_quote(t_token *tokens, int i,
 						char *line, int *flag);
 int					is_double_quote(t_token *tokens, int i,
 						char *line, int *flag);
-int					is_directions(t_token *tokens, int i, char *line,
+int					is_directions(int i, char *line,
 						int *flag);
 int					is_pipe(t_token *tokens, int i,
 						char *line);
@@ -111,16 +111,17 @@ void				free_pipes(t_pipe *pipes);
 void				replace_env_variables(t_token *tokens, char **clone_envi);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
-void				add_redirection(t_token **head, int flag);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
 void				print_pipes(t_pipe *pipes);
 t_token				*concat_fullstring(t_token *start, t_token **next);
-void				main_parsing(char *line, char **clone_envi, t_pipe **pipes);
+int					main_parsing(char *line, char **clone_envi, t_pipe **pipes);
 void				print_cmd_not_found(char *cmd);
 void				print_syntax_error(char *token);
-char				*read_heredoc(char *delimiter);
+char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type);
 char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
+int					append_env_or_chunk(char *str, int i, char **clone_envi,
+						char **result);
 
 size_t 	var_num(char **arr);
 void	free_arr(char **arr, int j);
