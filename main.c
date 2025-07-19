@@ -16,9 +16,12 @@ char	*readline_func(char *line)
 {
 	line = readline("minishell> ");
 	if (!line)
+	{
 		exit(0);
+	}
 	else if (*line)
 		add_history(line);
+	
 	return (line);
 }
 
@@ -49,12 +52,16 @@ int	main(int argc, char **argv, char **envp)
     {
         line = readline_func(line);
         if (!line)
+		{
             break ;
-        pipes = NULL;
+		}
+		pipes = NULL;
 		if (main_parsing(line, clone_envi, &pipes))
+		{
 			execute(pipes, &clone_envi);
-        // free(line);
-        // free_pipes(&pipes);
+		}
+		free(line);
+        free_pipes(pipes);
     }
     return (0);
 }

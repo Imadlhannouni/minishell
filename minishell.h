@@ -155,5 +155,6 @@ int		fill_redirection(t_exe *var, t_token *tok);
 t_exe 	*creat_node(t_token *tok);
 void 	add_node(t_exe **lst, t_exe *node);
 void print_2d(char **arr);
+void	print_var(t_exe *var);
 
 #endif

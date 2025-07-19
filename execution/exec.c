@@ -5,11 +5,9 @@ int	fill_redirection(t_exe *var, t_token *tok)
 	if (!(tok->heredoc != 0 || tok->inp_red != 0
 		|| tok->out_app != 0 || tok->out_red != 0))
 	{
-		(var)->red_file = NULL;
-		(var)->red_type = 0;
 		return 1;
 	}
-	if ((var)->red_file)
+	if ((var)->red_file )
 		free((var)->red_file);
 	if (tok->heredoc != 0)
 		(var)->red_type = 1;
@@ -42,8 +40,9 @@ int	group_2d_arr(t_exe *var,t_token *tok)
 			(var)->arr[i++] = ft_strdup(temp->value);
 		if (!(var)->arr[i - 1])
 			return (free_arr((var)->arr, i - 2), 0);
-		if(!fill_redirection(var, tok))
+		if(!fill_redirection(var, temp))
 			return (free_2d_arr((var)->arr), 0);
+
 		temp = temp->next;
 	}
 	(var)->arr[i] = NULL;
@@ -86,46 +85,38 @@ void group_pipes(t_pipe *pipes, t_exe **var)
 		add_node(var,creat_node(tmp->full_cmd));
 		tmp = tmp->nextpipe;
 	}
-	while (*var)
-	{
-		print_2d((*var)->arr);
-		printf("-------\n");
-		*var = (*var)->next;
-	}
-	
 }
 
+void	print_var(t_exe *var)
+{
+	t_exe *tmp;
+	tmp = var;
+	// while (tmp)
+	// {
+		print_2d(var->arr);
+		printf("%s\n----------------\n",var->red_file);
+	// 	tmp = tmp->next;
+	// }
+	
+}
 void	execute(t_pipe *pipes, char ***env)
 {
 	t_exe	*var = NULL;
 	size_t count;
-	// static char **no_val = NULL;
+	static char **no_val = NULL;
 	(void)env;
 	count = count_pipes(pipes);
 
+	group_pipes(pipes, &var);
 	if (count > 1)
 	{
-		group_pipes(pipes, &var);
-		// while (var)
-		// {
-		// 	int i = 0;
-		// 	while (var->arr[i])
-		// 	{
-		// 		printf("||   %s   ||",var->arr[i++]);
-		// 	}
-		// 	write(1, "\n", 1);
-		// 	var = var->next;
-		// }
-		
-		//exec_pipe(var, env, &no_val, count);
+		exec_pipe(var, env, &no_val, count);
 	}
-	// else if (count == 1)
-	// {
-	// 	char **arg = group_2d_arr(pipes->full_cmd);
-	// 	if (!is_builtin(arg[0]))
-	// 		exec_command(arg, *env);
-	// 	else
-	// 		exec_builtin(arg,env, &no_val);
-	// 	free_2d_arr(arg);
-	// }
+	else if (count == 1)
+	{
+		if (!is_builtin(var->arr[0]))
+			exec_command(var->arr, *env);
+		else
+			exec_builtin(var->arr,env, &no_val);
+	}
 }

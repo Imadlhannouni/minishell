@@ -115,7 +115,7 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi)
 		}
 		if (current->nextpipe == NULL)
 			break ;
-        current = pipe->nextpipe;
+        current = current->nextpipe;
     }
 	return (1);
 }
