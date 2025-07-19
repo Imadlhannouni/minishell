@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/17 15:39:25 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/19 16:35:56 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int					is_option(t_token *tokens, int i,
 						char *line);
 void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);
-void				free_pipes(t_pipe *pipes);
+void				free_pipes(t_pipe **pipes);
 void				replace_env_variables(t_token *tokens, char **clone_envi);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
@@ -122,6 +122,7 @@ char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
 int					append_env_or_chunk(char *str, int i, char **clone_envi,
 						char **result);
+void				cleanup_heredoc_files(t_pipe *pipes);
 
 size_t 	var_num(char **arr);
 void	free_arr(char **arr, int j);

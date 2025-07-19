@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/15 14:47:22 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/19 16:30:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static char	*get_env_value(const char *key, char **clone_envi)
 			value = ft_strdup(env_splited[1]);
 			free(env_splited[0]);
 			free(env_splited[1]);
+			free(env_splited);
 			return (value);
 		}
 		i++;
@@ -42,6 +43,7 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi,
 	char	*tmp;
 	char	*key;
 	char	*chunk;
+	char	*env_val;
 
 	if (str[i] == '$')
 	{
@@ -50,10 +52,12 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi,
 		while (ft_isalnum(str[i]) || str[i] == '_')
 			i++;
 		key = substrdup(start, i, str);
+		env_val = get_env_value(key, clone_envi);
 		tmp = *result;
-		*result = ft_strjoin(tmp, get_env_value(key, clone_envi));
+		*result = ft_strjoin(tmp, env_val);
 		free(tmp);
 		free(key);
+		free(env_val);
 	}
 	else
 	{
