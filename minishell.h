@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/17 15:39:25 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/19 16:35:56 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
 int					append_env_or_chunk(char *str, int i, char **clone_envi,
 						char **result);
+void				cleanup_heredoc_files(t_pipe *pipes);
 
 size_t var_num(char **arr);
 void	free_arr(char **arr, int j);

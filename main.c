@@ -6,17 +6,19 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/17 15:39:26 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/19 16:35:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*readline_func(char *line)
+char	*readline_func(void)
 {
+	char	*line;
+
 	line = readline("minishell> ");
 	if (!line)
-		exit(0);
+		return (NULL);
 	else if (*line)
 		add_history(line);
 	return (line);
@@ -47,14 +49,17 @@ int	main(int argc, char **argv, char **envp)
     line = NULL;
     while (1)
     {
-        line = readline_func(line);
+        line = readline_func();
         if (!line)
             break ;
         pipes = NULL;
 		if (main_parsing(line, clone_envi, &pipes))
 			execute(pipes, &clone_envi);
-        // free(line);
-        // free_pipes(&pipes);
+        free(line);
+        cleanup_heredoc_files(pipes);
+        free_pipes(&pipes);
     }
+	rl_clear_history();
+	free_2d_arr(clone_envi);
     return (0);
 }
