@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/14 14:05:33 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/17 13:54:19 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,21 +72,21 @@ int	is_double_quote(t_token *tokens, int i, char *line, int *flag)
 	return (i);
 }
 
-int	is_directions(t_token *tokens, int i, char *line, int *flag)
+int	is_directions(int i, char *line, int *flag)
 {
 	if (line[i] == '>' && line[i + 1] != '>')
 	{
-		add_redirection(&tokens, 0);
+		*flag = 4;
 		i++;
 	}
 	else if (line[i] == '<' && line[i + 1] != '<')
 	{
-		add_redirection(&tokens, 1);
+		*flag = 3;
 		i++;
 	}
 	else if (line[i] == '>' && line[i + 1] == '>')
 	{
-		add_redirection(&tokens, 2);
+		*flag = 2;
 		i += 2;
 	}
 	else if (line[i] == '<' && line[i + 1] == '<')
@@ -132,9 +132,17 @@ int	is_word(t_token *tokens, int i, char *line, int *flag)
 		add_token(&tokens, substrdup(start, end, line), type, 0);
 	last = ft_lstlast(tokens);
 	if (*flag == 1)
+		last->heredoc = 1;
+	else if (*flag == 2)
+		last->out_app = 1;
+	else if (*flag == 3)
+		last->inp_red = 1;
+	else if (*flag == 4)
+		last->out_red = 1;
+	if (*flag > 0)
 	{
 		*flag = 0;
-		last->heredoc = 1;
+		last->type = TOKEN_PATH;
 	}
 	return (i);
 }

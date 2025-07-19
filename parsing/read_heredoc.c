@@ -6,41 +6,106 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/12 22:21:36 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/17 15:28:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*read_heredoc(char *delimiter)
+int	check_delimiter(char *delimiter)
 {
-	char	*line;
-	char	*content;
-	char	*tmp;
+	if (ft_strchr(delimiter, '"'))
+		return (1);
+	return (0);
+}
+
+char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type)
+{
+	char				*line;
+	char				*content;
+	char				*tmp;
+	int					i;
+	char				*expanded_line;
+	int					pipefd[2];
+	pid_t				pid;
+	int					status;
+	char				buffer[1024];
+	ssize_t				bytes;
+
+	if (pipe(pipefd) == -1)
+		return (NULL);
+
+	pid = fork();
+	if (pid == -1)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (NULL);
+	}
+
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		signal(SIGINT, SIG_DFL);
+
+		content = ft_strdup("");
+		while (1)
+		{
+			line = readline("> ");
+			if (!line)
+			{
+				ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
+				ft_putstr_fd(delimiter, 2);
+				ft_putstr_fd("')\n", 2);
+				break;
+			}
+			if (ft_strcmp(line, delimiter) == 0)
+			{
+				free(line);
+				break;
+			}
+			if (type != 9 && type != 3 && type != 4 && ft_strchr(line, '$'))
+			{
+				i = 0;
+				expanded_line = ft_strdup("");
+				while (line[i])
+					i = append_env_or_chunk(line, i, clone_envi, &expanded_line);
+				free(line);
+				line = expanded_line;
+			}
+			write(pipefd[1], line, ft_strlen(line));
+			write(pipefd[1], "\n", 1);
+			free(line);
+		}
+		close(pipefd[1]);
+		free(content);
+		exit(0);
+	}
+
+	close(pipefd[1]);
+	signal(SIGINT, SIG_IGN);
 
 	content = ft_strdup("");
-	
-	while (1)
+	while ((bytes = read(pipefd[0], buffer, sizeof(buffer) - 1)) > 0)
 	{
-		line = readline("> ");
-		if (!line)
-			break ;
-		if (ft_strcmp(line, delimiter) == 0)
+		buffer[bytes] = '\0';
+		tmp = content;
+		content = ft_strjoin(tmp, buffer);
+		free(tmp);
+		if (!content)
 		{
-			free(line);
-			break ;
+			close(pipefd[0]);
+			waitpid(pid, &status, 0);
+			return (NULL);
 		}
-		tmp = content;
-		content = ft_strjoin(tmp, line);
-		free(tmp);
-		if (!content)
-			return(free(content), NULL);
-		tmp = content;
-		content = ft_strjoin(tmp, "\n");
-		free(tmp);
-		if (!content)
-			return(free(content), NULL);
-		free(line);
+	}
+	close(pipefd[0]);
+	waitpid(pid, &status, 0);
+	if (status != 0)
+	{
+		write(1, "\n", 1);
+		free(content);
+		return (NULL);
 	}
 	return (content);
 }
