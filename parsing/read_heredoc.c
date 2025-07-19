@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/17 15:28:02 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/19 16:34:48 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type)
 		close(pipefd[0]);
 		signal(SIGINT, SIG_DFL);
 
-		content = ft_strdup("");
 		while (1)
 		{
 			line = readline("> ");
@@ -78,13 +77,10 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type)
 			free(line);
 		}
 		close(pipefd[1]);
-		free(content);
 		exit(0);
 	}
-
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
-
 	content = ft_strdup("");
 	while ((bytes = read(pipefd[0], buffer, sizeof(buffer) - 1)) > 0)
 	{
@@ -112,20 +108,42 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type)
 
 char	*create_heredoc_file(char *content)
 {
-	static int	heredoc_num = 0;
-	char		*filename;
-	int			fd;
+    static int	heredoc_num = 0;
+    char		*filename;
+    char		*num_str;
+    int			fd;
 
-	filename = ft_strjoin("/tmp/.heredoc_", ft_itoa(heredoc_num++));
-	if (!filename)
-		return (NULL);
-	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
-	if (fd == -1)
-	{
-		perror("Erreur lors de l'ouverture du fichier");
+    num_str = ft_itoa(heredoc_num++);
+    filename = ft_strjoin("/tmp/.heredoc_", num_str);
+    free(num_str);
+    if (!filename)
         return (NULL);
-	}
-	write(fd, content, ft_strlen(content));
-	close(fd);
-	return (filename);
+    fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+    if (fd == -1)
+    {
+        perror("Erreur lors de l'ouverture du fichier");
+        free(filename);
+        return (NULL);
+    }
+    write(fd, content, ft_strlen(content));
+    close(fd);
+    return (filename);
+}
+
+void cleanup_heredoc_files(t_pipe *pipes)
+{
+    t_pipe *current_pipe = pipes;
+    t_token *current_token;
+
+    while (current_pipe)
+    {
+        current_token = current_pipe->full_cmd;
+        while (current_token)
+        {
+            if (current_token->heredoc == 1 && current_token->value)
+                unlink(current_token->value);
+            current_token = current_token->next;
+        }
+        current_pipe = current_pipe->nextpipe;
+    }
 }
