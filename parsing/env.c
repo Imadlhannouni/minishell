@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 16:30:43 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/19 17:32:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*get_env_value(const char *key, char **clone_envi)
 		}
 		i++;
 	}
-	return ("");
+	return (ft_strdup(""));
 }
 
 int	append_env_or_chunk(char *str, int i, char **clone_envi,
