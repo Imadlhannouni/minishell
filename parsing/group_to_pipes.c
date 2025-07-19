@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 21:05:38 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/19 21:25:38 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ t_pipe	*group_tokens_into_pipes(t_token *tokens)
 	t_token	*curr;
 	t_token	*prev;
 	t_token *to_free;
+	t_token *next;
 
 	pipes = NULL;
 	start = tokens;
@@ -78,18 +79,22 @@ t_pipe	*group_tokens_into_pipes(t_token *tokens)
 	{
 		if (curr->type == TOKEN_PIPE)
 		{
+			next = curr->next;
 			if (curr->value)
 				free(curr->value);
 			to_free = curr;
 			if (prev)
 				prev->next = NULL;
 			add_pipe(&pipes, start);
-			start = curr->next;
+			start = next;
 			free(to_free);
+			curr = next;
 		}
 		else
+		{
 			prev = curr;
-		curr = curr->next;
+			curr = curr->next;
+		}
 	}
 	if (start)
 		add_pipe(&pipes, start);
