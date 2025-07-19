@@ -22,6 +22,7 @@
 # include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <dirent.h>
 
 typedef enum s_token_type
 {
@@ -58,11 +59,20 @@ typedef struct s_pipe
 
 typedef struct s_vars
 {
-	int i;
-	int pipe_num;
-	int **fd;
+	size_t i;
+	size_t pipe_num;
+	int (*fd)[2];
 	__pid_t *pid;
 }	t_vars;
+
+typedef struct s_exe
+{
+	char **arr;
+	int red_type;
+	char *red_file;
+	struct s_exe *next;
+}	t_exe;
+
 
 char				*ft_strchr(const char *s, int c);
 size_t				ft_strcpy(char *dst, const char *src);
@@ -97,7 +107,7 @@ int					is_option(t_token *tokens, int i,
 						char *line);
 void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);
-void				free_pipes(t_pipe **pipes);
+void				free_pipes(t_pipe *pipes);
 void				replace_env_variables(t_token *tokens, char **clone_envi);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
@@ -112,17 +122,20 @@ char				*read_heredoc(char *delimiter);
 char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
 
-size_t var_num(char **arr);
+size_t 	var_num(char **arr);
 void	free_arr(char **arr, int j);
 char 	**clone_env(char **env);
 void	execute(t_pipe *pipes, char ***env);
 
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env);
-void	free_all(char ***arr);
 void	free_2d_arr(char **arr);
-void	exec_pipe(char ***args, char ***envp, char ***no_val);
-void	print_3d_arr(char ***arr);
+int		count_args(t_token *tok);
+int		count_pipes(t_pipe *pipes);
+void	exec_pipe(t_exe *var, char ***envp, char ***no_val, size_t pipe_num);
+void	close_fd(int (*fd)[2], size_t i, size_t total);
+void	switch_fd(int (*fd)[2], size_t i, size_t total);
+void 	close_all(int (*fd)[2], int j);
 
 void	print_sorted(char **env, char **arr);
 void	cd(char *path, char ***env);
@@ -136,6 +149,10 @@ void 	echo(char **arg);
 char 	*join_strings(char *s1, char *s2, char *s3);
 int 	is_builtin(char *cmd);
 void 	exec_builtin(char **arg, char ***env, char ***no_val);
-void free_3d_arr(char ***arr, int j);
+int		group_2d_arr(t_exe *var,t_token *tok);
+int		fill_redirection(t_exe *var, t_token *tok);
+t_exe 	*creat_node(t_token *tok);
+void 	add_node(t_exe **lst, t_exe *node);
+void print_2d(char **arr);
 
 #endif

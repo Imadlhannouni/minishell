@@ -1,144 +1,99 @@
 #include "../minishell.h"
 
-void close_fd(int **fd, int i, int total)
+int	count_args(t_token *tok)
 {
-	int	j;
+	t_token *temp;
+	int cpt;
 
-	j = 0;
-	if (i == 0)
+	if (!tok)
+		return 0;
+	temp = tok;
+	cpt = 0;
+
+	while (temp != NULL)
 	{
-		close(fd[i][0]);
-		j++;
+		if ((temp->inp_red == 0) && (temp->heredoc == 0)
+			&& (temp->out_red == 0) && (temp->out_app == 0))
+			cpt++;
+		temp = temp->next;
 	}
-	else if (i == total - 1)
-	{
-		close(fd[i][1]);
-		total--;
-	}
-	while (j < total)
-	{
-		if (j == i - 1)
-			close(fd[j++][1]);
-		else if (j == i)
-			close(fd[j++][0]);
-		else
-		{
-			close(fd[j][0]);
-			close(fd[j++][1]);
-		}
-	}
+	return cpt;
 }
 
-void	switch_fd(int **fd, int i, int total)
+int	init_var(t_vars *var, size_t pipe_num)
 {
-	if (i == 0)
-	{
-		dup2(fd[0][1], STDOUT_FILENO);
-		close(fd[0][1]);
-	}
-	else if (i == total - 1)
-	{
-		dup2(fd[i - 1][0], STDIN_FILENO);
-		close(fd[i - 1][0]);
-	}
-	else
-	{
-		dup2(fd[i - 1][0], STDIN_FILENO);
-		dup2(fd[i][1], STDOUT_FILENO);
-		close(fd[i - 1][0]);
-		close(fd[i][1]);
-	}
-}
-
-int	var_num_v2(char ***arr)
-{
-	int i;
-
-	i = 0;
-	while (arr[i])
-	{
-		i++;
-	}
-	return i;
-}
-
-int	init_var(t_vars *var, char ***args)
-{
-	int j;
+	size_t j;
 
 	j = 0;
 	var->i = 0;
-	var->pipe_num = var_num_v2(args);
+	var->pipe_num = pipe_num;
 	if (var->pipe_num > 1)
 	{
-		var->fd = malloc((var->pipe_num - 1) * sizeof(int*));
-		if (!var->fd)
-			return 0;
 		var->pid = malloc((var->pipe_num) * sizeof(__pid_t));
 		if (!var->pid)
 			return 0;
-		while (j < var->pipe_num)
+		var->fd = malloc((var->pipe_num - 1) * sizeof(*(var->fd)));
+		if (!var->fd)
+			return (free(var->pid), 0);
+		while (j < var->pipe_num - 1)
 		{
-			var->fd[j] = malloc(2 * sizeof(int));
-			if (!(var->fd)[j])
-				return 0;
 			if (pipe((var->fd)[j]) == -1)
-				return 0;// need to free arr
+				return (close_all(var->fd, j),free(var->fd),free(var->pid),0);
 			j++;
 		}
 	}
 	return 1;
 }
 
-int helper(char **args ,char ***env, char ***no_val, t_vars var)
+
+int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 {
 	char *path;
 
-	if (!is_builtin(args[0]))
-		path = retrieve_path(args[0],*env);
+	if (!is_builtin(tmp->arr[0]))
+		path = retrieve_path(tmp->arr[0],*env);
 	int pid = fork();
 	if (pid == 0)
 	{
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num);
-		if (!is_builtin(args[0]))
+		if (!is_builtin(tmp->arr[0]))
 		{
-			if (execve(path, args, *env) == -1)
+			if (execve(path, tmp->arr, *env) == -1)
 			{
 				exit(EXIT_FAILURE);
 			}
 		}
 		else
 		{
-			exec_builtin(args, env,no_val);
+			exec_builtin(tmp->arr, env,no_val);
 			exit(0);
 		}
 	}
 	return pid;
 }
 
-void exec_pipe(char ***args, char ***envp, char ***no_val)
+void exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
 {
 	t_vars var;
+	t_exe *tmp;
 
-	init_var(&var, args);
-	while (var.i < var.pipe_num) 
+	if (!init_var(&var, pipe_num))
+		return;
+	tmp = grp;
+	while (tmp) 
 	{
-		var.pid[var.i] = helper(args[var.i], envp, no_val, var);
-    	var.i++;
+		var.pid[var.i++] = helper(tmp, envp, no_val, var);
+		tmp = tmp->next;
 	}
 	var.i = 0;
-	while(var.i < var.pipe_num)	
+	while(var.i < var.pipe_num - 1)	
 	{
 		close(var.fd[var.i][0]);
 		close(var.fd[var.i++][1]);
 	}
 	var.i = 0;
 	waitpid(var.pid[var.pipe_num],NULL,0);
-	while (var.i < var.pipe_num - 1)
-	{
+	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
-		var.i++;
-	}
-	free_all(args);
 }

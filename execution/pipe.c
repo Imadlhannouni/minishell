@@ -33,44 +33,80 @@ char	*retrieve_path(char *cmd, char **env)
 	return (NULL);
 }
 
-void	free_2d_arr(char **arr)
+void close_fd(int (*fd)[2], size_t i, size_t total)
 {
-	int i = 0;
+	size_t	j;
 
-	while (arr[i])
+	j = 0;
+	if (i == 0)
 	{
-		free(arr[i]);
-		i++;
+		close(fd[i][0]);
+		j++;
 	}
-	free(arr);
-}
-
-void	free_all(char ***arr)
-{
-	int i = 0;
-	int j = 0;
-
-	if (!arr)
-		return;
-	while (arr[i])
+	else if (i == total - 1)
 	{
-		while (arr[i][j])
+		close(fd[i][1]);
+		total--;
+	}
+	while (j < total)
+	{
+		if (j == i - 1)
+			close(fd[j++][1]);
+		else if (j == i)
+			close(fd[j++][0]);
+		else
 		{
-			free(arr[i][j]);
-			j++;
+			close(fd[j][0]);
+			close(fd[j++][1]);
 		}
-		free(arr[i]);
-		i++;
-		j = 0;
 	}
-	free(arr);
 }
-void free_3d_arr(char ***arr, int j)
+
+void	switch_fd(int (*fd)[2], size_t i, size_t total)
 {
-	while (j >= 0)
+	if (i == 0)
 	{
-		free_2d_arr(arr[j]);
-		j--;
+		dup2(fd[0][1], STDOUT_FILENO);
+		close(fd[0][1]);
 	}
-	free(arr);
+	else if (i == total - 1)
+	{
+		dup2(fd[i - 1][0], STDIN_FILENO);
+		close(fd[i - 1][0]);
+	}
+	else
+	{
+		dup2(fd[i - 1][0], STDIN_FILENO);
+		dup2(fd[i][1], STDOUT_FILENO);
+		close(fd[i - 1][0]);
+		close(fd[i][1]);
+	}
+}
+
+void close_all(int (*fd)[2], int j)
+{
+	int	i;
+
+	i = 0;
+	while (i < j)
+	{
+		close(fd[i][0]);
+		close(fd[i][1]);
+		i++;
+	}
+}
+
+int count_pipes(t_pipe *pipes)
+{
+	t_pipe *temp;
+	int cpt;
+
+	temp = pipes;
+	cpt = 0;
+	while (temp)
+	{
+		cpt++;
+		temp = temp->nextpipe;
+	}
+	return cpt;
 }

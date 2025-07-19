@@ -1,78 +1,53 @@
-#include <dirent.h>
 #include "../minishell.h"
 
-int	count_args(t_token *tok)
+int	fill_redirection(t_exe *var, t_token *tok)
 {
-	t_token *temp;
-	int cpt;
-
-	temp = tok;
-	cpt = 0;
-	while (temp)
+	if (!(tok->heredoc != 0 || tok->inp_red != 0
+		|| tok->out_app != 0 || tok->out_red != 0))
 	{
-		cpt++;
-		temp = temp->next;
+		(var)->red_file = NULL;
+		(var)->red_type = 0;
+		return 1;
 	}
-	return cpt;
+	if ((var)->red_file)
+		free((var)->red_file);
+	if (tok->heredoc != 0)
+		(var)->red_type = 1;
+	else if (tok->inp_red != 0)
+		(var)->red_type = 2;
+	else if (tok->out_app != 0)
+		(var)->red_type = 3;
+	else if (tok->out_red != 0)
+		(var)->red_type = 4;
+	(var)->red_file = ft_strdup(tok->value);
+	if (!(var)->red_file)
+		return 0;
+	return 1;
 }
 
-int count_pipes(t_pipe *pipes)
-{
-	t_pipe *temp;
-	int cpt;
-
-	temp = pipes;
-	cpt = 0;
-	while (temp)
-	{
-		cpt++;
-		temp = temp->nextpipe;
-	}
-	return cpt;
-}
-
-char	**group_2d_arr(t_token *tok)
+int	group_2d_arr(t_exe *var,t_token *tok)
 {
 	t_token	*temp;
-	char **arr;
 	int i;
 
 	i = 0;
 	temp = tok;
-	arr = malloc((count_args(tok) + 1) * sizeof(char*));
-	if (!arr)
-		return NULL;
+	(var)->arr = malloc((count_args(tok) + 1) * sizeof(char*));
+	if (!(var)->arr)
+		return 0;
 	while (temp)
 	{
-		arr[i++] = ft_strdup(temp->value);
-		if (!arr[i - 1])
-			return (free_arr(arr, i - 1),NULL);
+		if ((temp->inp_red == 0) && (temp->heredoc == 0)
+			&& (temp->out_red == 0) && (temp->out_app == 0))
+			(var)->arr[i++] = ft_strdup(temp->value);
+		if (!(var)->arr[i - 1])
+			return (free_arr((var)->arr, i - 2), 0);
+		if(!fill_redirection(var, tok))
+			return (free_2d_arr((var)->arr), 0);
 		temp = temp->next;
 	}
-	arr[i] = NULL;
-	return arr;
-}
-
-char	***group_3d_arr(t_pipe *pipes)
-{
-	char ***global;
-	t_pipe *temp;
-	int i;
-
-	i = 0;
-	temp = pipes;
-	global = malloc((count_pipes(pipes) + 1) * sizeof(char**));
-	if (!global)
-		return NULL;
-	while (temp)
-	{
-		global[i++] = group_2d_arr(temp->full_cmd);
-		if (!global[i - 1])
-			return (free_3d_arr(global, i - 2),NULL);
-		temp = temp->nextpipe;
-	}
-	global[i] = NULL;
-	return global;
+	(var)->arr[i] = NULL;
+	return 1;
 }
 
 void exec_command(char **arg, char **env)
@@ -92,60 +67,65 @@ void exec_command(char **arg, char **env)
 	}
 	free(path);
 }
-int is_builtin(char *cmd)
+void print_2d(char **arr)
 {
-	if (strcmp(cmd, "cd") == 0)
-		return 1;
-	else if (strcmp(cmd, "pwd") == 0)
-		return 1;
-	else if (strcmp(cmd, "echo") == 0)
-		return 1;
-	else if (strcmp(cmd, "export") == 0)
-		return 1;
-	else if (strcmp(cmd, "unset") == 0)
-		return 1;
-	else if (strcmp(cmd, "exit") == 0)
-		return 1;
-	else if (strcmp(cmd, "env") == 0)
-		return 1;
-	return 0;
+	int i = 0;
+	while (arr[i])
+	{
+		printf("%s\n",arr[i++]);
+	}
+	
 }
-
-void exec_builtin(char **arg, char ***env, char ***no_val)
+void group_pipes(t_pipe *pipes, t_exe **var)
 {
-	if (strcmp(arg[0], "cd") == 0)
-		cd(arg[1], env);
-	else if (strcmp(arg[0], "pwd") == 0)
-		pwd();
-	else if (strcmp(arg[0], "echo") == 0)
-		echo(arg);
-	else if (strcmp(arg[0], "export") == 0)
-		export(env, &arg[1], no_val) ;
-	else if (strcmp(arg[0], "unset") == 0)
-		unset(env, arg[1]);
-	else if (strcmp(arg[0], "exit") == 0)
-		exit(0);
-	else if (strcmp(arg[0], "env") == 0)
-		print_env(*env);
+	t_pipe *tmp;
+
+	tmp = pipes;
+	while (tmp)
+	{
+		add_node(var,creat_node(tmp->full_cmd));
+		tmp = tmp->nextpipe;
+	}
+	while (*var)
+	{
+		print_2d((*var)->arr);
+		printf("-------\n");
+		*var = (*var)->next;
+	}
+	
 }
 
 void	execute(t_pipe *pipes, char ***env)
 {
-	int count = count_pipes(pipes);
-	static char **no_val = NULL;
+	t_exe	*var = NULL;
+	size_t count;
+	// static char **no_val = NULL;
+	(void)env;
+	count = count_pipes(pipes);
 
 	if (count > 1)
 	{
-		char ***args=group_3d_arr(pipes);
-		exec_pipe(args, env, &no_val);
+		group_pipes(pipes, &var);
+		// while (var)
+		// {
+		// 	int i = 0;
+		// 	while (var->arr[i])
+		// 	{
+		// 		printf("||   %s   ||",var->arr[i++]);
+		// 	}
+		// 	write(1, "\n", 1);
+		// 	var = var->next;
+		// }
+		
+		//exec_pipe(var, env, &no_val, count);
 	}
-	else if (count == 1)
-	{
-		char **arg = group_2d_arr(pipes->full_cmd);
-		if (!is_builtin(arg[0]))
-			exec_command(arg, *env);
-		else
-			exec_builtin(arg,env, &no_val);
-		free_2d_arr(arg);
-	}
+	// else if (count == 1)
+	// {
+	// 	char **arg = group_2d_arr(pipes->full_cmd);
+	// 	if (!is_builtin(arg[0]))
+	// 		exec_command(arg, *env);
+	// 	else
+	// 		exec_builtin(arg,env, &no_val);
+	// 	free_2d_arr(arg);
+	// }
 }
