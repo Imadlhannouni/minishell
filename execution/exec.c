@@ -66,15 +66,7 @@ void exec_command(char **arg, char **env)
 	}
 	free(path);
 }
-void print_2d(char **arr)
-{
-	int i = 0;
-	while (arr[i])
-	{
-		printf("%s\n",arr[i++]);
-	}
-	
-}
+
 void group_pipes(t_pipe *pipes, t_exe **var)
 {
 	t_pipe *tmp;
@@ -87,18 +79,20 @@ void group_pipes(t_pipe *pipes, t_exe **var)
 	}
 }
 
-void	print_var(t_exe *var)
+void	free_t_exe(t_exe **var)
 {
 	t_exe *tmp;
-	tmp = var;
-	// while (tmp)
-	// {
-		print_2d(var->arr);
-		printf("%s\n----------------\n",var->red_file);
-	// 	tmp = tmp->next;
-	// }
-	
+
+	while (*var)
+	{
+		tmp = *var;
+		*var = (*var)->next;
+		free_2d_arr(tmp->arr);
+		free(tmp->red_file);
+		free(tmp);
+	}
 }
+
 void	execute(t_pipe *pipes, char ***env)
 {
 	t_exe	*var = NULL;
@@ -119,4 +113,5 @@ void	execute(t_pipe *pipes, char ***env)
 		else
 			exec_builtin(var->arr,env, &no_val);
 	}
+	free_t_exe(&var);
 }
