@@ -54,9 +54,7 @@ int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 		path = retrieve_path(tmp->arr[0],*env);
 	int pid = fork();
 	if (pid < 0)
-	{
 		exit(1);
-	}
 	if (pid == 0)
 	{
 		close_fd(var.fd, var.i, var.pipe_num);
@@ -78,11 +76,8 @@ void exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
 	t_vars var;
 	t_exe *tmp;
 
-
 	if (!init_var(&var, pipe_num))
-	{
 		return;
-	}
 	tmp = grp;
 	while (var.i < pipe_num) 
 	{
@@ -97,11 +92,26 @@ void exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
 	}
 	var.i = 0;
 	waitpid(var.pid[var.pipe_num - 1],NULL,0);
-	while (var.i < var.pipe_num - 1)
-	{
+	while (var.i++< var.pipe_num - 1)
 		wait(NULL);
-		var.i++;
-	}
 	free(var.pid);
 	free(var.fd);
+}
+
+int handle_redirections(t_exe *var)
+{
+	int fd = 1;
+	if (var->red_type == 4)
+	{
+		int fd1 = open(var->red_file, O_RDWR | O_CREAT | O_TRUNC, 0666);
+		fd = dup(STDOUT_FILENO);
+		dup2(fd1, STDOUT_FILENO);
+	}
+	else if (var->red_type == 3)
+	{
+		int fd1 = open(var->red_file, O_RDWR | O_CREAT | O_APPEND, 0666);
+		fd = dup(STDOUT_FILENO);
+		dup2(fd1, STDOUT_FILENO);
+	}
+	return fd;
 }

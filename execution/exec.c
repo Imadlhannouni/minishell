@@ -79,39 +79,23 @@ void group_pipes(t_pipe *pipes, t_exe **var)
 	}
 }
 
-void	free_t_exe(t_exe **var)
-{
-	t_exe *tmp;
-
-	while (*var)
-	{
-		tmp = *var;
-		*var = (*var)->next;
-		free_2d_arr(tmp->arr);
-		free(tmp->red_file);
-		free(tmp);
-	}
-}
-
 void	execute(t_pipe *pipes, char ***env)
 {
 	t_exe	*var = NULL;
-	size_t count;
 	static char **no_val = NULL;
-	(void)env;
-	count = count_pipes(pipes);
+	int fd;
 
 	group_pipes(pipes, &var);
-	if (count > 1)
+	if (count_pipes(pipes) > 1)
+		exec_pipe(var, env, &no_val, count_pipes(pipes));
+	else if (count_pipes(pipes) == 1)
 	{
-		exec_pipe(var, env, &no_val, count);
-	}
-	else if (count == 1)
-	{
+		fd = handle_redirections(var);
 		if (!is_builtin(var->arr[0]))
 			exec_command(var->arr, *env);
 		else
 			exec_builtin(var->arr,env, &no_val);
+		dup2(fd,STDOUT_FILENO);
 	}
 	free_t_exe(&var);
 }
