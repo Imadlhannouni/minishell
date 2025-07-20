@@ -68,8 +68,10 @@ typedef struct s_vars
 typedef struct s_exe
 {
 	char **arr;
-	int red_type;
-	char *red_file;
+	int in_red_type;
+	int out_red_type;
+	char *out_red_file;
+	char *in_red_file;
 	struct s_exe *next;
 }	t_exe;
 
