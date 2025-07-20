@@ -35,4 +35,16 @@ void add_node(t_exe **lst, t_exe *node)
 	temp->next = node;
 }
 
+void	free_t_exe(t_exe **var)
+{
+	t_exe *tmp;
 
+	while (*var)
+	{
+		tmp = *var;
+		*var = (*var)->next;
+		free_2d_arr(tmp->arr);
+		free(tmp->red_file);
+		free(tmp);
+	}
+}
