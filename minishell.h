@@ -152,12 +152,12 @@ char 	**spec_split(char *str);
 void 	echo(char **arg);
 char 	*join_strings(char *s1, char *s2, char *s3);
 int 	is_builtin(char *cmd);
-void 	exec_builtin(char **arg, char ***env, char ***no_val);
+void 	exec_builtin(t_exe *var, char ***env, char ***no_val, int fd[2]);
 int		group_2d_arr(t_exe *var,t_token *tok);
 int		fill_redirection(t_exe *var, t_token *tok);
 t_exe 	*creat_node(t_token *tok);
 void 	add_node(t_exe **lst, t_exe *node);
 void	free_t_exe(t_exe **var);
-int handle_redirections(t_exe *var);
+void handle_redirections(t_exe *var, int fd[2]);
 
 #endif

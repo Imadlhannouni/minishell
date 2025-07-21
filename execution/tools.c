@@ -20,21 +20,22 @@ int is_builtin(char *cmd)
 	return 0;
 }
 
-void exec_builtin(char **arg, char ***env, char ***no_val)
+void exec_builtin(t_exe *var, char ***env, char ***no_val, int fd[2])
 {
-	if (strcmp(arg[0], "cd") == 0)
-		cd(arg[1], env);
-	else if (strcmp(arg[0], "pwd") == 0)
+	handle_redirections(var, fd);
+	if (strcmp(var->arr[0], "cd") == 0)
+		cd(var->arr[1], env);
+	else if (strcmp(var->arr[0], "pwd") == 0)
 		pwd();
-	else if (strcmp(arg[0], "echo") == 0)
-		echo(arg);
-	else if (strcmp(arg[0], "export") == 0)
-		export(env, &arg[1], no_val) ;
-	else if (strcmp(arg[0], "unset") == 0)
-		unset(env, arg[1]);
-	else if (strcmp(arg[0], "exit") == 0)
+	else if (strcmp(var->arr[0], "echo") == 0)
+		echo(var->arr);
+	else if (strcmp(var->arr[0], "export") == 0)
+		export(env, &(var->arr[1]), no_val) ;
+	else if (strcmp(var->arr[0], "unset") == 0)
+		unset(env, var->arr[1]);
+	else if (strcmp(var->arr[0], "exit") == 0)
 		exit(0);
-	else if (strcmp(arg[0], "env") == 0)
+	else if (strcmp(var->arr[0], "env") == 0)
 		print_env(*env);
 }
 

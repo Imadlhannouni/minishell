@@ -10,8 +10,10 @@ t_exe *creat_node(t_token *tok)
 	if (!node)
 		return NULL;
 	node->arr = NULL;
-	node->red_file = NULL;
-	node->red_type = 0;
+	node->in_red_file = NULL;
+	node->out_red_file = NULL;
+	node->in_red_type = 0;
+	node->out_red_type = 0;
 	if (!group_2d_arr(node,tok))
 		return (free(node), NULL);
 	node->next = NULL;
@@ -44,7 +46,10 @@ void	free_t_exe(t_exe **var)
 		tmp = *var;
 		*var = (*var)->next;
 		free_2d_arr(tmp->arr);
-		free(tmp->red_file);
+		if (tmp->in_red_file)
+			free(tmp->in_red_file);
+		if (tmp->out_red_file)
+			free(tmp->out_red_file);
 		free(tmp);
 	}
 }
