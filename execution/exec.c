@@ -4,22 +4,28 @@ int	fill_redirection(t_exe *var, t_token *tok)
 {
 	if (!(tok->heredoc != 0 || tok->inp_red != 0
 		|| tok->out_app != 0 || tok->out_red != 0))
-	{
 		return 1;
+	if (tok->heredoc != 0 || tok->inp_red != 0)
+	{
+		var->in_red_type = 1;
+		if (var->in_red_file)
+			free(var->in_red_file);
+		var->in_red_file = ft_strdup(tok->value);
+		if (!var->in_red_file)
+			return 0;
 	}
-	if ((var)->red_file )
-		free((var)->red_file);
-	if (tok->heredoc != 0)
-		(var)->red_type = 1;
-	else if (tok->inp_red != 0)
-		(var)->red_type = 2;
-	else if (tok->out_app != 0)
-		(var)->red_type = 3;
-	else if (tok->out_red != 0)
-		(var)->red_type = 4;
-	(var)->red_file = ft_strdup(tok->value);
-	if (!(var)->red_file)
-		return 0;
+	else if (tok->out_app != 0 || tok->out_red)
+	{
+		if (tok->out_app != 0)
+			var->out_red_type = 1;
+		else if (tok->out_red != 0)
+			var->out_red_type = 2;
+		if (var->out_red_file)
+			free(var->out_red_file);
+		var->out_red_file = ft_strdup(tok->value);
+		if (!var->out_red_file)
+			return 0;
+	}
 	return 1;
 }
 
@@ -42,23 +48,24 @@ int	group_2d_arr(t_exe *var,t_token *tok)
 			return (free_arr((var)->arr, i - 2), 0);
 		if(!fill_redirection(var, temp))
 			return (free_2d_arr((var)->arr), 0);
-
 		temp = temp->next;
 	}
 	(var)->arr[i] = NULL;
 	return 1;
 }
 
-void exec_command(char **arg, char **env)
+void exec_command(t_exe *var, char **env)
 {
 	int pid;
-	char *path = retrieve_path(arg[0],env);
+	int fd[2] = {0 , 0};
+	char *path = retrieve_path(var->arr[0],env);
 	if (!path)
 	 	return;
 	pid = fork();
 	if (pid == 0)
 	{
-		execve(path, arg, env);
+		handle_redirections(var, fd);
+		execve(path, var->arr, env);
 	}
 	else
 	{
@@ -83,19 +90,28 @@ void	execute(t_pipe *pipes, char ***env)
 {
 	t_exe	*var = NULL;
 	static char **no_val = NULL;
-	int fd;
+	int fd[2];
 
+	fd[0] = -1;
+	fd[1] = -1;
 	group_pipes(pipes, &var);
 	if (count_pipes(pipes) > 1)
 		exec_pipe(var, env, &no_val, count_pipes(pipes));
 	else if (count_pipes(pipes) == 1)
 	{
-		fd = handle_redirections(var);
+		// printf("red_in_type == %d || red_in_file == %s\n",var->in_red_type,var->in_red_file);
+		// printf("red_out_type == %d || red_out_file == %s\n",var->out_red_type,var->out_red_file);
 		if (!is_builtin(var->arr[0]))
-			exec_command(var->arr, *env);
-		else
-			exec_builtin(var->arr,env, &no_val);
-		dup2(fd,STDOUT_FILENO);
+			exec_command(var, *env);
+		else if(is_builtin(var->arr[0]))
+			exec_builtin(var, env, &no_val, fd);
+		if (fd[0] >= 0 || fd[1] >= 0)
+		{
+			if (var->out_red_type)
+				dup2(fd[1] ,STDOUT_FILENO);
+			if (var->in_red_type)
+				dup2(fd[0] ,STDIN_FILENO);
+		}
 	}
 	free_t_exe(&var);
 }
