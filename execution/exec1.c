@@ -48,8 +48,7 @@ int	init_var(t_vars *var, size_t pipe_num)
 
 int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 {
-	char *path;
-	int fd[2] = {0 ,0};
+	char *path = NULL;
 
 	if (!is_builtin(tmp->arr[0]))
 		path = retrieve_path(tmp->arr[0],*env);
@@ -60,12 +59,13 @@ int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 	{
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
+		handle_redirections(tmp, NULL);
 		if (!is_builtin(tmp->arr[0]))
 		{
 			if (execve(path, tmp->arr, *env) == -1)
 				exit(EXIT_FAILURE);
 		}
-		exec_builtin(tmp, env, no_val, fd);
+		exec_builtin(tmp, env, no_val);
 		exit(0);
 	}
 	free(path);
@@ -109,14 +109,16 @@ void handle_redirections(t_exe *var, int fd[2])
 			fd1 = open(var->out_red_file, O_RDWR | O_CREAT | O_APPEND, 0666);
 		else if (var->out_red_type == 2)
 			fd1 = open(var->out_red_file, O_RDWR | O_CREAT | O_TRUNC, 0666);
-		fd[1] = dup(STDOUT_FILENO);
+		if (fd)
+			fd[1] = dup(STDOUT_FILENO);
 		dup2(fd1, STDOUT_FILENO);
 		close(fd1);
 	}
 	if (var->in_red_type)
 	{
 		fd2 = open(var->in_red_file, O_RDWR , 0666);
-		fd[0] = dup(STDIN_FILENO);
+		if (fd)
+			fd[0] = dup(STDIN_FILENO);
 		dup2(fd2, STDIN_FILENO);
 		close(fd2);
 	}

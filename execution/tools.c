@@ -20,9 +20,8 @@ int is_builtin(char *cmd)
 	return 0;
 }
 
-void exec_builtin(t_exe *var, char ***env, char ***no_val, int fd[2])
+void exec_builtin(t_exe *var, char ***env, char ***no_val)
 {
-	handle_redirections(var, fd);
 	if (strcmp(var->arr[0], "cd") == 0)
 		cd(var->arr[1], env);
 	else if (strcmp(var->arr[0], "pwd") == 0)
