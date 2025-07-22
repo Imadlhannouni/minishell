@@ -16,19 +16,6 @@ static char	*allocate(size_t size)
 	}
 	return (full);
 }
-// static size_t	ft_strlen(const char *str)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	if (str == NULL)
-// 		return 0;
-// 	while (str[i])
-// 	{
-// 		i++;
-// 	}
-// 	return (i);
-// }
 
 char	*ft_strjoin_v2(char *s1, char *s2, int flag)
 {
