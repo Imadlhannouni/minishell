@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 17:47:44 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/21 17:52:04 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,8 @@ t_token	*smart_split(char *line)
 	tokens = NULL;
 	i = 0;
 	new_command = 1;
-	if (character_count(line) == 0)
-	{
-		ft_putstr_fd("minishell: syntax error: unclosed quote\n", 2);
+	if (handle_errors(line))
 		return (tokens);
-	}
 	while (line[i] != '\0')
 	{
 		while (line[i] == ' ' || line[i] == '\t')
