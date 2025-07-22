@@ -31,6 +31,17 @@ void group_pipes(t_pipe *pipes, t_exe **var)
 	}
 }
 
+void reset_redirections(t_exe *var,int fd[2])
+{
+	if (fd[0] >= 0 || fd[1] >= 0)
+	{
+		if (var->out_red_type)
+			dup2(fd[1] ,STDOUT_FILENO);
+		if (var->in_red_type)
+			dup2(fd[0] ,STDIN_FILENO);
+	}
+}
+
 void	execute(t_pipe *pipes, char ***env)
 {
 	t_exe	*var = NULL;
@@ -50,13 +61,7 @@ void	execute(t_pipe *pipes, char ***env)
 		{
 			handle_redirections(var, fd);
 			exec_builtin(var, env, &no_val);
-			if (fd[0] >= 0 || fd[1] >= 0)
-			{
-				if (var->out_red_type)
-					dup2(fd[1] ,STDOUT_FILENO);
-				if (var->in_red_type)
-					dup2(fd[0] ,STDIN_FILENO);
-			}
+			reset_redirections(var, fd);
 		}
 	}
 	free_t_exe(&var);
