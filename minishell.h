@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 16:35:56 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/21 18:01:33 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char				*ft_strjoin(char const *s1, char const *s2);
 void				ft_putstr_fd(char *s, int fd);
+void				ft_putchar_fd(char c, int fd);
 int					character_count(char *s);
 int					ft_isalpha(char *s);
 int					ft_isalnum(int c);
@@ -118,13 +119,13 @@ void				print_pipes(t_pipe *pipes);
 t_token				*concat_fullstring(t_token *start, t_token **next);
 int					main_parsing(char *line, char **clone_envi, t_pipe **pipes);
 void				print_cmd_not_found(char *cmd);
-void				print_syntax_error(char *token);
 char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type);
 char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
 int					append_env_or_chunk(char *str, int i, char **clone_envi,
 						char **result);
 void				cleanup_heredoc_files(t_pipe *pipes);
+int					handle_errors(char *line);
 
 size_t 	var_num(char **arr);
 void	free_arr(char **arr, int j);
