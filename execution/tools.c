@@ -3,6 +3,8 @@
 
 int is_builtin(char *cmd)
 {
+	if (cmd == NULL)
+		return 0;
 	if (strcmp(cmd, "cd") == 0)
 		return 1;
 	else if (strcmp(cmd, "pwd") == 0)
