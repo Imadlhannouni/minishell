@@ -160,5 +160,7 @@ t_exe 	*creat_node(t_token *tok);
 void 	add_node(t_exe **lst, t_exe *node);
 void	free_t_exe(t_exe **var);
 void handle_redirections(t_exe *var, int fd[2]);
+void reset_redirections(t_exe *var,int fd[2]);
+
 
 #endif

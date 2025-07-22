@@ -62,8 +62,8 @@ int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 		handle_redirections(tmp, NULL);
 		if (!is_builtin(tmp->arr[0]))
 		{
-			if (execve(path, tmp->arr, *env) == -1)
-				exit(EXIT_FAILURE);
+			execve(path, tmp->arr, *env);
+			exit(EXIT_FAILURE);
 		}
 		exec_builtin(tmp, env, no_val);
 		exit(0);
