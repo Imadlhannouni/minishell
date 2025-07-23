@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tools.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
+/*   Updated: 2025/07/23 22:50:27 by abbenmou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 
 int is_builtin(char *cmd)
 {
-	if (cmd == NULL)
-		return 0;
+	if (!cmd)
+		return -1;
 	if (strcmp(cmd, "cd") == 0)
 		return 1;
 	else if (strcmp(cmd, "pwd") == 0)
@@ -24,19 +36,21 @@ int is_builtin(char *cmd)
 
 void exec_builtin(t_exe *var, char ***env, char ***no_val)
 {
-	if (strcmp(var->arr[0], "cd") == 0)
+	if (!var->arr || !var->arr[0])
+		return;
+	if (ft_strcmp(var->arr[0], "cd") == 0)
 		cd(var->arr[1], env);
-	else if (strcmp(var->arr[0], "pwd") == 0)
+	else if (ft_strcmp(var->arr[0], "pwd") == 0)
 		pwd();
-	else if (strcmp(var->arr[0], "echo") == 0)
+	else if (ft_strcmp(var->arr[0], "echo") == 0)
 		echo(var->arr);
-	else if (strcmp(var->arr[0], "export") == 0)
+	else if (ft_strcmp(var->arr[0], "export") == 0)
 		export(env, &(var->arr[1]), no_val) ;
-	else if (strcmp(var->arr[0], "unset") == 0)
+	else if (ft_strcmp(var->arr[0], "unset") == 0)
 		unset(env, var->arr[1]);
-	else if (strcmp(var->arr[0], "exit") == 0)
+	else if (ft_strcmp(var->arr[0], "exit") == 0)
 		exit(0);
-	else if (strcmp(var->arr[0], "env") == 0)
+	else if (ft_strcmp(var->arr[0], "env") == 0)
 		print_env(*env);
 }
 

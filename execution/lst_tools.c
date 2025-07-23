@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lst_tools.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 22:50:36 by abbenmou          #+#    #+#             */
+/*   Updated: 2025/07/23 22:50:37 by abbenmou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 t_exe *creat_node(t_token *tok)
@@ -95,8 +107,9 @@ int	group_2d_arr(t_exe *var,t_token *tok)
 		return 0;
 	while (temp)
 	{
-		if ((temp->inp_red == 0) && (temp->heredoc == 0)
+		if (((temp->inp_red == 0) && (temp->heredoc == 0)
 			&& (temp->out_red == 0) && (temp->out_app == 0))
+			&& temp->value)
 			(var)->arr[i++] = ft_strdup(temp->value);
 		if (!(var)->arr[i - 1])
 			return (free_arr((var)->arr, i - 2), 0);

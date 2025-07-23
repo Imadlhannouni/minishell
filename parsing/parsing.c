@@ -148,6 +148,6 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 		return (0);
 	}
 	is_path(*pipes);
-	print_pipes(*pipes);
+	//print_pipes(*pipes);
 	return (1);
 }
