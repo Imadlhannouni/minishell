@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/23 22:50:32 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/24 16:29:57 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,25 @@
 void exec_command(t_exe *var, char **env)
 {
 	int pid;
-	char *path = retrieve_path(var->arr[0],env);
+	char *path;
+
+	if (!is_path1(var->arr[0]))
+		path = retrieve_path(var->arr[0],env);
+	else
+		path = ft_strdup(var->arr[0]);
 	if (!path)
 	 	return;
 	pid = fork();
 	if (pid == 0)
 	{
-		handle_redirections(var, NULL);
-		execve(path, var->arr, env);
+		handle_redirections(var, NULL);		
+		if (execve(path, var->arr, env) == -1)
+		{
+			put_str_fd("command not fount", 2);
+			exit(EXIT_FAILURE);
+		}
 	}
-	else
-	{
-		waitpid(pid, NULL, 0);
-	}
+	waitpid(pid, NULL, 0);
 	free(path);
 }
 
@@ -69,9 +75,10 @@ void	execute(t_pipe *pipes, char ***env)
 		exec_pipe(var, env, &no_val, count_pipes(pipes));
 	else if (count_pipes(pipes) == 1)
 	{
-		if (is_builtin(var->arr[0]) == 0)
+		if (!is_builtin(var->arr[0]))
 			exec_command(var, *env);
-		handle_redirections(var, fd);
+		if (!handle_redirections(var, fd))
+			return;
 		if (var->arr)
 			exec_builtin(var, env, &no_val);
 		reset_redirections(var, fd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/21 18:01:33 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/24 16:18:23 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,11 +127,11 @@ int					append_env_or_chunk(char *str, int i, char **clone_envi,
 void				cleanup_heredoc_files(t_pipe *pipes);
 int					handle_errors(char *line);
 
-size_t 	var_num(char **arr);
+size_t	var_num(char **arr);
 void	free_arr(char **arr, int j);
-char 	**clone_env(char **env);
+char	**clone_env(char **env);
 void	execute(t_pipe *pipes, char ***env);
-
+void put_str_fd(char *str, int fd);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env);
 void	free_2d_arr(char **arr);
@@ -140,27 +140,25 @@ int		count_pipes(t_pipe *pipes);
 void	exec_pipe(t_exe *var, char ***envp, char ***no_val, size_t pipe_num);
 void	close_fd(int (*fd)[2], size_t i, size_t total);
 void	switch_fd(int (*fd)[2], size_t i, size_t total);
-void 	close_all(int (*fd)[2], int j);
-
+void	close_previous(int (*fd)[2], int j);
 void	print_sorted(char **env, char **arr);
 void	cd(char *path, char ***env);
-char 	*retreive_var(char **env, char *var);
 void	pwd(void);
 void	print_env(char **env);
 void	export(char ***env, char **args, char ***no_val);
-void	unset(char ***env, char *var);
-char 	**spec_split(char *str);
-void 	echo(char **arg);
-char 	*join_strings(char *s1, char *s2, char *s3);
+void	unset(char ***env, char *var, char ***no_val);
+char	**spec_split(char *str);
+void	echo(char **arg);
+char	*join_strings(char *s1, char *s2, char *s3);
 int 	is_builtin(char *cmd);
-void 	exec_builtin(t_exe *var, char ***env, char ***no_val);
-int		group_2d_arr(t_exe *var,t_token *tok);
+void	exec_builtin(t_exe *var, char ***env, char ***no_val);
+int		group_2d_arr(t_exe *var, t_token *tok);
 int		fill_redirection(t_exe *var, t_token *tok);
-t_exe 	*creat_node(t_token *tok);
-void 	add_node(t_exe **lst, t_exe *node);
+t_exe	*creat_node(t_token *tok);
+void	add_node(t_exe **lst, t_exe *node);
 void	free_t_exe(t_exe **var);
-void handle_redirections(t_exe *var, int fd[2]);
-void reset_redirections(t_exe *var,int fd[2]);
-
+int	handle_redirections(t_exe *var, int fd[2]);
+void	reset_redirections(t_exe *var, int fd[2]);
+int		is_path1(char *cmd);
 
 #endif

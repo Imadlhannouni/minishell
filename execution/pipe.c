@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/23 22:50:47 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:22:16 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	switch_fd(int (*fd)[2], size_t i, size_t total)
 	}
 }
 
-void close_all(int (*fd)[2], int j)
+void close_previous(int (*fd)[2], int j)
 {
 	int	i;
 

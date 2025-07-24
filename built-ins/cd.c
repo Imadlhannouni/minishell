@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/23 22:50:07 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/24 16:00:20 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int update_PWD(char ***env, char *buff)
 					free((*env)[i]);
 					(*env)[i] = ft_strjoin("PWD=",get_pwd());
 					update_OLDPWD(env, buff);
-					perror("parent directory has been deleted\n");
+					put_str_fd("parent directory has been deleted\n", 2);
 					return 0;
 				}
 				free((*env)[i]);
@@ -75,7 +75,7 @@ void	cd(char *path, char ***env)
 	if (!buff)
 		buff = get_pwd();
 	if (chdir(path) != 0)
-		perror("no such a directory");
+		put_str_fd("no such a directory\n", 2);
 	if (!update_PWD(env, buff))
 		return;
 	update_OLDPWD(env, buff);

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/23 22:50:22 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/24 18:45:06 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,35 @@ int	init_var(t_vars *var, size_t pipe_num)
 		while (j < var->pipe_num - 1)
 		{
 			if (pipe((var->fd)[j]) == -1)
-				return (close_all(var->fd, j - 1),free(var->fd),free(var->pid),0);
+				return (close_previous(var->fd, j - 1),free(var->fd),free(var->pid),0);
 			j++;
 		}
 	}
 	return 1;
 }
 
+int is_path1(char *cmd)
+{
+	int i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] == '/')
+			return 1;
+		i++;
+	}
+	return 0;
+}
 
 int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 {
 	char *path = NULL;
 
-	if (!is_builtin(tmp->arr[0]))
+	if (!is_builtin(tmp->arr[0]) && !is_path1(tmp->arr[0]))
 		path = retrieve_path(tmp->arr[0],*env);
+	else if (is_path1(tmp->arr[0]))
+		path = ft_strdup(tmp->arr[0]);
 	int pid = fork();
 	if (pid < 0)
 		exit(1);
@@ -97,30 +112,40 @@ void exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
 		var.pid[var.i++] = helper(tmp, envp, no_val, var);
 		tmp = tmp->next;
 	}
-	var.i = 0;
-	while(var.i < var.pipe_num - 1)	
-	{
-		close(var.fd[var.i][0]);
-		close(var.fd[var.i++][1]);
-	}
+	close_previous(var.fd, var.pipe_num - 1);
 	var.i = 0;
 	waitpid(var.pid[var.pipe_num - 1],NULL,0);
-	while (var.i++< var.pipe_num - 1)
+	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
 	free(var.pid);
 	free(var.fd);
 }
 
-void handle_redirections(t_exe *var, int fd[2])
+int	handle_redirections(t_exe *var, int fd[2])
 {
 	int fd1 = -1;
 	int fd2 = -1;
+	char **file = NULL;
 	if (var->out_red_type)
 	{
+		file = ft_split(var->out_red_file, ' ');
+		if (file && file[1])
+		{
+			put_str_fd("Ambigious redirections\n", 2);
+			return 0;
+		}
 		if (var->out_red_type == 1)
+		{
 			fd1 = open(var->out_red_file, O_RDWR | O_CREAT | O_APPEND, 0666);
+			if (fd1 < 0)
+				exit(1);
+		}
 		else if (var->out_red_type == 2)
+		{
 			fd1 = open(var->out_red_file, O_RDWR | O_CREAT | O_TRUNC, 0666);
+			if (fd1 < 0)
+				exit(1);
+		}
 		if (fd)
 			fd[1] = dup(STDOUT_FILENO);
 		dup2(fd1, STDOUT_FILENO);
@@ -129,9 +154,12 @@ void handle_redirections(t_exe *var, int fd[2])
 	if (var->in_red_type)
 	{
 		fd2 = open(var->in_red_file, O_RDWR , 0666);
+		if (fd2 < 0)
+			exit(1);
 		if (fd)
 			fd[0] = dup(STDIN_FILENO);
 		dup2(fd2, STDIN_FILENO);
 		close(fd2);
 	}
+	return 1;
 }

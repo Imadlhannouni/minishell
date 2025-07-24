@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/23 22:51:17 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/24 20:03:46 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static char *fill_word(int start, int end, char *str)
 	char *s;
 	int i = 0;
 
-	s = malloc((end - start + 1) * sizeof(char));
+	s = malloc((end - start + 2) * sizeof(char));
 	if (!s)
 		return NULL;
 	while (i < end - start)
