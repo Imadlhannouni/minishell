@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/21 17:11:46 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:59:40 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char	*create_heredoc_file(char *content)
     fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
     if (fd == -1)
     {
-        perror("Erreur lors de l'ouverture du fichier");
+        put_str_fd("Error When Opening file\n", 2);
         free(filename);
         return (NULL);
     }
