@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:19 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/23 22:51:20 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 21:28:27 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,16 @@ static char	*join_vars(char *s1, char *s2)
 void	put_nl(char **str, int flag)
 {
 	if (!flag)
-		printf("%s", *str);
+		putstr_fd(*str, 1);
 	else
-		printf("%s\n", *str);
+	{
+		putstr_fd(*str, 1);
+		write(1, "\n", 1);
+	}
 	free(*str);
 }
 
-void	echo(char **arg)
+int	echo(char **arg)
 {
 	int		i;
 	char	*str;
@@ -60,10 +63,10 @@ void	echo(char **arg)
 	if (!arg[1])
 	{
 		write(1, "\n", 1);
-		return ;
+		return 0;
 	}
 	else if (arg[1] && !arg[2] && !ft_strcmp(arg[1], "-n"))
-		return ;
+		return (putstr_fd(arg[1], 1), 0);
 	i = 1;
 	if (!ft_strcmp(arg[1], "-n"))
 	{
@@ -71,9 +74,7 @@ void	echo(char **arg)
 		i = 2;
 	}
 	while (arg[i])
-	{
-		str = join_vars(str, arg[i]);
-		i++;
-	}
+		str = join_vars(str, arg[i++]);
 	put_nl(&str, k);
+	return 0;
 }

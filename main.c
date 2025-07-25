@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/23 21:57:03 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/25 22:03:22 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	main(int argc, char **argv, char **envp)
     char	*line;
     t_pipe	*pipes;
 	char	**clone_envi;
+	int s;
 
 	clone_envi = clone_env(envp);
     (void)argc;
@@ -58,7 +59,8 @@ int	main(int argc, char **argv, char **envp)
             break ;
         pipes = NULL;
 		if (main_parsing(line, clone_envi, &pipes))
-			execute(pipes, &clone_envi);
+			s = execute(pipes, &clone_envi);
+		printf("exit_code = %d\n", s);
         free(line);
         cleanup_heredoc_files(pipes);
         free_pipes(&pipes);

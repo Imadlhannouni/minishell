@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/24 15:59:40 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 21:25:42 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char	*create_heredoc_file(char *content)
     fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
     if (fd == -1)
     {
-        put_str_fd("Error When Opening file\n", 2);
+        putstr_fd("Error When Opening file\n", 2);
         free(filename);
         return (NULL);
     }

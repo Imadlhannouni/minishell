@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 16:54:43 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 21:49:35 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,27 +136,33 @@ size_t	var_num(char **arr);
 void	free_arr(char **arr, int j);
 char	**clone_env(char **env);
 int		execute(t_pipe *pipes, char ***env);
-void 	put_str_fd(char *str, int fd);
+void 	putstr_fd(char *str, int fd);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env);
 void	free_2d_arr(char **arr);
 int		count_args(t_token *tok);
 int		count_pipes(t_pipe *pipes);
-int		exec_pipe(t_exe *var, char ***envp, char ***no_val, size_t pipe_num);
+int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num);
 void	close_fd(int (*fd)[2], size_t i, size_t total);
 void	switch_fd(int (*fd)[2], size_t i, size_t total);
 void	close_previous(int (*fd)[2], int j);
-void	print_sorted(char **env, char **arr);
-void	cd(char *path, char ***env);
-void	pwd(void);
-void	print_env(char **env);
-void	export(char ***env, char **args, char ***no_val);
-void	unset(char ***env, char *var, char ***no_val);
+int helper(t_exe *tmp ,char ***env, t_vars var);
+
+int	print_sorted(char **env, char **arr);
+int	cd(char *path, char ***env);
+int	pwd(void);
+int	print_env(char **env, char **args);
+int	unset(char ***env, char *var, char ***no_val);
+int	echo(char **arg);
+int	export(char ***env, char **args, char ***no_val);
 char	**spec_split(char *str);
-void	echo(char **arg);
+int check_var(char *str);
 char	*join_strings(char *s1, char *s2, char *s3);
+int check_existence(char **env, char *name);
+char *fill_word(int start, int end, char *str);
+
 int 	is_builtin(char *cmd);
-int		exec_builtin(t_exe *var, char ***env, char ***no_val);
+int		exec_builtin(t_exe *var, char ***env);
 int		group_2d_arr(t_exe *var, t_token *tok);
 int		fill_redirection(t_exe *var, t_token *tok);
 t_exe	*creat_node(t_token *tok);
