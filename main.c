@@ -6,19 +6,22 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 16:35:43 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/23 21:57:03 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*readline_func(void)
+char	*readline_func(char ***clone_envi)
 {
 	char	*line;
 
 	line = readline("minishell> ");
 	if (!line)
+	{
+		free_2d_arr(*clone_envi);
 		exit(0);
+	}
 	else if (*line)
 		add_history(line);
 	
@@ -50,7 +53,7 @@ int	main(int argc, char **argv, char **envp)
     line = NULL;
     while (1)
     {
-        line = readline_func();
+        line = readline_func(&clone_envi);
         if (!line)
             break ;
         pipes = NULL;
@@ -60,7 +63,6 @@ int	main(int argc, char **argv, char **envp)
         cleanup_heredoc_files(pipes);
         free_pipes(&pipes);
     }
-	rl_clear_history();
 	free_2d_arr(clone_envi);
     return (0);
 }

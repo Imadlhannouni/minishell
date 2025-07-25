@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/22 12:20:31 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/25 16:14:32 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,11 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 	tokens = smart_split(line);
 	if (!tokens)
 		return (0);
-	replace_env_variables(tokens, clone_envi);
+	if (!replace_env_variables(tokens, clone_envi))
+	{
+		free_tokens(tokens);
+		return (0);
+	}
 	*pipes = group_tokens_into_pipes(tokens);
 	if (!handle_heredocs(*pipes, clone_envi))
 	{

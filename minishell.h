@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 15:06:31 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 16:54:43 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_token
 	int				out_red;
 	int				heredoc;
 	int				out_app;
+	int				expand;
 	char			*value;
 	struct s_token	*next;
 }					t_token;
@@ -115,7 +116,7 @@ int					is_option(t_token *tokens, int i,
 void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);
 void				free_pipes(t_pipe **pipes);
-void				replace_env_variables(t_token *tokens, char **clone_envi);
+int					replace_env_variables(t_token *tokens, char **clone_envi);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
