@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/24 18:45:06 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/24 22:30:20 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 	{
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
-		handle_redirections(tmp, NULL);
+		handle_redirections(tmp);
 		if (!is_builtin(tmp->arr[0]))
 		{
 			execve(path, tmp->arr, *env);
@@ -121,45 +121,4 @@ void exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
 	free(var.fd);
 }
 
-int	handle_redirections(t_exe *var, int fd[2])
-{
-	int fd1 = -1;
-	int fd2 = -1;
-	char **file = NULL;
-	if (var->out_red_type)
-	{
-		file = ft_split(var->out_red_file, ' ');
-		if (file && file[1])
-		{
-			put_str_fd("Ambigious redirections\n", 2);
-			return 0;
-		}
-		if (var->out_red_type == 1)
-		{
-			fd1 = open(var->out_red_file, O_RDWR | O_CREAT | O_APPEND, 0666);
-			if (fd1 < 0)
-				exit(1);
-		}
-		else if (var->out_red_type == 2)
-		{
-			fd1 = open(var->out_red_file, O_RDWR | O_CREAT | O_TRUNC, 0666);
-			if (fd1 < 0)
-				exit(1);
-		}
-		if (fd)
-			fd[1] = dup(STDOUT_FILENO);
-		dup2(fd1, STDOUT_FILENO);
-		close(fd1);
-	}
-	if (var->in_red_type)
-	{
-		fd2 = open(var->in_red_file, O_RDWR , 0666);
-		if (fd2 < 0)
-			exit(1);
-		if (fd)
-			fd[0] = dup(STDIN_FILENO);
-		dup2(fd2, STDIN_FILENO);
-		close(fd2);
-	}
-	return 1;
-}
+
