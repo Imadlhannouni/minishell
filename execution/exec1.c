@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 16:24:34 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 22:02:40 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	init_var(t_vars *var, size_t pipe_num)
 			j++;
 		}
 	}
-	return 1;
+	return 0;
 }
 
 int is_path1(char *cmd)
@@ -71,7 +71,7 @@ int is_path1(char *cmd)
 	return 0;
 }
 
-int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
+int helper(t_exe *tmp ,char ***env, t_vars var)
 {
 	char *path = NULL;
 
@@ -93,34 +93,34 @@ int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 			execve(path, tmp->arr, *env);
 			exit(127);
 		}
-		return exec_builtin(tmp, env, no_val);
-		exit(0);
+		exit(exec_builtin(tmp, env));
 	}
 	free(path);
 	return pid;
 }
 
-int exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
+int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num)
 {
 	t_vars var;
 	t_exe *tmp;
+	int status = -1;
 
-	if (!init_var(&var, pipe_num))
+	if (init_var(&var, pipe_num))
 		return 1;
 	tmp = grp;
 	while (var.i < pipe_num) 
 	{
-		var.pid[var.i++] = helper(tmp, envp, no_val, var);
+		var.pid[var.i++] = helper(tmp, envp, var);
 		tmp = tmp->next;
 	}
 	close_previous(var.fd, var.pipe_num - 1);
 	var.i = 0;
-	waitpid(var.pid[var.pipe_num - 1],NULL,0);
+	waitpid(var.pid[var.pipe_num - 1], &status, 0);
 	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
 	free(var.pid);
 	free(var.fd);
-	return 0;
+	return status;
 }
 
 

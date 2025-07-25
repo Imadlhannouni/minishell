@@ -6,14 +6,10 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/24 16:00:20 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 21:26:58 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <dirent.h>
 #include "../minishell.h"
 
 static char *get_pwd(void)
@@ -41,45 +37,44 @@ int update_OLDPWD(char ***env, char *buff)
 	return 1;
 }
 
-int update_PWD(char ***env, char *buff)
+int update_PWD(char ***env)
 {
 	int i;
+	char *str;
 
-	i = 0;
-	while ((*env)[i])
+	i = -1;
+	while ((*env)[++i])
 	{
 		if (ft_strncmp((*env)[i], "PWD=", 4) == 0)
+		{
+			str = get_pwd();
+			if (!str)
 			{
-				char *str = get_pwd();
-				if (!str)
-				{
-					chdir("/home");
-					free((*env)[i]);
-					(*env)[i] = ft_strjoin("PWD=",get_pwd());
-					update_OLDPWD(env, buff);
-					put_str_fd("parent directory has been deleted\n", 2);
-					return 0;
-				}
-				free((*env)[i]);
-				(*env)[i] = ft_strjoin("PWD=",str);
+				putstr_fd("Parent Directory Has Been Deleted\n", 2);
+				if (chdir("/home"))
+					return (putstr_fd("/home Does Not Exist\n", 2), -1);
+				str = get_pwd();
 			}
-		i++;
+			(*env)[i] = ft_strjoin("PWD=",get_pwd());
+		}
 	}
+	free(str);
 	return 1;
 }
 
-void	cd(char *path, char ***env)
+int	cd(char *path, char ***env)
 {	
 	static char *buff = NULL;
 
 	if (!buff)
 		buff = get_pwd();
 	if (chdir(path) != 0)
-		put_str_fd("no such a directory\n", 2);
-	if (!update_PWD(env, buff))
-		return;
+		return (putstr_fd("No Such a Directory\n", 2), 1);
+	if (update_PWD(env) == -1)
+		return (putstr_fd("No Such a Directory\n", 2), 1);
 	update_OLDPWD(env, buff);
 	buff = get_pwd();
+	return (0);
 }
 
 

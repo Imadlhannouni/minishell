@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:59 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/24 19:11:26 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 21:35:10 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ static void	unset_no_val(char ***no_val, char *arg)
 	*no_val = clone;
 }
 
-void	unset(char ***env, char *arg, char ***no_val)
+int	unset(char ***env, char *arg, char ***no_val)
 {
 	char **clone;
 	int i;
 	int j;
 
 	if (!arg)
-		return;
+		return 0;
 	i = 0;
 	j = 0;	
 	unset_no_val(no_val, arg);
@@ -61,4 +61,5 @@ void	unset(char ***env, char *arg, char ***no_val)
 	clone[j] = NULL;
 	free_2d_arr(*env);
 	*env = clone;
+	return 0;
 }
