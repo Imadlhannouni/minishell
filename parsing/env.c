@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 17:32:02 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/23 22:31:21 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ void	replace_env_variables(t_token *tokens, char **clone_envi)
 {
 	char	*expanded;
 	int		i;
+	int		j;
+	char	**splited;
 
 	while (tokens)
 	{
@@ -88,6 +90,20 @@ void	replace_env_variables(t_token *tokens, char **clone_envi)
 			while (tokens->value[i])
 				i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded);
 			free(tokens->value);
+			if (ft_strchr(expanded, ' '))
+			{
+				splited = ft_split(expanded, ' ');
+				free(expanded);
+				expanded = ft_strdup("");
+				j = 0;
+				while (splited[j])
+				{
+					expanded = ft_strjoin(expanded, splited[j]);
+					if (splited[j + 1] != NULL)
+						expanded = ft_strjoin(expanded, " ");
+					j++;
+				}
+			}
 			tokens->value = expanded;
 		}
 		tokens = tokens->next;
