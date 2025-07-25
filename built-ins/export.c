@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
+/*   Updated: 2025/07/24 20:03:46 by abbenmou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int check_existence(char **env, char *name)
@@ -73,7 +85,7 @@ static char *fill_word(int start, int end, char *str)
 	char *s;
 	int i = 0;
 
-	s = malloc((end - start + 1) * sizeof(char));
+	s = malloc((end - start + 2) * sizeof(char));
 	if (!s)
 		return NULL;
 	while (i < end - start)
@@ -176,7 +188,10 @@ void	export(char ***env, char **args, char ***no_val)
 	{
 		arg = spec_split(args[i]);
 		if (!check_var(arg[0]))
+		{
 			printf("export : %s : not a valid identifier\n",args[i]);
+			return;
+		}
 		if (!arg[1])
 			store_no_val(no_val, env, args[i]);
 		else

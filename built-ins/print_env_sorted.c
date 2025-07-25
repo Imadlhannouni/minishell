@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_env_sorted.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
+/*   Updated: 2025/07/24 19:01:39 by abbenmou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char **merge_arr(char **env, char **arr)
@@ -23,23 +35,37 @@ char **merge_arr(char **env, char **arr)
 	new[j] = NULL;
 	return new;
 }
-void put_str(char *str)
+void put_str_fd(char *str, int fd)
 {
-	int i = 0;
-	while (str[i])
-	{
-		write(1, &str[i], 1);
-		i++;
-	}
-	
+	write(fd, str, ft_strlen(str));
 }
 
-void	print_sorted(char **env, char **arr)
+static void put_format(char **var)
 {
-	int i = 0;
+	put_str_fd("declare -x ", 1);
+	if (var[0])
+		put_str_fd(var[0], 1);
+	if (*var[1])
+	{
+		write(1, "=\"", 1);
+		put_str_fd(var[1], 1);
+		write(1, "\"", 1);
+	}
+	write(1, "\n", 1);
+}
+
+static char **sort_env(char **env, char **arr)
+{
+	int i;
+	int len;
 	char *temp;
-	int len = var_num(env) + var_num(arr);
-	char **clone = merge_arr(env, arr);
+	char **clone;
+
+	i = 0;
+	len = var_num(env) + var_num(arr);
+	clone = merge_arr(env, arr);
+	if (!clone)
+		return NULL;
 	while (i < len - 1)
 	{
 		if (strcmp(clone[i] ,clone[i + 1]) > 0)
@@ -52,24 +78,26 @@ void	print_sorted(char **env, char **arr)
 		else
 			i++;
 	}
-	i = 0;
+	return clone;
+}
+
+void	print_sorted(char **env, char **arr)
+{
+	int i;
 	char **var;
-	while (clone[i])
+	char **merged_arr;
+	
+	i = 0;
+	merged_arr = sort_env(env, arr);
+	if (!merged_arr)
+		return ;
+	while (merged_arr[i])
 	{
-		var = spec_split(clone[i]);
+		var = spec_split(merged_arr[i]);
 		if (!var)
 			return;
-		put_str("declare -x ");
-		if (var[0])
-			put_str(var[0]);
-		if (*var[1])
-		{
-			write(1, "=\"", 2);
-			put_str(var[1]);
-			write(1, "\"", 1);
-		}
-		write(1, "\n", 1);
+		put_format(var);
 		i++;
 	}
-	free_2d_arr(clone);
+	free_2d_arr(merged_arr);
 }
