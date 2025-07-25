@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/24 16:18:23 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/24 22:39:56 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,17 @@ typedef struct s_vars
 	__pid_t *pid;
 }	t_vars;
 
+typedef struct s_red
+{
+	int		red_type;
+	char	*file;
+	struct s_red *next;
+}	t_red;
+
 typedef struct s_exe
 {
 	char **arr;
-	int in_red_type;
-	int out_red_type;
-	char *out_red_file;
-	char *in_red_file;
+	t_red	*redirections;
 	struct s_exe *next;
 }	t_exe;
 
@@ -157,8 +161,9 @@ int		fill_redirection(t_exe *var, t_token *tok);
 t_exe	*creat_node(t_token *tok);
 void	add_node(t_exe **lst, t_exe *node);
 void	free_t_exe(t_exe **var);
-int	handle_redirections(t_exe *var, int fd[2]);
-void	reset_redirections(t_exe *var, int fd[2]);
+int	handle_redirections(t_exe *var);
+void	reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
-
+void	add_redirection(t_red **red, t_red *new_red);
+int	fill_redirection(t_exe *var, t_token *tok);
 #endif
