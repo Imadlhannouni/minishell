@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/23 22:31:21 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/25 16:12:47 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,37 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi,
 	return (i);
 }
 
-void	replace_env_variables(t_token *tokens, char **clone_envi)
+int	replace_env_variables(t_token *tokens, char **clone_envi)
 {
-	char	*expanded;
-	int		i;
-	int		j;
-	char	**splited;
+	char			*expanded;
+	t_token			*tmp;
+	t_token_type	tmp2;
+	t_token			*prev;
+	int				i;
+	int				j;
+	char			**splited;
 
 	while (tokens)
 	{
 		if (tokens->value && tokens->type != TOKEN_SIMPLE_QUOTE
-			&& strchr(tokens->value, '$') && tokens->heredoc == 0)
+			&& ft_strchr(tokens->value, '$') && tokens->heredoc == 0 && tokens->expand == 0)
 		{
 			i = 0;
 			expanded = ft_strdup("");
 			while (tokens->value[i])
 				i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded);
+			if ((ft_strchr(expanded, ' ') || expanded[0] == '\0') && tokens->type != TOKEN_DOUBLE_QUOTE
+				&& (tokens->out_app || tokens->out_red || tokens->inp_red))
+			{
+				
+				free(expanded);
+				ft_putstr_fd("minishell: ", 2);
+				ft_putstr_fd(tokens->value, 2);
+				ft_putstr_fd(": ambiguous redirect\n", 2);
+				return (0);
+			}
 			free(tokens->value);
-			if (ft_strchr(expanded, ' '))
+			if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
 			{
 				splited = ft_split(expanded, ' ');
 				free(expanded);
@@ -103,9 +116,26 @@ void	replace_env_variables(t_token *tokens, char **clone_envi)
 						expanded = ft_strjoin(expanded, " ");
 					j++;
 				}
+				free_arr(splited, j);
+				splited = NULL;
 			}
-			tokens->value = expanded;
+			if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
+			{
+				splited = ft_split_env(expanded, ' ');
+				tmp = tokens->next;
+				tokens->value = splited[0];
+				tmp2 = tokens->type;
+				tokens->next = NULL;
+				add_token(&tokens, splited[1], tmp2, 0);
+				while (strcmp(tokens->value, splited[1]) != 0)
+					tokens = tokens->next;
+				tokens->next = tmp;
+			}
+			else
+				tokens->value = expanded;
 		}
+		prev = tokens;
 		tokens = tokens->next;
 	}
+	return (1);
 }
