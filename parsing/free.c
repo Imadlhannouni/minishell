@@ -14,32 +14,31 @@
 
 void	free_tokens(t_token *tokens)
 {
-    t_token	*tmp;
+	t_token	*tmp;
 
 	if (!tokens)
-		return;
-    while (tokens)
-    {
-        tmp = tokens;
-        if (tokens->value)
-            free(tokens->value);
+		return ;
+	while (tokens)
+	{
+		tmp = tokens;
+		if (tokens->value)
+			free(tokens->value);
 		// if (tokens->heredoc_filename)
 		// 	free(tokens->heredoc_filename);
-        tokens = tokens->next;
-        free(tmp);
-    }
+		tokens = tokens->next;
+		free(tmp);
+	}
 }
-
 
 void	free_pipes(t_pipe **pipes)
 {
-    t_pipe	*tmp;
+	t_pipe	*tmp;
 
-    while (*pipes)
-    {
-        tmp = *pipes;
-        *pipes = (*pipes)->nextpipe;
-        free_tokens(tmp->full_cmd);
-        free(tmp);
-    }
+	while (*pipes)
+	{
+		tmp = *pipes;
+		*pipes = (*pipes)->nextpipe;
+		free_tokens(tmp->full_cmd);
+		free(tmp);
+	}
 }
