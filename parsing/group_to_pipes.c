@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 21:25:38 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 17:45:58 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,30 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 	}
 }
 
+static void	handle_pipe_token(t_pipe **pipes, t_token **start, t_token **curr,
+		t_token **prev)
+{
+	t_token	*next;
+	t_token	*to_free;
+
+	next = (*curr)->next;
+	to_free = *curr;
+	if ((*curr)->value)
+		free((*curr)->value);
+	if (*prev)
+		(*prev)->next = NULL;
+	add_pipe(pipes, *start);
+	*start = next;
+	free(to_free);
+	*curr = next;
+}
+
 t_pipe	*group_tokens_into_pipes(t_token *tokens)
 {
 	t_pipe	*pipes;
 	t_token	*start;
 	t_token	*curr;
 	t_token	*prev;
-	t_token *to_free;
-	t_token *next;
 
 	pipes = NULL;
 	start = tokens;
@@ -78,18 +94,7 @@ t_pipe	*group_tokens_into_pipes(t_token *tokens)
 	while (curr)
 	{
 		if (curr->type == TOKEN_PIPE)
-		{
-			next = curr->next;
-			if (curr->value)
-				free(curr->value);
-			to_free = curr;
-			if (prev)
-				prev->next = NULL;
-			add_pipe(&pipes, start);
-			start = next;
-			free(to_free);
-			curr = next;
-		}
+			handle_pipe_token(&pipes, &start, &curr, &prev);
 		else
 		{
 			prev = curr;

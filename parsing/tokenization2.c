@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:08:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/22 12:24:17 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 17:43:18 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ static int	handle_unquoted_part(int *i, char *line, char **part)
 
 int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 {
-	char			*value;
-	char			*part;
-	t_token			*last_cmd;
+	char	*value;
+	char	*part;
+	t_token	*last_cmd;
 
 	part = NULL;
 	value = NULL;
@@ -66,19 +66,7 @@ int	is_cmds_var(t_token **tokens, int i, char *line, int *flag)
 		return (i); // error here
 	add_token(tokens, value, TOKEN_CMD, 0);
 	last_cmd = ft_lstlast(*tokens);
-	if (*flag == 1)
-		last_cmd->heredoc = 1;
-	else if (*flag == 2)
-		last_cmd->out_app = 1;
-	else if (*flag == 3)
-		last_cmd->inp_red = 1;
-	else if (*flag == 4)
-		last_cmd->out_red = 1;
-	if (*flag > 0)
-	{
-		*flag = 0;
-		last_cmd->type = TOKEN_PATH;
-	}
+	apply_flag_to_token(last_cmd, flag, 0);
 	return (i);
 }
 
