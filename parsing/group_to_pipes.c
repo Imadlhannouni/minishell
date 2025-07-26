@@ -6,13 +6,13 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 17:45:58 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 18:40:05 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	compact_fullstrings(t_token **fullcmd)
+void	compact_fullstrings(t_token **fullcmd)
 {
 	t_token	*curr;
 	t_token	*prev;
@@ -48,7 +48,6 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 	new = malloc(sizeof(t_pipe));
 	if (!new)
 		return ;
-	compact_fullstrings(&fullcmd);
 	new->full_cmd = fullcmd;
 	new->nextpipe = NULL;
 	if (!*head)

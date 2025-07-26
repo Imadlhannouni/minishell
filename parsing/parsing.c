@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 17:46:09 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 18:42:40 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 {
 	t_token	*tokens;
+	t_pipe	*curr;
 
 	*pipes = NULL;
 	tokens = smart_split(line);
@@ -158,6 +159,12 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 		return (0);
 	if (!replace_env_variables(*pipes, clone_envi, exit_code))
 		return (0);
+	curr = *pipes;
+	while (curr)
+	{
+		compact_fullstrings(&(curr)->full_cmd);
+		curr = curr->nextpipe;
+	}
 	is_path(*pipes);
 	//print_pipes(*pipes);
 	return (1);
