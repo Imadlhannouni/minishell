@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 20:40:32 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 15:38:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static char	*get_env_value(const char *key, char **clone_envi)
 }
 
 int	append_env_or_chunk(char *str, int i, char **clone_envi,
-		char **result)
+		char **result, char *exit_code)
 {
 	int		start;
 	char	*tmp;
@@ -45,14 +45,22 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi,
 	char	*chunk;
 	char	*env_val;
 
-	if (str[i] == '$')
+	if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?'))
 	{
 		i++;
 		start = i;
-		while (ft_isalnum(str[i]) || str[i] == '_')
+		if (str[i] == '?')
 			i++;
+		else
+		{
+			while (ft_isalnum(str[i]) || str[i] == '_')
+				i++;
+		}
 		key = substrdup(start, i, str);
-		env_val = get_env_value(key, clone_envi);
+		if (ft_strcmp(key, "?") == 0)
+			env_val = ft_strdup(exit_code);
+		else
+			env_val = get_env_value(key, clone_envi);
 		tmp = *result;
 		*result = ft_strjoin(tmp, env_val);
 		free(tmp);
@@ -62,7 +70,7 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi,
 	else
 	{
 		start = i;
-		while (str[i] && str[i] != '$')
+		while (str[i] && (str[i] != '$' || !(ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')))
 			i++;
 		chunk = substrdup(start, i, str);
 		tmp = *result;
@@ -73,7 +81,8 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi,
 	return (i);
 }
 
-int	replace_env_variables(t_pipe *pipes, char **clone_envi)
+
+int	replace_env_variables(t_pipe *pipes, char **clone_envi, char *exit_code)
 {
 	t_token			*tokens;
 	char			*expanded;
@@ -95,7 +104,7 @@ int	replace_env_variables(t_pipe *pipes, char **clone_envi)
 				i = 0;
 				expanded = ft_strdup("");
 				while (tokens->value[i])
-					i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded);
+					i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded, exit_code);
 				if ((ft_strchr(expanded, ' ') || ft_strlen(expanded) == 0) && tokens->type != TOKEN_DOUBLE_QUOTE
 					&& (tokens->out_app || tokens->out_red || tokens->inp_red))
 				{

@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 14:15:53 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 15:09:33 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,21 +116,22 @@ int					is_option(t_token *tokens, int i,
 void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);
 void				free_pipes(t_pipe **pipes);
-int					replace_env_variables(t_pipe *pipes, char **clone_envi);
+int					replace_env_variables(t_pipe *pipes, char **clone_envi, char *exit_code);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
 void				print_pipes(t_pipe *pipes);
 t_token				*concat_fullstring(t_token *start, t_token **next);
-int					main_parsing(char *line, char **clone_envi, t_pipe **pipes);
+int					main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code);
 void				print_cmd_not_found(char *cmd);
-char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type);
+char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type, char **exit_code);
 char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
 int					append_env_or_chunk(char *str, int i, char **clone_envi,
-						char **result);
+						char **result, char *exit_code);
 void				cleanup_heredoc_files(t_pipe *pipes);
 int					handle_errors(char *line);
+char				*ft_itoa(int n);
 
 size_t	var_num(char **arr);
 void	free_arr(char **arr, int j);

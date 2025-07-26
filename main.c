@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 22:03:22 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/26 15:51:47 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,11 @@ void	sighandler(int signum)
 
 int	main(int argc, char **argv, char **envp)
 {
-    char	*line;
-    t_pipe	*pipes;
-	char	**clone_envi;
-	int s;
+    char		*line;
+    t_pipe		*pipes;
+	char		**clone_envi;
+	static char	*exit_code;
+	int 		s;
 
 	clone_envi = clone_env(envp);
     (void)argc;
@@ -52,15 +53,20 @@ int	main(int argc, char **argv, char **envp)
     signal(SIGINT, sighandler);
     signal(SIGQUIT, SIG_IGN);
     line = NULL;
+	exit_code = ft_strdup("0");
     while (1)
     {
         line = readline_func(&clone_envi);
         if (!line)
             break ;
         pipes = NULL;
-		if (main_parsing(line, clone_envi, &pipes))
+		if (main_parsing(line, clone_envi, &pipes, exit_code))
+		{
 			s = execute(pipes, &clone_envi);
-		printf("exit_code = %d\n", s);
+			if (exit_code[0] != '0')
+				free(exit_code);
+			exit_code = ft_itoa(s);
+		}
         free(line);
         cleanup_heredoc_files(pipes);
         free_pipes(&pipes);

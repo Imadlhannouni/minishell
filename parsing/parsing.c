@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 14:17:18 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 15:09:23 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ t_token	*smart_split(char *line)
 	return (tokens);
 }
 
-int	handle_heredocs(t_pipe *pipe, char **clone_envi)
+int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 {
     t_pipe	*current;
 	t_token	*current_token;
@@ -112,7 +112,7 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi)
 		{
 			if (current_token->heredoc == 1)
 			{
-				content = read_heredoc(current_token->value, clone_envi, current_token->type);
+				content = read_heredoc(current_token->value, clone_envi, current_token->type, exit_code);
 				if (content)
 				{
 					free(current_token->value);
@@ -132,7 +132,7 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi)
 	return (1);
 }
 
-int	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
+int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 {
 	t_token		*tokens;
 	
@@ -141,9 +141,9 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 	if (!tokens)
 		return (0);
 	*pipes = group_tokens_into_pipes(tokens);
-	if (!handle_heredocs(*pipes, clone_envi))
+	if (!handle_heredocs(*pipes, clone_envi, &exit_code))
 		return (0);
-	if (!replace_env_variables(*pipes, clone_envi))
+	if (!replace_env_variables(*pipes, clone_envi, exit_code))
 		return (0);
 	is_path(*pipes);
 	//print_pipes(*pipes);

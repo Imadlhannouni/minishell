@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:25:42 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/26 15:39:20 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_delimiter(char *delimiter)
 	return (0);
 }
 
-char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type)
+char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type, char **exit_code)
 {
 	char				*line;
 	char				*content;
@@ -68,7 +68,7 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type)
 				i = 0;
 				expanded_line = ft_strdup("");
 				while (line[i])
-					i = append_env_or_chunk(line, i, clone_envi, &expanded_line);
+					i = append_env_or_chunk(line, i, clone_envi, &expanded_line, *exit_code);
 				free(line);
 				line = expanded_line;
 			}
@@ -101,6 +101,9 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type)
 	{
 		write(1, "\n", 1);
 		free(content);
+		if (*exit_code)
+			free(*exit_code);
+		*exit_code = ft_strdup("130");
 		return (NULL);
 	}
 	return (content);
