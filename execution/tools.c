@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/24 16:19:45 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 21:31:09 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,28 @@ int is_builtin(char *cmd)
 	return 0;
 }
 
-void exec_builtin(t_exe *var, char ***env, char ***no_val)
+int exec_builtin(t_exe *var, char ***env)
 {
+	static char **no_val = NULL;
+
 	if (!var->arr || !var->arr[0])
-		return;
+		return 1;
+	no_val = NULL;
 	if (ft_strcmp(var->arr[0], "cd") == 0)
-		cd(var->arr[1], env);
+		return cd(var->arr[1], env);
 	else if (ft_strcmp(var->arr[0], "pwd") == 0)
-		pwd();
+		return pwd();
 	else if (ft_strcmp(var->arr[0], "echo") == 0)
-		echo(var->arr);
+		return (echo(var->arr));
 	else if (ft_strcmp(var->arr[0], "export") == 0)
-		export(env, &(var->arr[1]), no_val) ;
+		return export(env, &(var->arr[1]), &no_val) ;
 	else if (ft_strcmp(var->arr[0], "unset") == 0)
-		unset(env, var->arr[1],no_val);
+		return unset(env, var->arr[1], &no_val);
 	else if (ft_strcmp(var->arr[0], "exit") == 0)
 		exit(0);
 	else if (ft_strcmp(var->arr[0], "env") == 0)
-		print_env(*env);
+		return print_env(*env, var->arr);
+	return 0;
 }
 
 void	free_2d_arr(char **arr)

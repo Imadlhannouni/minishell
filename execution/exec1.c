@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/24 22:30:20 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 22:02:40 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,18 @@ int	init_var(t_vars *var, size_t pipe_num)
 	{
 		var->pid = malloc((pipe_num) * sizeof(__pid_t));
 		if (!var->pid)
-			return 0;
+			exit(2);
 		var->fd = malloc((pipe_num - 1) * sizeof(int[2]));
 		if (!var->fd)
-			return (free(var->pid), 0);
+			return (free(var->pid), exit(2), 1);
 		while (j < var->pipe_num - 1)
 		{
 			if (pipe((var->fd)[j]) == -1)
-				return (close_previous(var->fd, j - 1),free(var->fd),free(var->pid),0);
+				return (close_previous(var->fd, j - 1),free(var->fd),free(var->pid),1);
 			j++;
 		}
 	}
-	return 1;
+	return 0;
 }
 
 int is_path1(char *cmd)
@@ -71,7 +71,7 @@ int is_path1(char *cmd)
 	return 0;
 }
 
-int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
+int helper(t_exe *tmp ,char ***env, t_vars var)
 {
 	char *path = NULL;
 
@@ -81,44 +81,46 @@ int helper(t_exe *tmp ,char ***env, char ***no_val, t_vars var)
 		path = ft_strdup(tmp->arr[0]);
 	int pid = fork();
 	if (pid < 0)
-		exit(1);
+		return (1);
 	if (pid == 0)
 	{
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
-		handle_redirections(tmp);
+		if (handle_redirections(tmp) < 0)
+			exit(1);
 		if (!is_builtin(tmp->arr[0]))
 		{
 			execve(path, tmp->arr, *env);
-			exit(EXIT_FAILURE);
+			exit(127);
 		}
-		exec_builtin(tmp, env, no_val);
-		exit(0);
+		exit(exec_builtin(tmp, env));
 	}
 	free(path);
 	return pid;
 }
 
-void exec_pipe(t_exe *grp, char ***envp, char ***no_val, size_t pipe_num)
+int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num)
 {
 	t_vars var;
 	t_exe *tmp;
+	int status = -1;
 
-	if (!init_var(&var, pipe_num))
-		return;
+	if (init_var(&var, pipe_num))
+		return 1;
 	tmp = grp;
 	while (var.i < pipe_num) 
 	{
-		var.pid[var.i++] = helper(tmp, envp, no_val, var);
+		var.pid[var.i++] = helper(tmp, envp, var);
 		tmp = tmp->next;
 	}
 	close_previous(var.fd, var.pipe_num - 1);
 	var.i = 0;
-	waitpid(var.pid[var.pipe_num - 1],NULL,0);
+	waitpid(var.pid[var.pipe_num - 1], &status, 0);
 	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
 	free(var.pid);
 	free(var.fd);
+	return status;
 }
 
 
