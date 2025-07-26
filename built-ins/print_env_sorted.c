@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/24 19:01:39 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/25 21:33:41 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,27 @@ char **merge_arr(char **env, char **arr)
 	new[j] = NULL;
 	return new;
 }
-void put_str_fd(char *str, int fd)
+void putstr_fd(char *str, int fd)
 {
-	write(fd, str, ft_strlen(str));
+	int d;
+	
+	d = write(fd, str, ft_strlen(str));
+	if (d < 0)
+	{
+		perror("Invalid fd\n");
+		exit(1);
+	}
 }
 
 static void put_format(char **var)
 {
-	put_str_fd("declare -x ", 1);
+	putstr_fd("declare -x ", 1);
 	if (var[0])
-		put_str_fd(var[0], 1);
+		putstr_fd(var[0], 1);
 	if (*var[1])
 	{
 		write(1, "=\"", 1);
-		put_str_fd(var[1], 1);
+		putstr_fd(var[1], 1);
 		write(1, "\"", 1);
 	}
 	write(1, "\n", 1);
@@ -65,7 +72,7 @@ static char **sort_env(char **env, char **arr)
 	len = var_num(env) + var_num(arr);
 	clone = merge_arr(env, arr);
 	if (!clone)
-		return NULL;
+		exit(1);
 	while (i < len - 1)
 	{
 		if (strcmp(clone[i] ,clone[i + 1]) > 0)
@@ -81,7 +88,7 @@ static char **sort_env(char **env, char **arr)
 	return clone;
 }
 
-void	print_sorted(char **env, char **arr)
+int	print_sorted(char **env, char **arr)
 {
 	int i;
 	char **var;
@@ -90,14 +97,15 @@ void	print_sorted(char **env, char **arr)
 	i = 0;
 	merged_arr = sort_env(env, arr);
 	if (!merged_arr)
-		return ;
+		exit(1) ;
 	while (merged_arr[i])
 	{
 		var = spec_split(merged_arr[i]);
 		if (!var)
-			return;
+			exit(1);
 		put_format(var);
 		i++;
 	}
 	free_2d_arr(merged_arr);
+	return 0;
 }
