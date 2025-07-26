@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 15:09:33 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 17:42:29 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ int					append_env_or_chunk(char *str, int i, char **clone_envi,
 						char **result, char *exit_code);
 void				cleanup_heredoc_files(t_pipe *pipes);
 int					handle_errors(char *line);
-char				*ft_itoa(int n);
+void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 
 size_t	var_num(char **arr);
 void	free_arr(char **arr, int j);
