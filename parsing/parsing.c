@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 12:39:24 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 14:17:18 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,6 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
 	if (!replace_env_variables(*pipes, clone_envi))
 		return (0);
 	is_path(*pipes);
-	print_pipes(*pipes);
+	//print_pipes(*pipes);
 	return (1);
 }
