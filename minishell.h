@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 16:12:07 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/25 17:13:09 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int					is_option(t_token *tokens, int i,
 void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);
 void				free_pipes(t_pipe **pipes);
-int					replace_env_variables(t_token *tokens, char **clone_envi);
+int					replace_env_variables(t_pipe *pipes, char **clone_envi);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
@@ -167,4 +167,5 @@ void	reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
 void	add_redirection(t_red **red, t_red *new_red);
 int	fill_redirection(t_exe *var, t_token *tok);
+
 #endif
