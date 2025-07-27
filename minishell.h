@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:49:35 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 16:38:26 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 # include <string.h>
 # include <unistd.h>
 # include <unistd.h>
-#include <sys/wait.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <dirent.h>
+# include <sys/wait.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <dirent.h>
 
 typedef enum s_token_type
 {
@@ -80,6 +80,16 @@ typedef struct s_exe
 	struct s_exe *next;
 }	t_exe;
 
+typedef struct s_free
+{
+	t_pipe	*pipes;
+	t_exe	*exe;
+	char **env;
+	char **no_val;
+	int	*pid;
+	int (*fd)[2];
+	int *fds;
+}	t_free;
 
 char				*ft_strchr(const char *s, int c);
 size_t				ft_strcpy(char *dst, const char *src);
@@ -142,27 +152,30 @@ char	*retrieve_path(char *cmd, char **env);
 void	free_2d_arr(char **arr);
 int		count_args(t_token *tok);
 int		count_pipes(t_pipe *pipes);
-int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num);
+int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_free *collect);
 void	close_fd(int (*fd)[2], size_t i, size_t total);
 void	switch_fd(int (*fd)[2], size_t i, size_t total);
 void	close_previous(int (*fd)[2], int j);
-int helper(t_exe *tmp ,char ***env, t_vars var);
+int		helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect);
+int	init_var(t_vars *var, size_t pipe_num, t_free *collect);
 
-int	print_sorted(char **env, char **arr);
-int	cd(char *path, char ***env);
-int	pwd(void);
-int	print_env(char **env, char **args);
-int	unset(char ***env, char *var, char ***no_val);
-int	echo(char **arg);
-int	export(char ***env, char **args, char ***no_val);
+int		print_sorted(char **env, char **arr);
+int		cd(char *path, char ***env, t_free *collect);
+void	exit_free(t_free *collect, int exit_code);
+int		pwd(void);
+int		print_env(char **env, char **args);
+int		unset(char ***env, char *var, char ***no_val);
+int		echo(char **arg);
+int		export(char ***env, char **args, char ***no_val);
 char	**spec_split(char *str);
-int check_var(char *str);
+int		check_var(char *str);
 char	*join_strings(char *s1, char *s2, char *s3);
-int check_existence(char **env, char *name);
-char *fill_word(int start, int end, char *str);
+int		check_existence(char **env, char *name);
+char	*fill_word(int start, int end, char *str);
+void	group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char **env);
+int		exec_builtin(t_exe *var, char ***env, t_free *collect);
 
 int 	is_builtin(char *cmd);
-int		exec_builtin(t_exe *var, char ***env);
 int		group_2d_arr(t_exe *var, t_token *tok);
 int		fill_redirection(t_exe *var, t_token *tok);
 t_exe	*creat_node(t_token *tok);
@@ -173,5 +186,6 @@ void	reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
 void	add_redirection(t_red **red, t_red *new_red);
 int		fill_redirection(t_exe *var, t_token *tok);
+void	exit_shell(t_exe *var, t_free *collect);
 
 #endif
