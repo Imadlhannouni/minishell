@@ -6,21 +6,20 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/26 15:20:24 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 20:30:58 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	*retrieve_path(char *cmd, char **env)
+static char **get_PATH(char **env)
 {
-	int i = 0;
-	char *path;
-	char **paths;
+	char	*path;
+	char	**paths;
+	int	i;
 
+	i = 0;
+	path = NULL;
 	paths = NULL;
-	if (is_path1(cmd))
-		return (ft_strdup(cmd));
 	while (env[i])
 	{
 		if (ft_strncmp(env[i],"PATH=",5) == 0)
@@ -32,13 +31,27 @@ char	*retrieve_path(char *cmd, char **env)
 		}
 		i++; 
 	}
+	return (paths);
+}
+char	*retrieve_path(char *cmd, char **env, t_free *collect)
+{
+	int i;
+	char *path;
+	char **paths;
+
+	if (is_path1(cmd))
+		return (ft_strdup(cmd));
+	paths = get_PATH(env);
 	i = 0;
 	while (paths[i])
 	{
 		path = ft_strjoin_v2(paths[i], "/", 0);
 		path = ft_strjoin_v2(path, cmd, 1);
 		if (access(path,F_OK | X_OK) == 0)
+		{
+			collect->path = path;
 			return (free_2d_arr(paths),path);
+		}
 		else
 			free(path);
 		i++;
