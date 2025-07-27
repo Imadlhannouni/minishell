@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 16:49:31 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 20:31:23 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct s_free
 	int	*pid;
 	int (*fd)[2];
 	int *fds;
+	char *path;
 }	t_free;
 
 char				*ft_strchr(const char *s, int c);
@@ -151,7 +152,7 @@ char	**clone_env(char **env);
 int		execute(t_pipe *pipes, char ***env);
 void 	putstr_fd(char *str, int fd);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
-char	*retrieve_path(char *cmd, char **env);
+char	*retrieve_path(char *cmd, char **env, t_free *collect);
 void	free_2d_arr(char **arr);
 int		count_args(t_token *tok);
 int		count_pipes(t_pipe *pipes);
@@ -160,10 +161,12 @@ void	close_fd(int (*fd)[2], size_t i, size_t total);
 void	switch_fd(int (*fd)[2], size_t i, size_t total);
 void	close_previous(int (*fd)[2], int j);
 int		helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect);
-int	init_var(t_vars *var, size_t pipe_num, t_free *collect);
+int		init_var(t_vars *var, size_t pipe_num, t_free *collect);
+int 	exec_command(t_exe *var, char **env, t_free *collect);
+
 
 int		print_sorted(char **env, char **arr);
-int		cd(char *path, char ***env, t_free *collect);
+int		cd(char **arr, char ***env, t_free *collect);
 void	exit_free(t_free *collect, int exit_code);
 int		pwd(void);
 int		print_env(char **env, char **args);

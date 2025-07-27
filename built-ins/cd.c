@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/26 21:18:29 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 18:33:29 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,29 @@ static char *get_pwd(void)
 	return buff;
 }
 
-int update_OLDPWD(char ***env, char *buff, t_free *collect)
+int update_OLDPWD(char ***env, t_free *collect)
 {
 	int i;
+	char *oldpwd;
 
-	i = 0;
-	while ((*env)[i])
+	i = -1;
+	while ((*env)[++i])
+	{
+		if (ft_strncmp((*env)[i], "PWD=", 4) == 0)
+			oldpwd = ft_strdup((*env)[i] + 4);
+	}
+	i = -1;
+	while ((*env)[++i])
 	{
 		if ((ft_strncmp((*env)[i], "OLDPWD=", 7) == 0))
 		{
 			free((*env)[i]);
-			(*env)[i] = ft_strjoin("OLDPWD=", buff);
+			(*env)[i] = ft_strjoin("OLDPWD=", oldpwd);
 			if (!(*env)[i])
 				exit_free(collect, 1);
 		}
-		i++;
 	}
-	free(buff);
+	free(oldpwd);
 	return 1;
 }
 
@@ -68,17 +74,17 @@ int update_PWD(char ***env, t_free *collect)
 	return 1;
 }
 
-int	cd(char *path, char ***env, t_free *collect)
+int	cd(char **arr, char ***env, t_free *collect)
 {	
-	static char *buff = NULL;
-
-	if (!buff)
-		buff = get_pwd();
-	if (chdir(path) != 0)
+	if (chdir(arr[1]) != 0)
 		return (putstr_fd("No Such a Directory\n", 2), 1);
+	if (arr[2])
+	{
+		putstr_fd("cd : too many arguments\n", 2);
+		return (1);
+	}
+	update_OLDPWD(env, collect);
 	if (update_PWD(env, collect) == -1)
 		return (putstr_fd("No Such a Directory\n", 2), 1);
-	update_OLDPWD(env, buff, collect);
-	buff = get_pwd();
 	return (0);
 }

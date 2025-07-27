@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 12:23:38 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 20:29:32 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@ void	exit_free(t_free *collect, int exit_code)
 		free(collect->pid);
 	if (collect->pipes)
 		free_pipes(&(collect->pipes));
+	if (collect->path)
+		free(collect->path);
 	if (collect->fds)
 	{
 		close(collect->fds[0]);
 		close(collect->fds[1]);
 	}
-	putstr_fd("exit\n", 1);
-	exit(exit_code % 255);
+	exit(exit_code % 256);
 }
 
 int ft_isnum(char *str)
@@ -42,7 +43,8 @@ int ft_isnum(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (!(str[i] >= 48 && str[i] <= 57))
+		if (!((str[i] >= 48 && str[i] <= 57)
+			|| str[i] == '-' || str[i] == '+'))
 			return (0);
 		i++;
 	}
@@ -56,9 +58,9 @@ static int	is_space(char c)
 	return (0);
 }
 
-int	ft_atoi(const char *str)
+long	ft_atoi(const char *str)
 {
-	int	val;
+	long	val;
 	int	sign;
 	int	i;
 
@@ -76,9 +78,11 @@ int	ft_atoi(const char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		val = val * 10 + (str[i] - 48);
+		if (val > 9223372036854775807)
+			return -1;
 		i++;
 	}
-	return (val * sign);
+	return ((long)(val * sign));
 }
 
 void	exit_shell(t_exe *var, t_free *collect)
@@ -94,5 +98,11 @@ void	exit_shell(t_exe *var, t_free *collect)
 		exit_free(collect, 2);
 	}
 	i = ft_atoi((var->arr)[1]);
-	exit_free(collect, i);
+	if (i < 0)
+	{
+		putstr_fd("Numeric argument required\n", 2);
+		exit_free(collect, 2);
+	}
+	putstr_fd("exit\n", 1);
+	exit_free(collect, i % 256);
 }
