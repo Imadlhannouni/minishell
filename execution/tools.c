@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:31:09 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 16:41:51 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int is_builtin(char *cmd)
 	return 0;
 }
 
-int exec_builtin(t_exe *var, char ***env)
+int exec_builtin(t_exe *var, char ***env, t_free *collect)
 {
 	static char **no_val = NULL;
 
@@ -41,7 +41,7 @@ int exec_builtin(t_exe *var, char ***env)
 		return 1;
 	no_val = NULL;
 	if (ft_strcmp(var->arr[0], "cd") == 0)
-		return cd(var->arr[1], env);
+		return cd(var->arr[1], env, collect);
 	else if (ft_strcmp(var->arr[0], "pwd") == 0)
 		return pwd();
 	else if (ft_strcmp(var->arr[0], "echo") == 0)
@@ -51,7 +51,7 @@ int exec_builtin(t_exe *var, char ***env)
 	else if (ft_strcmp(var->arr[0], "unset") == 0)
 		return unset(env, var->arr[1], &no_val);
 	else if (ft_strcmp(var->arr[0], "exit") == 0)
-		exit(0);
+		exit_shell(var, collect);
 	else if (ft_strcmp(var->arr[0], "env") == 0)
 		return print_env(*env, var->arr);
 	return 0;

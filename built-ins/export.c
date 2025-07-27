@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:32:37 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/26 12:01:21 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	export(char ***env, char **args, char ***no_val)
 			arg = spec_split(args[i]);
 		if (!check_var(arg[0]))
 			return (putstr_fd("export : not a valid identifier\n", 2), 1);
-		if (!arg[1])
+		if (!arg[1] || !*arg[1])
 			store_no_val(no_val, env, args[i]);
 		else
 		{
@@ -124,8 +124,8 @@ int	export(char ***env, char **args, char ***no_val)
 				replace_variable(env, arg);
 			else
 				*env = add_var(*env, arg);
-			free_2d_arr(arg);
 		}
+		free_2d_arr(arg);
 	}
 	return 0;
 }

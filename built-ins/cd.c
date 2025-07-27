@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:26:58 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/26 21:18:29 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char *get_pwd(void)
 	return buff;
 }
 
-int update_OLDPWD(char ***env, char *buff)
+int update_OLDPWD(char ***env, char *buff, t_free *collect)
 {
 	int i;
 
@@ -31,13 +31,16 @@ int update_OLDPWD(char ***env, char *buff)
 		{
 			free((*env)[i]);
 			(*env)[i] = ft_strjoin("OLDPWD=", buff);
+			if (!(*env)[i])
+				exit_free(collect, 1);
 		}
 		i++;
 	}
+	free(buff);
 	return 1;
 }
 
-int update_PWD(char ***env)
+int update_PWD(char ***env, t_free *collect)
 {
 	int i;
 	char *str;
@@ -55,14 +58,17 @@ int update_PWD(char ***env)
 					return (putstr_fd("/home Does Not Exist\n", 2), -1);
 				str = get_pwd();
 			}
-			(*env)[i] = ft_strjoin("PWD=",get_pwd());
+			free((*env)[i]);
+			(*env)[i] = ft_strjoin("PWD=", str);
+			if (!(*env)[i])
+				return (free(str), exit_free(collect, 1), 1);
 		}
 	}
 	free(str);
 	return 1;
 }
 
-int	cd(char *path, char ***env)
+int	cd(char *path, char ***env, t_free *collect)
 {	
 	static char *buff = NULL;
 
@@ -70,12 +76,9 @@ int	cd(char *path, char ***env)
 		buff = get_pwd();
 	if (chdir(path) != 0)
 		return (putstr_fd("No Such a Directory\n", 2), 1);
-	if (update_PWD(env) == -1)
+	if (update_PWD(env, collect) == -1)
 		return (putstr_fd("No Such a Directory\n", 2), 1);
-	update_OLDPWD(env, buff);
+	update_OLDPWD(env, buff, collect);
 	buff = get_pwd();
 	return (0);
 }
-
-
-  
