@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:31:23 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 20:58:38 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ typedef struct s_free
 	int (*fd)[2];
 	int *fds;
 	char *path;
+	char *exit_code;
 }	t_free;
 
 char				*ft_strchr(const char *s, int c);
@@ -149,7 +150,7 @@ void				compact_fullstrings(t_token **fullcmd);
 size_t	var_num(char **arr);
 void	free_arr(char **arr, int j);
 char	**clone_env(char **env);
-int		execute(t_pipe *pipes, char ***env);
+int		execute(t_pipe *pipes, char ***env, t_free *collect);
 void 	putstr_fd(char *str, int fd);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env, t_free *collect);

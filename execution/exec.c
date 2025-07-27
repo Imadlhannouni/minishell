@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:32:12 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 21:08:28 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,18 @@ int	exec_command(t_exe *var, char **env, t_free *collect)
 	{
 		if (handle_redirections(var) < 0)
 			exit_free(collect, 1);
-		if (execve(path, var->arr, env) == -1)
+		if (!path)
+		{
 			putstr_fd("Command not found\n",2);
-		exit_free(collect, 127);
+			exit_free(collect, 127);
+		}
+		execve(path, var->arr, env);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
     	exit_code = WEXITSTATUS(status);
 	free(path);
 	return (exit_code);
-}
-void	init_collect(t_free *collect)
-{
-	collect->env = NULL;
-	collect->exe = NULL;
-	collect->fd = NULL;
-	collect->no_val = NULL;
-	collect->pid = NULL;
-	collect->pipes = NULL;
-	collect->fds = NULL;
-	collect->path = NULL;
 }
 
 void group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char **env)
@@ -57,7 +49,6 @@ void group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char **env)
 
 	if (!pipes)
 		return;
-	init_collect(collect);
 	collect->pipes = pipes;
 	tmp = pipes;
 	while (tmp)
@@ -86,28 +77,27 @@ void dup_std(int fd[2], t_free *collect)
 }
 
 
-int	execute(t_pipe *pipes, char ***env)
+int	execute(t_pipe *pipes, char ***env, t_free *collect)
 {
 	t_exe	*var;
-	t_free	collect;
 	int fd[2];
 	int status = -1;
 
 	var = NULL;
-	group_pipes(pipes, &var, &collect, *env);
+	group_pipes(pipes, &var, collect, *env);
 	if (count_pipes(pipes) > 1)
-		status = exec_pipe(var, env, count_pipes(pipes), &collect);
+		status = exec_pipe(var, env, count_pipes(pipes), collect);
 	else if (count_pipes(pipes) == 1)
 	{
-		dup_std(fd, &collect);
+		dup_std(fd, collect);
 		if (!is_builtin(var->arr[0]))
-		status = exec_command(var, *env, &collect);
+		status = exec_command(var, *env, collect);
 		else
 		{
 			if (handle_redirections(var) < 0)
 				return (1);
 			if (var->arr)
-				status = exec_builtin(var, env, &collect);
+				status = exec_builtin(var, env, collect);
 		}
 		reset_redirections(fd);
 	}

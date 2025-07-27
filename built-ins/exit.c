@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:29:32 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 21:05:02 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	exit_free(t_free *collect, int exit_code)
 		free_pipes(&(collect->pipes));
 	if (collect->path)
 		free(collect->path);
+	if (collect->exit_code)
+		free(collect->exit_code);
 	if (collect->fds)
 	{
 		close(collect->fds[0]);
