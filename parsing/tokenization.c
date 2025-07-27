@@ -6,11 +6,30 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 16:12:27 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 17:44:03 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	apply_flag_to_token(t_token *last, int *flag, int set_expand)
+{
+	if (*flag == 1)
+		last->heredoc = 1;
+	else if (*flag == 2)
+		last->out_app = 1;
+	else if (*flag == 3)
+		last->inp_red = 1;
+	else if (*flag == 4)
+		last->out_red = 1;
+	if (*flag > 0)
+	{
+		*flag = 0;
+		last->type = TOKEN_PATH;
+		if (set_expand)
+			last->expand = 1;
+	}
+}
 
 int	is_simple_quote(t_token *tokens, int i, char *line, int *flag)
 {
@@ -35,20 +54,7 @@ int	is_simple_quote(t_token *tokens, int i, char *line, int *flag)
 	else
 		add_token(&tokens, value, type, 0);
 	last = ft_lstlast(tokens);
-	if (*flag == 1)
-		last->heredoc = 1;
-	else if (*flag == 2)
-		last->out_app = 1;
-	else if (*flag == 3)
-		last->inp_red = 1;
-	else if (*flag == 4)
-		last->out_red = 1;
-	if (*flag > 0)
-	{
-		*flag = 0;
-		last->type = TOKEN_PATH;
-		last->expand = 1;
-	}
+	apply_flag_to_token(last, flag, 1);
 	return (i);
 }
 
@@ -73,19 +79,7 @@ int	is_double_quote(t_token *tokens, int i, char *line, int *flag)
 	else
 		add_token(&tokens, substrdup(start, end, line), type, 0);
 	last = ft_lstlast(tokens);
-	if (*flag == 1)
-		last->heredoc = 1;
-	else if (*flag == 2)
-		last->out_app = 1;
-	else if (*flag == 3)
-		last->inp_red = 1;
-	else if (*flag == 4)
-		last->out_red = 1;
-	if (*flag > 0)
-	{
-		*flag = 0;
-		last->type = TOKEN_PATH;
-	}
+	apply_flag_to_token(last, flag, 0);
 	return (i);
 }
 
@@ -148,18 +142,6 @@ int	is_word(t_token *tokens, int i, char *line, int *flag)
 	else
 		add_token(&tokens, substrdup(start, end, line), type, 0);
 	last = ft_lstlast(tokens);
-	if (*flag == 1)
-		last->heredoc = 1;
-	else if (*flag == 2)
-		last->out_app = 1;
-	else if (*flag == 3)
-		last->inp_red = 1;
-	else if (*flag == 4)
-		last->out_red = 1;
-	if (*flag > 0)
-	{
-		*flag = 0;
-		last->type = TOKEN_PATH;
-	}
+	apply_flag_to_token(last, flag, 0);
 	return (i);
 }
