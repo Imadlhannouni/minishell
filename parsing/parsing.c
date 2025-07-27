@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 18:42:40 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/27 20:44:39 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 {
 	t_pipe	*current;
 	t_token	*current_token;
+	t_token	*compact;
 
 	current = pipe;
 	while (current)
@@ -134,8 +135,16 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 		while (current_token)
 		{
 			if (current_token->heredoc == 1)
+			{
+				compact = current_token;
+				if (current_token->is_fullstring == 1)
+				{
+					concat_fullstring(compact, NULL);
+					current_token->is_fullstring = 0;
+				}
 				if (!handle_heredoc_token(current_token, clone_envi, exit_code))
 					return (0);
+			}
 			current_token = current_token->next;
 		}
 		if (current->nextpipe == NULL)

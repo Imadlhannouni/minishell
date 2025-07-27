@@ -6,19 +6,20 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:47:12 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 21:04:27 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*readline_func(char ***clone_envi)
+char	*readline_func(char ***clone_envi, char **exit_code)
 {
 	char	*line;
 
 	line = readline("minishell> ");
 	if (!line)
 	{
+		free(*exit_code);
 		free_2d_arr(*clone_envi);
 		exit(0);
 	}
@@ -38,11 +39,24 @@ void	sighandler(int signum)
 		rl_redisplay();
 	}
 }
+static void	init_collect(t_free *collect)
+{
+	collect->env = NULL;
+	collect->exe = NULL;
+	collect->fd = NULL;
+	collect->no_val = NULL;
+	collect->pid = NULL;
+	collect->pipes = NULL;
+	collect->fds = NULL;
+	collect->path = NULL;
+	collect->exit_code = NULL;
+}
 
 int	main(int argc, char **argv, char **envp)
 {
     char	*line;
     t_pipe	*pipes;
+	t_free	collect;
 	char	**clone_envi;
 	static char *exit_code;
 	int s;
@@ -53,24 +67,26 @@ int	main(int argc, char **argv, char **envp)
     signal(SIGINT, sighandler);
     signal(SIGQUIT, SIG_IGN);
     line = NULL;
-	exit_code = ft_strdup("0");
+	exit_code = NULL;
+	init_collect(&collect);
     while (1)
-    {
-        line = readline_func(&clone_envi);
-        if (!line)
+	{
+		line = readline_func(&clone_envi, &exit_code);
+		if (!line)
             break ;
         pipes = NULL;
+		
 		if (main_parsing(line, clone_envi, &pipes, exit_code))
 		{
-			s = execute(pipes, &clone_envi);
-			if (exit_code[0] != '0')
-				free(exit_code);
+			s = execute(pipes, &clone_envi, &collect);
+			free(exit_code);
 			exit_code = ft_itoa(s);
 		}
         free(line);
         cleanup_heredoc_files(pipes);
         free_pipes(&pipes);
     }
+	free(exit_code);
 	free_2d_arr(clone_envi);
     return (0);
 }
