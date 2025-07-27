@@ -6,13 +6,11 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/26 12:01:21 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 18:54:59 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-
 
 void replace_variable(char ***env, char **arg)
 {
@@ -100,8 +98,6 @@ void store_no_val(char ***no_val, char ***env, char *arg)
 	}
 }
 
-
-
 int	export(char ***env, char **args, char ***no_val)
 {
 	char	**arg = NULL;
@@ -116,8 +112,8 @@ int	export(char ***env, char **args, char ***no_val)
 			arg = spec_split(args[i]);
 		if (!check_var(arg[0]))
 			return (putstr_fd("export : not a valid identifier\n", 2), 1);
-		if (!arg[1] || !*arg[1])
-			store_no_val(no_val, env, args[i]);
+		if (!arg[1])
+			store_no_val(no_val, env, arg[0]);
 		else
 		{
 			if (check_existence(*env, arg[0]))

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/26 18:58:49 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/27 20:31:57 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 	char *path = NULL;
 
 	if (!is_builtin(tmp->arr[0]))
-		path = retrieve_path(tmp->arr[0], *env);
+		path = retrieve_path(tmp->arr[0], *env, collect);
 	int pid = fork();
 	if (pid < 0)
 		return (-1);
@@ -94,7 +94,7 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 				putstr_fd("Command not found\n", 2);
 			exit_free(collect, 127);
 		}
-		exit(exec_builtin(tmp, env, collect));
+		exit_free(collect, exec_builtin(tmp, env, collect));
 	}
 	if (path)
 		free(path);
