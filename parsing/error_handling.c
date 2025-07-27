@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:38:33 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 17:18:09 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/27 18:26:18 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ static int	handle_redir_error(char *s, int *i_ptr)
 	i = *i_ptr;
 	c = s[i];
 	cnt = 0;
+	if (s[i] == '<' && s[i + 1] == '>')
+		return (ft_putstr_fd(ERR_MISSFILE, 2), 1);
 	while (s[i] == c)
 	{
 		cnt++;
