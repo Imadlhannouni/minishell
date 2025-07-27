@@ -6,42 +6,48 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/25 16:14:32 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/26 18:42:40 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	handle_new_command(t_token **tokens, int i, char *line,
-		int *new_command, int *flag)
+static int	handle_redirection(int i, char *line, int *flag)
 {
 	if (line[i] == '>' && line[i + 1] != '>')
 	{
 		*flag = 4;
-		i++;
+		return (i + 1);
 	}
 	else if (line[i] == '<' && line[i + 1] != '<')
 	{
 		*flag = 3;
-		i++;
+		return (i + 1);
 	}
 	else if (line[i] == '>' && line[i + 1] == '>')
 	{
 		*flag = 2;
-		i += 2;
+		return (i + 2);
 	}
 	else if (line[i] == '<' && line[i + 1] == '<')
 	{
 		*flag = 1;
-		i += 2;
+		return (i + 2);
 	}
+	return (i);
+}
+
+static int	handle_new_command(t_token **tokens, int i, char *line,
+		int *new_command, int *flag)
+{
+	i = handle_redirection(i, line, flag);
 	if (line[i] != '>' && line[i] != '<' && line[i] != '|')
 	{
 		i = is_cmds_var(tokens, i, line, flag);
 		*new_command = 0;
 	}
 	else
-		i++; // error here
+		i++;
 	return (i);
 }
 
@@ -98,58 +104,66 @@ t_token	*smart_split(char *line)
 	return (tokens);
 }
 
-int	handle_heredocs(t_pipe *pipe, char **clone_envi)
+static int	handle_heredoc_token(t_token *current_token, char **clone_envi,
+		char **exit_code)
 {
-    t_pipe	*current;
-	t_token	*current_token;
-    char	*content;
+	char	*content;
 
-    current = pipe;
-    while (current)
-    {
+	content = read_heredoc(current_token->value, clone_envi,
+			current_token->type, exit_code);
+	if (content)
+	{
+		free(current_token->value);
+		current_token->value = create_heredoc_file(content);
+		current_token->heredoc = 1;
+		free(content);
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
+{
+	t_pipe	*current;
+	t_token	*current_token;
+
+	current = pipe;
+	while (current)
+	{
 		current_token = current->full_cmd;
 		while (current_token)
 		{
 			if (current_token->heredoc == 1)
-			{
-				content = read_heredoc(current_token->value, clone_envi, current_token->type);
-				if (content)
-				{
-					free(current_token->value);
-					current_token->value = create_heredoc_file(content);
-					current_token->heredoc = 1;
-					free(content);
-				}
-				else
+				if (!handle_heredoc_token(current_token, clone_envi, exit_code))
 					return (0);
-			}
 			current_token = current_token->next;
 		}
 		if (current->nextpipe == NULL)
 			break ;
-        current = current->nextpipe;
-    }
+		current = current->nextpipe;
+	}
 	return (1);
 }
 
-int	main_parsing(char *line, char **clone_envi, t_pipe **pipes)
+int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 {
-	t_token		*tokens;
-	
+	t_token	*tokens;
+	t_pipe	*curr;
+
 	*pipes = NULL;
 	tokens = smart_split(line);
 	if (!tokens)
 		return (0);
-	if (!replace_env_variables(tokens, clone_envi))
-	{
-		free_tokens(tokens);
-		return (0);
-	}
 	*pipes = group_tokens_into_pipes(tokens);
-	if (!handle_heredocs(*pipes, clone_envi))
-	{
-		free_pipes(pipes);
+	if (!handle_heredocs(*pipes, clone_envi, &exit_code))
 		return (0);
+	if (!replace_env_variables(*pipes, clone_envi, exit_code))
+		return (0);
+	curr = *pipes;
+	while (curr)
+	{
+		compact_fullstrings(&(curr)->full_cmd);
+		curr = curr->nextpipe;
 	}
 	is_path(*pipes);
 	//print_pipes(*pipes);

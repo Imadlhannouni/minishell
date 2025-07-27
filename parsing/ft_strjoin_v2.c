@@ -2,11 +2,11 @@
 
 static char	*allocate(size_t size)
 {
-	size_t		i;
-	char		*full;
+	size_t	i;
+	char	*full;
 
 	i = 0;
-	full = (char *) malloc(size * sizeof(char) + 1);
+	full = (char *)malloc(size * sizeof(char) + 1);
 	if (!full)
 		return (0);
 	while (i < size)
@@ -19,8 +19,8 @@ static char	*allocate(size_t size)
 
 char	*ft_strjoin_v2(char *s1, char *s2, int flag)
 {
-	size_t			i;
-	char			*str;
+	size_t	i;
+	char	*str;
 
 	if (!s1 || !s2)
 		return (NULL);
