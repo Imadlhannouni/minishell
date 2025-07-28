@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 21:08:28 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/28 16:42:17 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ int	exec_command(t_exe *var, char **env, t_free *collect)
 	path = retrieve_path(var->arr[0], env, collect);
 	pid = fork();
 	if (pid < 0)
-		return (putstr_fd("fork() failed\n", 2), 1);
+		return (putstr_fd("Minishell : fork() failed\n", 2), 1);
 	if (pid == 0)
 	{
 		if (handle_redirections(var) < 0)
 			exit_free(collect, 1);
 		if (!path)
 		{
-			putstr_fd("Command not found\n",2);
+			putstr_fd("Minishell : Command not found\n",2);
 			exit_free(collect, 127);
 		}
 		execve(path, var->arr, env);
