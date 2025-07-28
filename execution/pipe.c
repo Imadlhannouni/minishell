@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:30:58 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/28 16:30:02 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*retrieve_path(char *cmd, char **env, t_free *collect)
 
 	if (is_path1(cmd))
 		return (ft_strdup(cmd));
+	if (!*cmd)
+		return (NULL);
 	paths = get_PATH(env);
 	i = 0;
 	while (paths[i])

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:31:57 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/28 16:42:27 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,11 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
 		if (handle_redirections(tmp) < 0)
-			return (-1);
+			exit_free(collect, 2);
 		if (!is_builtin(tmp->arr[0]))
 		{
 			if (execve(path, tmp->arr, *env) == -1)
-				putstr_fd("Command not found\n", 2);
+				putstr_fd("Minishell : Command not found\n", 2);
 			exit_free(collect, 127);
 		}
 		exit_free(collect, exec_builtin(tmp, env, collect));
