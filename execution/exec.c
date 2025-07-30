@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 19:20:36 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 21:52:49 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	execute(t_pipe *pipes, char ***env, t_free *collect)
 	int status = -1;
 
 	var = NULL;
-	group_pipes(pipes, &var, collect, *env);
+	group_pipes(pipes, &var, collect, env);
 	if (count_pipes(pipes) > 1)
 	{
 		int pipi = 	count_pipes(pipes);

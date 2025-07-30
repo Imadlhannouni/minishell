@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:37:54 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 23:27:23 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,45 +67,59 @@ char *fill_word(int start, int end, char *str)
 	return s;
 }
 
-void store_no_val(char ***no_val, char ***env, char *arg)
+static void init_no_val(char ***no_val, t_free *collect, char *arg)
 {
-	int i = 0;
-	if (*no_val == NULL)
-	{
-		*no_val = malloc(2 * sizeof(char*));
-		if (!*no_val)
-			return;
-		(*no_val)[0] = ft_strdup(arg);
-		(*no_val)[1] = NULL;
-	}
-	else if (check_existence(*env, arg) == 1)
-		return;
-	else
-	{
-		char **new;
-		new = malloc((var_num(*no_val) + 2) * sizeof(char *));
-		if (!new)
-			return;
-		while ((*no_val)[i])
-		{
-			new[i] = ft_strdup((*no_val)[i]);
-			i++;
-		}
-		new[i++] = ft_strdup(arg);
-		new[i] = NULL;
-		free_2d_arr(*no_val);
-		*no_val = new; 
-	}
+	*no_val = malloc(2 * sizeof(char*));
+	if (!*no_val)
+	exit_free(collect, 1);
+	(*no_val)[0] = ft_strdup(arg);
+	if (!(*no_val)[0])
+		exit_free(collect, 1);
+	(*no_val)[1] = NULL;
 }
 
-int	export(char ***env, char **args, char ***no_val)
+static void fill_no_val(char ***no_val, char *arg, t_free *collect)
+{
+	char **new;
+	int i;
+
+	i = 0;
+	new = malloc((var_num(*no_val) + 2) * sizeof(char *));
+	if (!new)
+		exit_free(collect, 1);
+	while ((*no_val)[i])
+	{
+		new[i] = ft_strdup((*no_val)[i]);
+		if (!new[i])
+			return (free_arr(new, i - 1),exit_free(collect, 1));
+		i++;
+	}
+	new[i++] = ft_strdup(arg);
+	if (!new[i - 1])
+		return (free_arr(new, i - 2),exit_free(collect, 1));
+	new[i] = NULL;
+	free_2d_arr(*no_val);
+	*no_val = new; 
+}
+
+void store_no_val(char ***no_val, char ***env, char *arg, t_free *collect)
+{
+	if (*no_val == NULL)
+		init_no_val(no_val, collect, arg);
+	else if (check_existence(*env, arg) || check_existence(*no_val, arg))
+		return ;
+	else
+		fill_no_val(no_val, arg, collect);
+}
+
+int	export(char ***env, char **args, char ***no_val, t_free *collect)
 {
 	char	**arg = NULL;
 	int		i;
 
 	i = -1;
 	if (*args == NULL)
-		return (print_sorted(*env, *no_val));
+		return (print_sorted(*env, *no_val, collect));
 	while (args[++i])
 	{
 		if (args[i])
@@ -113,7 +127,7 @@ int	export(char ***env, char **args, char ***no_val)
 		if (!check_var(arg[0]))
 			return (putstr_fd("export : not a valid identifier\n", 2), 1);
 		if (!*arg[1])
-			store_no_val(no_val, env, arg[0]);
+			store_no_val(no_val, env, arg[0], collect);
 		else
 		{
 			if (check_existence(*env, arg[0]))
