@@ -6,57 +6,104 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:59 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:49:38 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 20:42:47 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	unset_no_val(char ***no_val, char *arg)
+static int check(char *env, char **arg)
+{
+	int i;
+	
+	i = 0;
+	while (arg[i])
+	{
+		if (ft_strncmp(arg[i], env, ft_strlen(arg[i])) == 0)
+			return 1;
+		i++;
+	}
+	return 0;
+}
+
+static size_t count_to_remove(char **arr, char **arg)
+{
+	int i;
+	int cpt;
+
+	i = 0;
+	cpt = 0;
+	while (arr[i])
+	{
+		if (check(arr[i], arg))
+			cpt++;
+		i++;			
+	}
+	return cpt;
+}
+
+static void	unset_no_val(char ***no_val, char **arg, t_free *collect)
 {
 	char **clone;
 	int i;
+	int len;
 	int j;
 
 	if (!arg)
 		return;
-	i = 0;
-	j = 0;
+	i = -1;
+	j = -1;
+	len = var_num(*no_val) - count_to_remove(*no_val, arg) + 1;
 	if (!(*no_val) || !(*no_val)[0])
 		return ;
-	if (!check_existence(*no_val, arg))
-		return ;
-	clone = malloc((var_num(*no_val) + 1) * sizeof(char*));
+	clone = malloc(len * sizeof(char*));
 	if (!clone)
-		exit(1);
-	while ((*no_val)[i])
+		exit_free(collect, 1);
+	while ((*no_val)[++i])
 	{
-		if (ft_strcmp((*no_val)[i], arg) != 0)
-			clone[j++] = ft_strdup((*no_val)[i]);
-		i++;
+		if (check((*no_val)[i], arg))
+			clone[++j] = ft_strdup((*no_val)[i]);
+		if (!clone[j])
+			return (free_arr(clone, j), exit_free(collect, 1));
 	}
-	clone[j] = NULL;
+	clone[++j] = NULL;
 	free_2d_arr(*no_val);
 	*no_val = clone;
 }
 
-int	unset(char ***env, char **arg, char ***no_val)
+
+
+static int check_exe(char **env, char **arg)
+{
+	int i;
+
+	i = 0;
+	while (arg[i])
+	{
+		if (check_existence(env, arg[i]))
+			return 1;
+		i++;
+	}
+	return 0;
+}
+
+int	unset(char ***env, char **arg, char ***no_val, t_free *collect)
 {
 	char **clone;
 	int i;
 	int j;
 
-	if (!arg)
-		return 0;
 	i = 0;
 	j = 0;
-	unset_no_val(no_val, arg);
+	if (!arg || (!check_exe(*env, arg) && !check_exe(*no_val, arg)))
+		return 0;
+	unset_no_val(no_val, arg, collect);
 	clone = malloc((var_num(*env)) * sizeof(char*));
 	if (!clone)
-		exit(1);
+		exit_free(collect, 1);
 	while ((*env)[i])
 	{
-		if (ft_strncmp((*env)[i], arg, ft_strlen(arg)) != 0)
+		if (check((*env)[i], arg))
 			clone[j++] = ft_strdup((*env)[i]);
 		i++;
 	}
