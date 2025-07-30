@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 13:49:42 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:21:56 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,12 @@
 
 typedef enum s_token_type
 {
-	TOKEN_CMD,
 	TOKEN_WORD,
-	TOKEN_VAR,
 	TOKEN_SIMPLE_QUOTE,
 	TOKEN_DOUBLE_QUOTE,
 	TOKEN_REDIRECTION,
 	TOKEN_PIPE,
 	TOKEN_PATH,
-	TOKEN_OPTION,
 	TOKEN_LINKEDSTRING
 }					t_token_type;
 
@@ -111,21 +108,16 @@ void				ft_lstadd_back(t_token **lst, t_token *new);
 void				add_token(t_token **head, char *value, t_token_type type,
 						int is_full);
 char				*substrdup(int start, int end, char *str);
-int					is_cmds_var(t_token **tokens, int i,
+int					is_simple_quote(t_token **tokens, int i,
 						char *line, int *flag);
-int					is_simple_quote(t_token *tokens, int i,
-						char *line, int *flag);
-int					is_double_quote(t_token *tokens, int i,
+int					is_double_quote(t_token **tokens, int i,
 						char *line, int *flag);
 int					is_directions(int i, char *line,
 						int *flag);
 int					is_pipe(t_token *tokens, int i,
 						char *line);
-int					is_word(t_token *tokens, int i,
+int					is_word(t_token **tokens, int i,
 						char *line, int *flag);
-int					is_option(t_token *tokens, int i,
-						char *line);
-void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);
 void				free_pipes(t_pipe **pipes);
 int					replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code);
