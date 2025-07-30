@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 21:04:27 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 12:11:41 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	main(int argc, char **argv, char **envp)
 			exit_code = ft_itoa(s);
 		}
         free(line);
-        cleanup_heredoc_files(pipes);
+       cleanup_heredoc_files(pipes);
         free_pipes(&pipes);
     }
 	free(exit_code);
