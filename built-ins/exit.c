@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 11:52:59 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:15:18 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,8 @@ void	exit_free(t_free *collect, int exit_code)
 		free(collect->pid);
 	if (collect->pipes)
 		free_pipes(&(collect->pipes));
-	if (collect->path)
-		free(collect->path);
-	if (collect->exit_code)
-		free(collect->exit_code);
-	if (collect->fds)
-	{
-		close(collect->fds[0]);
-		close(collect->fds[1]);
-	}
+	if ((collect->exit_code) && *(collect->exit_code))
+		free(*(collect->exit_code));
 	exit(exit_code % 256);
 }
 
@@ -97,7 +90,7 @@ long	ft_atoi(const char *str)
 
 void	exit_shell(t_exe *var, t_free *collect)
 {
-	int i;
+	long i;
 
 	i = 0;
 	if (!(var->arr)[1] || !*(var->arr)[1])

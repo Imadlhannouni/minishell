@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:02 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:25:42 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:39:37 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ int	pwd(void)
 	}
 	putstr_fd(buffer, 1);
 	write(1, "\n", 1);
+	free(buffer);
 	return (0);
 }

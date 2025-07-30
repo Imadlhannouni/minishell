@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 17:00:35 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:47:09 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int exec_builtin(t_exe *var, char ***env, t_free *collect)
 	else if (ft_strcmp(var->arr[0], "export") == 0)
 		return export(env, &(var->arr[1]), &no_val) ;
 	else if (ft_strcmp(var->arr[0], "unset") == 0)
-		return unset(env, var->arr[1], &no_val);
+		return unset(env, var->arr, &no_val);
 	else if (ft_strcmp(var->arr[0], "exit") == 0)
 		exit_shell(var, collect);
 	else if (ft_strcmp(var->arr[0], "env") == 0)

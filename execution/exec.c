@@ -6,11 +6,24 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/28 18:52:12 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:25:36 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void help_exec(t_exe *var, t_free *collect, char *path)
+{
+	if (handle_redirections(var) < 0)
+
+		exit_free(collect, 1);
+	if (!path)
+	{
+		putstr_fd("Minishell : Command not found\n",2);
+		reset_redirections(collect->fds);
+		exit_free(collect, 127);
+	}
+}
 
 int	exec_command(t_exe *var, char **env, t_free *collect)
 {
@@ -27,39 +40,20 @@ int	exec_command(t_exe *var, char **env, t_free *collect)
 		return (putstr_fd("Minishell : fork() failed\n", 2), 1);
 	if (pid == 0)
 	{
-		if (handle_redirections(var) < 0)
-			exit_free(collect, 1);
-		if (!path)
-		{
-			putstr_fd("Minishell : Command not found\n",2);
-			exit_free(collect, 127);
-		}
+		signal(SIGINT, collect->prev_handler_int);
+		signal(SIGQUIT, collect->prev_handler_quit);
+		help_exec(var, collect, path);
 		execve(path, var->arr, env);
+		reset_redirections(collect->fds);
 		perror("Minishell");
-		exit_free(collect, 1);
+		exit_free(collect, 127);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
     	exit_code = WEXITSTATUS(status);
-	free(path);
+	if (path)
+		free(path);
 	return (exit_code);
-}
-
-void group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char **env)
-{
-	t_pipe *tmp;
-
-	if (!pipes)
-		return;
-	collect->pipes = pipes;
-	tmp = pipes;
-	while (tmp)
-	{
-		add_node(var,creat_node(tmp->full_cmd));
-		tmp = tmp->nextpipe;
-	}
-	collect->exe = *var;
-	collect->env = env;
 }
 
 void reset_redirections(int fd[2])
@@ -88,12 +82,15 @@ int	execute(t_pipe *pipes, char ***env, t_free *collect)
 	var = NULL;
 	group_pipes(pipes, &var, collect, *env);
 	if (count_pipes(pipes) > 1)
-		status = exec_pipe(var, env, count_pipes(pipes), collect);
+	{
+		int pipi = 	count_pipes(pipes);
+		status = exec_pipe(var, env, pipi, collect);
+	}
 	else if (count_pipes(pipes) == 1)
 	{
 		dup_std(fd, collect);
 		if (!is_builtin(var->arr[0]))
-		status = exec_command(var, *env, collect);
+			status = exec_command(var, *env, collect);
 		else
 		{
 			if (handle_redirections(var) < 0)

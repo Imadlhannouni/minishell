@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:59 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:35:10 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:49:38 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static void	unset_no_val(char ***no_val, char *arg)
 	j = 0;
 	if (!(*no_val) || !(*no_val)[0])
 		return ;
+	if (!check_existence(*no_val, arg))
+		return ;
 	clone = malloc((var_num(*no_val) + 1) * sizeof(char*));
 	if (!clone)
 		exit(1);
@@ -38,7 +40,7 @@ static void	unset_no_val(char ***no_val, char *arg)
 	*no_val = clone;
 }
 
-int	unset(char ***env, char *arg, char ***no_val)
+int	unset(char ***env, char **arg, char ***no_val)
 {
 	char **clone;
 	int i;
@@ -47,9 +49,9 @@ int	unset(char ***env, char *arg, char ***no_val)
 	if (!arg)
 		return 0;
 	i = 0;
-	j = 0;	
+	j = 0;
 	unset_no_val(no_val, arg);
-	clone = malloc((var_num(*env) + 1) * sizeof(char*));
+	clone = malloc((var_num(*env)) * sizeof(char*));
 	if (!clone)
 		exit(1);
 	while ((*env)[i])
