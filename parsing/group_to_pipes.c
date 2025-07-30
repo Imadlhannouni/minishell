@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 18:40:05 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:06:40 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 void	compact_fullstrings(t_token **fullcmd)
 {
 	t_token	*curr;
+	int		flag;
 	t_token	*prev;
 	t_token	*compact;
 
 	curr = *fullcmd;
 	prev = NULL;
+	flag = 0;
 	while (curr)
 	{
 		if (curr->is_fullstring == 1)

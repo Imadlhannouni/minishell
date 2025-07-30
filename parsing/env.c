@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 18:21:54 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:33:59 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,17 +168,32 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
 		handle_token_split(tokens, expanded);
 	else
-		tokens->value = expanded;
+	{
+		if (ft_strlen(expanded) == 1 && tokens->type != TOKEN_DOUBLE_QUOTE && tokens->type != TOKEN_SIMPLE_QUOTE && tokens->next && (tokens->next->type == TOKEN_DOUBLE_QUOTE || tokens->next->type == TOKEN_SIMPLE_QUOTE) && tokens->is_fullstring == 1)
+		{
+			free(expanded);
+			tokens->value = ft_strdup("");
+		}
+		else
+			tokens->value = expanded;
+	}
 	return (1);
 }
 
-int	replace_env_variables(t_pipe *pipes, char **clone_envi, char *exit_code)
+int	replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code)
 {
+	t_pipe	*current;
+	t_pipe	*prev;
 	t_token	*tokens;
+	t_pipe	*pipe_to_delete;
+	int		should_delete_pipe;
 
-	while (pipes)
+	current = *pipes;
+	prev = NULL;
+	while (current)
 	{
-		tokens = pipes->full_cmd;
+		should_delete_pipe = 0;
+		tokens = current->full_cmd;
 		while (tokens)
 		{
 			if (tokens->value && tokens->type != TOKEN_SIMPLE_QUOTE
@@ -186,11 +201,34 @@ int	replace_env_variables(t_pipe *pipes, char **clone_envi, char *exit_code)
 				&& tokens->expand == 0)
 			{
 				if (!expand_token_value(tokens, clone_envi, exit_code))
-					return (0);
+				{
+					should_delete_pipe = 1;
+					break ;
+				}
 			}
 			tokens = tokens->next;
 		}
-		pipes = pipes->nextpipe;
+		if (should_delete_pipe)
+		{
+			pipe_to_delete = current;
+			if (prev == NULL)
+			{
+				*pipes = current->nextpipe;
+				current = *pipes;
+			}
+			else
+			{
+				prev->nextpipe = current->nextpipe;
+				current = current->nextpipe;
+			}
+			free_tokens(pipe_to_delete->full_cmd);
+			free(pipe_to_delete);
+		}
+		else
+		{
+			prev = current;
+			current = current->nextpipe;
+		}
 	}
 	return (1);
 }

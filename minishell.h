@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:46:47 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:19:26 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,12 @@
 
 typedef enum s_token_type
 {
-	TOKEN_CMD,
 	TOKEN_WORD,
-	TOKEN_VAR,
 	TOKEN_SIMPLE_QUOTE,
 	TOKEN_DOUBLE_QUOTE,
 	TOKEN_REDIRECTION,
 	TOKEN_PIPE,
 	TOKEN_PATH,
-	TOKEN_OPTION,
 	TOKEN_LINKEDSTRING
 }					t_token_type;
 
@@ -113,24 +110,19 @@ void				ft_lstadd_back(t_token **lst, t_token *new);
 void				add_token(t_token **head, char *value, t_token_type type,
 						int is_full);
 char				*substrdup(int start, int end, char *str);
-int					is_cmds_var(t_token **tokens, int i,
+int					is_simple_quote(t_token **tokens, int i,
 						char *line, int *flag);
-int					is_simple_quote(t_token *tokens, int i,
-						char *line, int *flag);
-int					is_double_quote(t_token *tokens, int i,
+int					is_double_quote(t_token **tokens, int i,
 						char *line, int *flag);
 int					is_directions(int i, char *line,
 						int *flag);
 int					is_pipe(t_token *tokens, int i,
 						char *line);
-int					is_word(t_token *tokens, int i,
+int					is_word(t_token **tokens, int i,
 						char *line, int *flag);
-int					is_option(t_token *tokens, int i,
-						char *line);
-void				is_path(t_pipe *pipe);
 void				free_tokens(t_token *tokens);
 void				free_pipes(t_pipe **pipes);
-int					replace_env_variables(t_pipe *pipes, char **clone_envi, char *exit_code);
+int					replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
