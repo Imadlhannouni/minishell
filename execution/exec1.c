@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:02:17 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 23:22:00 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 	}
 	if (path)
 		free(path);
-	return pid;
+	return (path = NULL, pid);
 }
 
 int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_free *collect)
@@ -112,7 +112,7 @@ int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_free *collect)
 		wait(NULL);
 	if (WIFEXITED(status))
     	exit_code = WEXITSTATUS(status);
-	return (free(var.pid), free(var.fd),exit_code);
+	return (free(var.pid), free(var.fd), var.fd=NULL, var.pid=NULL, exit_code);
 }
 
 

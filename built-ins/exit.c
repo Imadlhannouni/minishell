@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:15:18 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 23:38:55 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 void	exit_free(t_free *collect, int exit_code)
 {
-	if (collect->env)
-		free_2d_arr(collect->env);
+	if (*(collect->env))
+		free_2d_arr(*(collect->env));
 	if (collect->exe)
 		free_t_exe(&(collect->exe));
 	if (collect->fd)
 		free(collect->fd);
-	if (collect->no_val)
-		free_2d_arr(collect->no_val);
 	if (collect->pid)
 		free(collect->pid);
+	if (*(collect->no_val))
+		free_2d_arr(*(collect->no_val));
 	if (collect->pipes)
 		free_pipes(&(collect->pipes));
 	if ((collect->exit_code) && *(collect->exit_code))
@@ -94,7 +94,11 @@ void	exit_shell(t_exe *var, t_free *collect)
 
 	i = 0;
 	if (!(var->arr)[1] || !*(var->arr)[1])
+	{
+		close(collect->fds[0]);
+		close(collect->fds[1]);
 		exit_free(collect, 1);
+	}
 	if (!ft_isnum((var->arr)[1]))
 	{
 		putstr_fd("Numeric argument required\n", 2);
@@ -106,6 +110,18 @@ void	exit_shell(t_exe *var, t_free *collect)
 		putstr_fd("Numeric argument required\n", 2);
 		exit_free(collect, 2);
 	}
+	close(collect->fds[0]);
+	close(collect->fds[1]);
+	if (*(collect->env))
+		free_2d_arr(*(collect->env));
+	if (collect->exe)
+		free_t_exe(&(collect->exe));
+	if (*(collect->no_val))
+		free_2d_arr(*(collect->no_val));
+	if (collect->pipes)
+		free_pipes(&(collect->pipes));
+	if ((collect->exit_code) && *(collect->exit_code))
+		free(*(collect->exit_code));
 	putstr_fd("exit\n", 1);
-	exit_free(collect, i % 256);
+	exit(i % 256);
 }
