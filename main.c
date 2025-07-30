@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 12:11:41 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:21:44 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	sighandler(int signum)
 		rl_redisplay();
 	}
 }
-static void	init_collect(t_free *collect)
+static void	init_collect(t_free *collect, char **exit_code)
 {
 	collect->env = NULL;
 	collect->exe = NULL;
@@ -49,7 +49,7 @@ static void	init_collect(t_free *collect)
 	collect->pipes = NULL;
 	collect->fds = NULL;
 	collect->path = NULL;
-	collect->exit_code = NULL;
+	collect->exit_code = exit_code;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -64,11 +64,11 @@ int	main(int argc, char **argv, char **envp)
 	clone_envi = clone_env(envp);
     (void)argc;
     (void)argv;
-    signal(SIGINT, sighandler);
-    signal(SIGQUIT, SIG_IGN);
     line = NULL;
 	exit_code = NULL;
-	init_collect(&collect);
+	init_collect(&collect, &exit_code);
+    collect.prev_handler_int = signal(SIGINT, sighandler);
+    collect.prev_handler_quit = signal(SIGQUIT, SIG_IGN);
     while (1)
 	{
 		line = readline_func(&clone_envi, &exit_code);
@@ -83,7 +83,7 @@ int	main(int argc, char **argv, char **envp)
 			exit_code = ft_itoa(s);
 		}
         free(line);
-       cleanup_heredoc_files(pipes);
+       	cleanup_heredoc_files(pipes);
         free_pipes(&pipes);
     }
 	free(exit_code);

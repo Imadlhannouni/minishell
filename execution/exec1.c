@@ -6,31 +6,11 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/28 16:42:27 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:02:17 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	count_args(t_token *tok)
-{
-	t_token *temp;
-	int cpt;
-
-	if (!tok)
-		return 0;
-	temp = tok;
-	cpt = 0;
-
-	while (temp != NULL)
-	{
-		if ((temp->inp_red == 0) && (temp->heredoc == 0)
-			&& (temp->out_red == 0) && (temp->out_app == 0))
-			cpt++;
-		temp = temp->next;
-	}
-	return cpt;
-}
 
 int	init_var(t_vars *var, size_t pipe_num, t_free *collect)
 {
@@ -86,12 +66,17 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 	{
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
+		if (!path && !is_builtin(tmp->arr[0]))
+		{
+			putstr_fd("Minishell : command not found\n", 2);
+			exit_free(collect, 127);
+		}
 		if (handle_redirections(tmp) < 0)
 			exit_free(collect, 2);
 		if (!is_builtin(tmp->arr[0]))
 		{
-			if (execve(path, tmp->arr, *env) == -1)
-				putstr_fd("Minishell : Command not found\n", 2);
+			execve(path, tmp->arr, *env);
+			perror("Minishell");
 			exit_free(collect, 127);
 		}
 		exit_free(collect, exec_builtin(tmp, env, collect));

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:58:38 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:46:47 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,9 @@ typedef struct s_free
 	int (*fd)[2];
 	int *fds;
 	char *path;
-	char *exit_code;
+	char **exit_code;
+	void (*prev_handler_int)(int);
+	void (*prev_handler_quit)(int);
 }	t_free;
 
 char				*ft_strchr(const char *s, int c);
@@ -171,7 +173,7 @@ int		cd(char **arr, char ***env, t_free *collect);
 void	exit_free(t_free *collect, int exit_code);
 int		pwd(void);
 int		print_env(char **env, char **args);
-int		unset(char ***env, char *var, char ***no_val);
+int		unset(char ***env, char **var, char ***no_val);
 int		echo(char **arg);
 int		export(char ***env, char **args, char ***no_val);
 char	**spec_split(char *str);

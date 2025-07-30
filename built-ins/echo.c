@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:19 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 21:53:09 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 13:56:24 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int check_flag(char *arg)
 	int i;
 
 	i = 0;
+	if (!arg)
+		return 0;
 	if (arg[i++] != '-')
 		return 0;
 	while (arg[i])
