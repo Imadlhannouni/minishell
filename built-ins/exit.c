@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 21:05:02 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 11:52:59 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ void	exit_free(t_free *collect, int exit_code)
 	exit(exit_code % 256);
 }
 
+static int	is_space(char c)
+{
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
+}
 int ft_isnum(char *str)
 {
 	int	i;
@@ -46,16 +52,16 @@ int ft_isnum(char *str)
 	while (str[i])
 	{
 		if (!((str[i] >= 48 && str[i] <= 57)
-			|| str[i] == '-' || str[i] == '+'))
+			|| str[i] == '-' || str[i] == '+' || is_space(str[i])))
 			return (0);
 		i++;
 	}
 	return 1;
 }
 
-static int	is_space(char c)
+static int	ft_isdigit(int a)
 {
-	if ((c >= 9 && c <= 13) || c == 32)
+	if (a >= '0' && a <= '9')
 		return (1);
 	return (0);
 }
@@ -77,8 +83,10 @@ long	ft_atoi(const char *str)
 			sign = -1;
 		i++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
+	while (str[i])
 	{
+		if (!ft_isdigit(str[i]))
+			return (-1);
 		val = val * 10 + (str[i] - 48);
 		if (val > 9223372036854775807)
 			return -1;

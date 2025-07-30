@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/28 16:42:17 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/28 18:52:12 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	exec_command(t_exe *var, char **env, t_free *collect)
 			exit_free(collect, 127);
 		}
 		execve(path, var->arr, env);
+		perror("Minishell");
+		exit_free(collect, 1);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/27 18:33:29 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/30 11:56:19 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,18 @@ int update_OLDPWD(char ***env, t_free *collect)
 	char *oldpwd;
 
 	i = -1;
+	oldpwd = NULL;
 	while ((*env)[++i])
 	{
 		if (ft_strncmp((*env)[i], "PWD=", 4) == 0)
+		{
 			oldpwd = ft_strdup((*env)[i] + 4);
+			if (!oldpwd)
+				exit_free(collect, 1);
+		}
 	}
+	if (!oldpwd)
+		return -1;
 	i = -1;
 	while ((*env)[++i])
 	{
@@ -51,6 +58,7 @@ int update_PWD(char ***env, t_free *collect)
 	int i;
 	char *str;
 
+	str = NULL;
 	i = -1;
 	while ((*env)[++i])
 	{
@@ -70,7 +78,8 @@ int update_PWD(char ***env, t_free *collect)
 				return (free(str), exit_free(collect, 1), 1);
 		}
 	}
-	free(str);
+	if (str)
+		free(str);
 	return 1;
 }
 
@@ -85,6 +94,6 @@ int	cd(char **arr, char ***env, t_free *collect)
 	}
 	update_OLDPWD(env, collect);
 	if (update_PWD(env, collect) == -1)
-		return (putstr_fd("No Such a Directory\n", 2), 1);
+		return (1);
 	return (0);
 }
