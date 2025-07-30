@@ -6,73 +6,30 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:44:39 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:18:19 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	handle_redirection(int i, char *line, int *flag)
-{
-	if (line[i] == '>' && line[i + 1] != '>')
-	{
-		*flag = 4;
-		return (i + 1);
-	}
-	else if (line[i] == '<' && line[i + 1] != '<')
-	{
-		*flag = 3;
-		return (i + 1);
-	}
-	else if (line[i] == '>' && line[i + 1] == '>')
-	{
-		*flag = 2;
-		return (i + 2);
-	}
-	else if (line[i] == '<' && line[i + 1] == '<')
-	{
-		*flag = 1;
-		return (i + 2);
-	}
-	return (i);
-}
-
-static int	handle_new_command(t_token **tokens, int i, char *line,
-		int *new_command, int *flag)
-{
-	i = handle_redirection(i, line, flag);
-	if (line[i] != '>' && line[i] != '<' && line[i] != '|')
-	{
-		i = is_cmds_var(tokens, i, line, flag);
-		*new_command = 0;
-	}
-	else
-		i++;
-	return (i);
-}
-
 static int	handle_token_cases(t_token **tokens, int i, char *line,
-		int *new_command, int *flag)
+		int *flag)
 {
 	if (line[i] == '\'')
-		i = is_simple_quote(*tokens, i, line, flag);
+		i = is_simple_quote(tokens, i, line, flag);
 	else if (line[i] == '"')
-		i = is_double_quote(*tokens, i, line, flag);
+		i = is_double_quote(tokens, i, line, flag);
 	else if (line[i] == '<' || line[i] == '>')
 		i = is_directions(i, line, flag);
 	else if (line[i] == '|')
 	{
 		i = is_pipe(*tokens, i, line);
-		*new_command = 1;
 	}
-	else if (line[i] == '-' && line[i + 1] == 'n' && (line[i + 2] == ' '
-			|| line[i + 2] == '\t' || line[i + 2] == '\0'))
-		i = is_option(*tokens, i, line);
 	else
 	{
 		if (line[i] == '\0')
 			return (i);
-		i = is_word(*tokens, i, line, flag);
+		i = is_word(tokens, i, line, flag);
 	}
 	return (i);
 }
@@ -81,13 +38,11 @@ t_token	*smart_split(char *line)
 {
 	t_token	*tokens;
 	int		i;
-	int		new_command;
 	int		flag;
 
 	flag = 0;
 	tokens = NULL;
 	i = 0;
-	new_command = 1;
 	if (handle_errors(line))
 		return (tokens);
 	while (line[i] != '\0')
@@ -96,10 +51,7 @@ t_token	*smart_split(char *line)
 			i++;
 		if (!line[i])
 			break ;
-		if (new_command)
-			i = handle_new_command(&tokens, i, line, &new_command, &flag);
-		else
-			i = handle_token_cases(&tokens, i, line, &new_command, &flag);
+		i = handle_token_cases(&tokens, i, line, &flag);
 	}
 	return (tokens);
 }
@@ -166,7 +118,7 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 	*pipes = group_tokens_into_pipes(tokens);
 	if (!handle_heredocs(*pipes, clone_envi, &exit_code))
 		return (0);
-	if (!replace_env_variables(*pipes, clone_envi, exit_code))
+	if (!replace_env_variables(pipes, clone_envi, exit_code))
 		return (0);
 	curr = *pipes;
 	while (curr)
@@ -174,7 +126,6 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 		compact_fullstrings(&(curr)->full_cmd);
 		curr = curr->nextpipe;
 	}
-	is_path(*pipes);
 	//print_pipes(*pipes);
 	return (1);
 }
