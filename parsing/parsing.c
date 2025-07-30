@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 13:49:15 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/30 13:51:08 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,7 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 	*pipes = group_tokens_into_pipes(tokens);
 	if (!handle_heredocs(*pipes, clone_envi, &exit_code))
 		return (0);
-<<<<<<< HEAD
 	if (!replace_env_variables(pipes, clone_envi, exit_code))
-=======
-	if (!replace_env_variables(*pipes, clone_envi, exit_code))
->>>>>>> 658c8c3512e5f9986469792ec04b11a2ccdcd729
 		return (0);
 	curr = *pipes;
 	while (curr)
