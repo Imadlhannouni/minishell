@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 18:22:51 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 14:42:33 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	expand_and_write_line(int write_fd, char *line, char **clone_envi,
 	free(line);
 }
 
-static void	child_heredoc_loop(int write_fd, char *delimiter, char **clone_envi,
+static void	child_heredoc_loop(t_pipe *pipe, int write_fd, char *delimiter, char **clone_envi,
 		t_token_type type, char **exit_code)
 {
 	char	*line;
@@ -64,6 +64,9 @@ static void	child_heredoc_loop(int write_fd, char *delimiter, char **clone_envi,
 		}
 		expand_and_write_line(write_fd, line, clone_envi, type, exit_code);
 	}
+	free_2d_arr(clone_envi);
+	free_pipes(&pipe);
+	free(*exit_code);
 	close(write_fd);
 	exit(0);
 }
@@ -112,7 +115,7 @@ static char	*parent_heredoc_read(int read_fd, pid_t pid, int *status,
 	return (content);
 }
 
-char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type,
+char	*read_heredoc(t_pipe *pipes, char *delimiter, char **clone_envi, t_token_type type,
 		char **exit_code)
 {
 	int		pipefd[2];
@@ -129,7 +132,10 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type,
 		return (NULL);
 	}
 	if (pid == 0)
-		child_heredoc_loop(pipefd[1], delimiter, clone_envi, type, exit_code);
+	{
+		close(pipefd[0]);
+		child_heredoc_loop(pipes, pipefd[1], delimiter, clone_envi, type, exit_code);
+	}
 	close(pipefd[1]);
 	return (parent_heredoc_read(pipefd[0], pid, &status, exit_code));
 }

@@ -6,11 +6,17 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:06:40 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 16:42:12 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	check_null(t_token **fullcmd)
+{
+	if ((*fullcmd)->value == NULL && (*fullcmd)->next)
+		(*fullcmd) = (*fullcmd)->next;
+}
 
 void	compact_fullstrings(t_token **fullcmd)
 {
@@ -18,12 +24,16 @@ void	compact_fullstrings(t_token **fullcmd)
 	int		flag;
 	t_token	*prev;
 	t_token	*compact;
+	t_token *head;
 
+	head = *fullcmd;
 	curr = *fullcmd;
 	prev = NULL;
 	flag = 0;
 	while (curr)
 	{
+		if (head == curr)
+			check_null(&curr);
 		if (curr->is_fullstring == 1)
 		{
 			compact = concat_fullstring(curr, &curr);

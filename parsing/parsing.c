@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:18:19 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 16:45:57 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	handle_token_cases(t_token **tokens, int i, char *line,
 	return (i);
 }
 
-t_token	*smart_split(char *line)
+t_token	*smart_split(char *line, char *exit_code)
 {
 	t_token	*tokens;
 	int		i;
@@ -43,7 +43,7 @@ t_token	*smart_split(char *line)
 	flag = 0;
 	tokens = NULL;
 	i = 0;
-	if (handle_errors(line))
+	if (handle_errors(line, exit_code))
 		return (tokens);
 	while (line[i] != '\0')
 	{
@@ -56,12 +56,12 @@ t_token	*smart_split(char *line)
 	return (tokens);
 }
 
-static int	handle_heredoc_token(t_token *current_token, char **clone_envi,
+static int	handle_heredoc_token(t_pipe *pipe, t_token *current_token, char **clone_envi,
 		char **exit_code)
 {
 	char	*content;
 
-	content = read_heredoc(current_token->value, clone_envi,
+	content = read_heredoc(pipe, current_token->value, clone_envi,
 			current_token->type, exit_code);
 	if (content)
 	{
@@ -94,7 +94,7 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 					concat_fullstring(compact, NULL);
 					current_token->is_fullstring = 0;
 				}
-				if (!handle_heredoc_token(current_token, clone_envi, exit_code))
+				if (!handle_heredoc_token(pipe, current_token, clone_envi, exit_code))
 					return (0);
 			}
 			current_token = current_token->next;
@@ -112,7 +112,7 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 	t_pipe	*curr;
 
 	*pipes = NULL;
-	tokens = smart_split(line);
+	tokens = smart_split(line, exit_code);
 	if (!tokens)
 		return (0);
 	*pipes = group_tokens_into_pipes(tokens);
