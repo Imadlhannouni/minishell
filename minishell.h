@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 20:26:43 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 16:48:16 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,13 +130,13 @@ void				print_pipes(t_pipe *pipes);
 t_token				*concat_fullstring(t_token *start, t_token **next);
 int					main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code);
 void				print_cmd_not_found(char *cmd);
-char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type, char **exit_code);
+char				*read_heredoc(t_pipe *pipes, char *delimite, char **clone_envi, t_token_type type, char **exit_code);
 char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
 int					append_env_or_chunk(char *str, int i, char **clone_envi,
 						char **result, char *exit_code);
 void				cleanup_heredoc_files(t_pipe *pipes);
-int					handle_errors(char *line);
+int					handle_errors(char *line, char *exit_code);
 char				*ft_itoa(int n);
 void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 void				compact_fullstrings(t_token **fullcmd);

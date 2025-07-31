@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 19:19:06 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 14:52:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
     line = NULL;
-	exit_code = NULL;
+	exit_code = ft_strdup("0");
 	init_collect(&collect, &exit_code);
     collect.prev_handler_int = signal(SIGINT, sighandler);
     collect.prev_handler_quit = signal(SIGQUIT, SIG_IGN);
