@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 16:48:16 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 17:00:13 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ typedef struct s_free
 {
 	t_pipe	*pipes;
 	t_exe	*exe;
-	char **env;
-	char **no_val;
+	char ***env;
+	char ***no_val;
 	int	*pid;
 	int (*fd)[2];
 	int *fds;
@@ -160,20 +160,20 @@ int		init_var(t_vars *var, size_t pipe_num, t_free *collect);
 int 	exec_command(t_exe *var, char **env, t_free *collect);
 
 
-int		print_sorted(char **env, char **arr);
+int		print_sorted(char **env, char **arr, t_free *collect);
 int		cd(char **arr, char ***env, t_free *collect);
 void	exit_free(t_free *collect, int exit_code);
 int		pwd(void);
 int		print_env(char **env, char **args);
 int		unset(char ***env, char **var, char ***no_val, t_free *collect);
 int		echo(char **arg);
-int		export(char ***env, char **args, char ***no_val);
+int		export(char ***env, char **args, char ***no_val, t_free *collect);
 char	**spec_split(char *str);
 int		check_var(char *str);
 char	*join_strings(char *s1, char *s2, char *s3);
 int		check_existence(char **env, char *name);
 char	*fill_word(int start, int end, char *str);
-void	group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char **env);
+void	group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char ***env);
 int		exec_builtin(t_exe *var, char ***env, t_free *collect);
 
 int 	is_builtin(char *cmd);

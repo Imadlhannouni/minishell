@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 19:20:36 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 16:24:39 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,13 @@
 static void help_exec(t_exe *var, t_free *collect, char *path)
 {
 	if (handle_redirections(var) < 0)
-
-		exit_free(collect, 1);
+	{
+		if (path)
+			free(path);
+		close(collect->fds[0]);
+		close(collect->fds[1]);		
+		exit_free(collect, 127);
+	}
 	if (!path)
 	{
 		putstr_fd("Minishell : Command not found\n",2);
@@ -37,20 +42,20 @@ int	exec_command(t_exe *var, char **env, t_free *collect)
 	path = retrieve_path(var->arr[0], env, collect);
 	pid = fork();
 	if (pid < 0)
-		return (putstr_fd("Minishell : fork() failed\n", 2), 1);
+		return (putstr_fd("Minishell : fork() failed\n", 2), free(path), 1);
 	if (pid == 0)
 	{
-		signal(SIGINT, collect->prev_handler_int);
-		signal(SIGQUIT, collect->prev_handler_quit);
 		help_exec(var, collect, path);
 		execve(path, var->arr, env);
-		reset_redirections(collect->fds);
 		perror("Minishell");
+		reset_redirections(collect->fds);
 		exit_free(collect, 127);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
-    	exit_code = WEXITSTATUS(status);
+	    exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		exit_code = WTERMSIG(status);
 	if (path)
 		free(path);
 	return (exit_code);
@@ -79,8 +84,8 @@ int	execute(t_pipe *pipes, char ***env, t_free *collect)
 	int fd[2];
 	int status = -1;
 
-	var = NULL;
-	group_pipes(pipes, &var, collect, *env);
+	var = NULL;		 
+	group_pipes(pipes, &var, collect, env);
 	if (count_pipes(pipes) > 1)
 	{
 		int pipi = 	count_pipes(pipes);

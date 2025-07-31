@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 21:17:54 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 21:25:42 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 15:09:54 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	dup_output(char *file, int type)
 	else
 		fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0666);
 	if (fd < 0)
-		return (-1);
+		return (perror("Minishell"), -1);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 	return 1;
@@ -91,13 +91,13 @@ int	handle_redirections(t_exe *var)
 		{
 			fd1 = open(red->file, O_RDWR , 0666);
 			if (fd1 < 0)
-				return (putstr_fd("Minishell : Open Failed\n", 2),-1);
+				return (perror("Minishell"),-1);
 			dup2(fd1, STDIN_FILENO);
 			close(fd1);
 		}
 		else if (red->red_type == 1 || red->red_type == 2)
 			if (dup_output(red->file, red->red_type) < 0)
-				return (putstr_fd("Minishell : Open Failed\n", 2),-1);;
+				return (-1);;
 		red = red->next;
 	}
 	return 1;
