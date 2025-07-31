@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 22:41:14 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 16:00:36 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	print_sorted(char **env, char **arr, t_free *collect)
 	{
 		var = spec_split(merged_arr[i]);
 		if (!var)
-			exit(1);
+			exit_free(collect, 1);
 		put_format(var);
 		free_2d_arr(var);
 		i++;
