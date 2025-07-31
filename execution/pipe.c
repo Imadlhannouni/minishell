@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:30 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:58:13 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char **get_PATH(char **env)
 	}
 	return (paths);
 }
-char	*retrieve_path(char *cmd, char **env, t_free *collect)
+char	*retrieve_path(char *cmd, char **env)
 {
 	int i;
 	char *path;
@@ -42,7 +42,7 @@ char	*retrieve_path(char *cmd, char **env, t_free *collect)
 	paths = get_PATH(env);
 	if (!*cmd)
 		return (free_2d_arr(paths), NULL);
-	if (is_path1(cmd) || !paths)
+	if (is_path1(cmd) || !paths || !*paths)
 		return (ft_strdup(cmd));
 	i = 0;
 	while (paths[i])
@@ -50,15 +50,9 @@ char	*retrieve_path(char *cmd, char **env, t_free *collect)
 		path = ft_strjoin_v2(paths[i], "/", 0);
 		path = ft_strjoin_v2(path, cmd, 1);
 		if (access(path,F_OK | X_OK) == 0)
-		{
-			collect->path = path;
-			return (free_2d_arr(paths),path);
-		}
-		else
-			free(path);
+			return (path);
 		i++;
 	}
-	free_2d_arr(paths);
 	return (NULL);
 }
 

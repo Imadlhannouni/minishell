@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens_manipulation.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:39:28 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:47:57 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	t_token	*new;
 	t_token	*tmp;
 
-	new = malloc(sizeof(t_token));
+	new = (t_token*)ft_malloc(sizeof(t_token), 0);
 	new->type = type;
 	new->value = value;
 	new->heredoc = 0;

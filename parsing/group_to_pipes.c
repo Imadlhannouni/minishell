@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   group_to_pipes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:06:40 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:46:26 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,7 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 	t_pipe	*new;
 	t_pipe	*tmp;
 
-	new = malloc(sizeof(t_pipe));
-	if (!new)
-		return ;
+	new = (t_pipe*)ft_malloc(sizeof(t_pipe), 0);
 	new->full_cmd = fullcmd;
 	new->nextpipe = NULL;
 	if (!*head)

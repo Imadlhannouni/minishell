@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 23:39:01 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:18:25 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <dirent.h>
+
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 10
+#endif
 
 typedef enum s_token_type
 {
@@ -55,6 +59,12 @@ typedef struct s_pipe
 	struct s_pipe	*nextpipe;
 }					t_pipe;
 
+typedef struct s_malloc
+{
+	void	*adress;
+	struct s_malloc *next;
+}	t_malloc;
+
 typedef struct s_vars
 {
 	size_t i;
@@ -76,21 +86,6 @@ typedef struct s_exe
 	t_red	*redirections;
 	struct s_exe *next;
 }	t_exe;
-
-typedef struct s_free
-{
-	t_pipe	*pipes;
-	t_exe	*exe;
-	char ***env;
-	char ***no_val;
-	int	*pid;
-	int (*fd)[2];
-	int *fds;
-	char *path;
-	char **exit_code;
-	void (*prev_handler_int)(int);
-	void (*prev_handler_quit)(int);
-}	t_free;
 
 char				*ft_strchr(const char *s, int c);
 size_t				ft_strcpy(char *dst, const char *src);
@@ -141,41 +136,44 @@ char				*ft_itoa(int n);
 void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 void				compact_fullstrings(t_token **fullcmd);
 
+void	sighandler(int signum);
+void	*ft_malloc(size_t len, int flag);
+
 size_t	var_num(char **arr);
 void	free_arr(char **arr, int j);
 char	**clone_env(char **env);
-int		execute(t_pipe *pipes, char ***env, t_free *collect);
+int		execute(t_pipe *pipes, char ***env);
 void 	putstr_fd(char *str, int fd);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
-char	*retrieve_path(char *cmd, char **env, t_free *collect);
+char	*retrieve_path(char *cmd, char **env);
 void	free_2d_arr(char **arr);
 int		count_args(t_token *tok);
 int		count_pipes(t_pipe *pipes);
-int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_free *collect);
+int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num);
 void	close_fd(int (*fd)[2], size_t i, size_t total);
 void	switch_fd(int (*fd)[2], size_t i, size_t total);
 void	close_previous(int (*fd)[2], int j);
-int		helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect);
-int		init_var(t_vars *var, size_t pipe_num, t_free *collect);
-int 	exec_command(t_exe *var, char **env, t_free *collect);
+int		helper(t_exe *tmp ,char ***env, t_vars var);
+int		init_var(t_vars *var, size_t pipe_num);
+int 	exec_command(t_exe *var, char **env, int *fd);
 
-
-int		print_sorted(char **env, char **arr, t_free *collect);
-int		cd(char **arr, char ***env, t_free *collect);
-void	exit_free(t_free *collect, int exit_code);
+int		print_sorted(char **env);
+int		cd(char **arr, char ***env);
+void	exit_free(int exit_code);
 int		pwd(void);
 int		print_env(char **env, char **args);
-int		unset(char ***env, char **var, char ***no_val, t_free *collect);
+int		unset(char ***env, char **var);
 int		echo(char **arg);
-int		export(char ***env, char **args, char ***no_val, t_free *collect);
+int		export(char ***env, char **args);
 char	**spec_split(char *str);
 int		check_var(char *str);
 char	*join_strings(char *s1, char *s2, char *s3);
 int		check_existence(char **env, char *name);
 char	*fill_word(int start, int end, char *str);
-void	group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char ***env);
-int		exec_builtin(t_exe *var, char ***env, t_free *collect);
+void	group_pipes(t_pipe *pipes, t_exe **var);
+int		exec_builtin(t_exe *var, char ***env);
 
+int check_equ(char *str);
 int 	is_builtin(char *cmd);
 int		group_2d_arr(t_exe *var, t_token *tok);
 int		fill_redirection(t_exe *var, t_token *tok);
@@ -187,6 +185,6 @@ void	reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
 void	add_redirection(t_red **red, t_red *new_red);
 int		fill_redirection(t_exe *var, t_token *tok);
-void	exit_shell(t_exe *var, t_free *collect);
+void	exit_shell(t_exe *var);
 
 #endif

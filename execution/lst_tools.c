@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:36 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 12:09:40 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:45:51 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ t_exe *creat_node(t_token *tok)
 
 	if (!tok)
 		return NULL;
-	node = malloc(sizeof(t_exe));
-	if (!node)
-		return NULL;
+	node = (t_exe*)ft_malloc(sizeof(t_exe), 0);
 	node->arr = NULL;
 	node->redirections = NULL;
 	if (!group_2d_arr(node,tok))
@@ -88,17 +86,11 @@ int	group_2d_arr(t_exe *var,t_token *tok)
 
 	i = 0;
 	temp = tok;
-	(var)->arr = malloc((count_args(tok) + 1) * sizeof(char*));
-	if (!(var)->arr)
-		return 0;
+	(var)->arr = (char**)ft_malloc((count_args(tok) + 1) * sizeof(char*), 0);
 	while (temp)
 	{
 		if (!is_redirection(temp))
-		{
 			(var)->arr[i++] = ft_strdup(temp->value);
-			if (!(var)->arr[i - 1])
-				return (free_arr((var)->arr, i - 2), 0);
-		}
 		else
 		{
 			if(!fill_redirection(var, temp))

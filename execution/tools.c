@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 23:38:48 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:59:17 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,25 +33,22 @@ int is_builtin(char *cmd)
 	return 0;
 }
 
-int exec_builtin(t_exe *var, char ***env, t_free *collect)
+int exec_builtin(t_exe *var, char ***env)
 {
-	static char **no_val = NULL;
-
-	collect->no_val = &no_val;
 	if (!var->arr || !var->arr[0])
 		return 1;
 	if (ft_strcmp(var->arr[0], "cd") == 0)
-		return cd(var->arr, env, collect);
+		return cd(var->arr, env);
 	else if (ft_strcmp(var->arr[0], "pwd") == 0)
 		return pwd();
 	else if (ft_strcmp(var->arr[0], "echo") == 0)
 		return (echo(var->arr));
 	else if (ft_strcmp(var->arr[0], "export") == 0)
-		return export(env, &(var->arr[1]), &no_val, collect) ;
+		return export(env, &(var->arr[1])) ;
 	else if (ft_strcmp(var->arr[0], "unset") == 0)
-		return unset(env, &(var->arr[1]), &no_val, collect);
+		return unset(env, &(var->arr[1]));
 	else if (ft_strcmp(var->arr[0], "exit") == 0)
-		exit_shell(var,collect);
+		exit_shell(var);
 	else if (ft_strcmp(var->arr[0], "env") == 0)
 		return print_env(*env, var->arr);
 	return 0;
@@ -88,14 +85,10 @@ char **clone_env(char **env)
 	char **clone;
 	int i = 0;
 
-	clone = malloc((var_num(env) + 1) * sizeof(char*));
-	if (!clone)
-		return NULL;
+	clone = (char**)ft_malloc((var_num(env) + 1) * sizeof(char*), 0);
 	while (env[i])
 	{
 		clone[i] = ft_strdup(env[i]);
-		if (!clone[i])
-			return (free_arr(clone, i), NULL);
 		i++;
 	}
 	clone[i] = NULL;
