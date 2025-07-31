@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 14:37:03 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:11:06 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char *get_pwd(void)
 	return buff;
 }
 
-int update_OLDPWD(char ***env, t_free *collect)
+int update_OLDPWD(char ***env)
 {
 	int i;
 	char *oldpwd;
@@ -30,11 +30,7 @@ int update_OLDPWD(char ***env, t_free *collect)
 	while ((*env)[++i])
 	{
 		if (ft_strncmp((*env)[i], "PWD=", 4) == 0)
-		{
 			oldpwd = ft_strdup((*env)[i] + 4);
-			if (!oldpwd)
-				exit_free(collect, 1);
-		}
 	}
 	if (!oldpwd)
 		return -1;
@@ -43,17 +39,13 @@ int update_OLDPWD(char ***env, t_free *collect)
 	{
 		if ((ft_strncmp((*env)[i], "OLDPWD=", 7) == 0))
 		{
-			free((*env)[i]);
 			(*env)[i] = ft_strjoin("OLDPWD=", oldpwd);
-			if (!(*env)[i])
-				exit_free(collect, 1);
 		}
 	}
-	free(oldpwd);
 	return 1;
 }
 
-int update_PWD(char ***env, t_free *collect)
+int update_PWD(char ***env)
 {
 	int i;
 	char *str;
@@ -72,10 +64,7 @@ int update_PWD(char ***env, t_free *collect)
 					return (putstr_fd("/home Does Not Exist\n", 2), -1);
 				str = get_pwd();
 			}
-			free((*env)[i]);
 			(*env)[i] = ft_strjoin("PWD=", str);
-			if (!(*env)[i])
-				return (free(str), exit_free(collect, 1), 1);
 		}
 	}
 	if (str)
@@ -83,17 +72,22 @@ int update_PWD(char ***env, t_free *collect)
 	return 1;
 }
 
-int	cd(char **arr, char ***env, t_free *collect)
-{	
+int	cd(char **arr, char ***env)
+{
+	if (arr && var_num(arr) > 2)
+		return (putstr_fd(" too many arguments\n", 2), 1);
 	if (chdir(arr[1]) != 0)
-		return (putstr_fd(" No such file or directory\n", 2), 1);
+	{
+		putstr_fd(" No such file or directory\n", 2);
+		return (1);
+	}
 	if (arr[2])
 	{
 		putstr_fd("cd : too many arguments\n", 2);
 		return (1);
 	}
-	update_OLDPWD(env, collect);
-	if (update_PWD(env, collect) == -1)
+	update_OLDPWD(env);
+	if (update_PWD(env) == -1)
 		return (1);
 	return (0);
 }

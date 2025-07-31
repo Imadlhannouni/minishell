@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:41:38 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/26 20:53:37 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:46:48 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,6 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-size_t	ft_strcpy(char *dst, const char *src)
-{
-	size_t	i;
-	size_t	l;
-
-	l = 0;
-	i = 0;
-	while (src[l] != '\0')
-		l++;
-	dst = malloc(l * sizeof(char));
-	while (src[i] != '\0')
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (l);
-}
-
 char	*ft_strdup(const char *s1)
 {
 	size_t	len1;
@@ -59,9 +40,7 @@ char	*ft_strdup(const char *s1)
 
 	i = 0;
 	len1 = ft_strlen(s1) + 1;
-	s2 = malloc(len1);
-	if (!s2)
-		return (NULL);
+	s2 = (char *)ft_malloc(len1, 0);
 	while (i < len1 - 1)
 	{
 		s2[i] = s1[i];

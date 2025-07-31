@@ -6,30 +6,28 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 16:18:19 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:13:41 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exit_free(t_free *collect, int exit_code)
-{
-	if (*(collect->env))
-		free_2d_arr(*(collect->env));
-	if (collect->exe)
-		free_t_exe(&(collect->exe));
-	if (collect->fd)
-		free(collect->fd);
-	if (collect->pid)
-		free(collect->pid);
-	if (collect->no_val && *(collect->no_val))
-		free_2d_arr(*(collect->no_val));
-	if (collect->pipes)
-		free_pipes(&(collect->pipes));
-	if ((collect->exit_code) && *(collect->exit_code))
-		free(*(collect->exit_code));
-	exit(exit_code);
-}
+// void	exit_free(t_free *collect, int exit_code)
+// {
+// 	if (*(collect->env))
+// 		free_2d_arr(*(collect->env));
+// 	if (collect->exe)
+// 		free_t_exe(&(collect->exe));
+// 	if (collect->fd)
+// 		free(collect->fd);
+// 	if (collect->pid)
+// 		free(collect->pid);
+// 	if (collect->pipes)
+// 		free_pipes(&(collect->pipes));
+// 	if ((collect->exit_code) && *(collect->exit_code))
+// 		free(*(collect->exit_code));
+// 	exit(exit_code);
+// }
 
 static int	is_space(char c)
 {
@@ -81,6 +79,8 @@ long	ft_atoi(const char *str)
 	{
 		// if (!ft_isdigit(str[i]))
 		// 	return (-1);
+		if (val > 9223372036854775807 && str[i] < '7' && sign == 1)
+			return -1;
 		val = val * 10 + (str[i] - 48);
 		if (val > 9223372036854775807)
 			return -1;
@@ -89,7 +89,7 @@ long	ft_atoi(const char *str)
 	return ((long)(val * sign));
 }
 
-void	exit_shell(t_exe *var, t_free *collect)
+void	exit_shell(t_exe *var)
 {
 	long i;
 
@@ -97,15 +97,17 @@ void	exit_shell(t_exe *var, t_free *collect)
 	if (var_num(var->arr) > 2)
 	{
 		putstr_fd(" too many arguments\n", 2);
-		exit_free(collect, 1);
+		ft_malloc(0, 1);
+		exit(1);
 	}
 	if ((var->arr)[1] && !ft_isnum((var->arr)[1]))
 	{
 		putstr_fd(" numeric argument required\n", 2);
-		exit_free(collect, 2);
+		ft_malloc(0, 1);
+		exit(2);
 	}
-	if (!(var->arr)[1])
-		i = ft_atoi(*(collect->exit_code));
+	// if (!(var->arr)[1])
+	// 	i = ft_atoi(*(collect->exit_code));
 	else
 		i = ft_atoi((var->arr)[1]);
 	// if (i < 0)
@@ -113,18 +115,7 @@ void	exit_shell(t_exe *var, t_free *collect)
 	// 	putstr_fd("Numeric argument required\n", 2);
 	// 	exit_free(collect, 2);
 	// }
-	close(collect->fds[0]);
-	close(collect->fds[1]);
-	if (*(collect->env))
-		free_2d_arr(*(collect->env));
-	if (collect->exe)
-		free_t_exe(&(collect->exe));
-	if (*(collect->no_val))
-		free_2d_arr(*(collect->no_val));
-	if (collect->pipes)
-		free_pipes(&(collect->pipes));
-	if ((collect->exit_code) && *(collect->exit_code))
-		free(*(collect->exit_code));
+	ft_malloc(0, 1);
 	putstr_fd("exit\n", 1);
 	exit((i % 256));
 }
