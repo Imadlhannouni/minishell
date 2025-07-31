@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:59 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 23:59:51 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 12:00:31 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static size_t count_to_remove(char **arr, char **arg)
 
 	i = 0;
 	cpt = 0;
+	if (!arr || !arg)
+		return 0;
 	while (arr[i])
 	{
 		if (check(arr[i], arg))

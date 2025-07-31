@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 19:19:06 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 16:25:09 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	init_collect(t_free *collect, char **exit_code)
 	collect->pipes = NULL;
 	collect->fds = NULL;
 	collect->path = NULL;
-	collect->exit_code = exit_code;
+	(collect->exit_code) = exit_code;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -69,6 +69,7 @@ int	main(int argc, char **argv, char **envp)
 	init_collect(&collect, &exit_code);
     collect.prev_handler_int = signal(SIGINT, sighandler);
     collect.prev_handler_quit = signal(SIGQUIT, SIG_IGN);
+	exit_code = ft_strdup("0");
     while (1)
 	{
 		line = readline_func(&clone_envi, &exit_code);
@@ -79,6 +80,7 @@ int	main(int argc, char **argv, char **envp)
 		if (main_parsing(line, clone_envi, &pipes, exit_code))
 		{
 			s = execute(pipes, &clone_envi, &collect);
+			// printf("exit code = %d \n",s);
 			free(exit_code);
 			exit_code = ft_itoa(s);
 		}
