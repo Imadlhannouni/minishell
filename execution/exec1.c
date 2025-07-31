@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:02:17 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 15:42:21 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 			exit_free(collect, 127);
 		}
 		if (handle_redirections(tmp) < 0)
-			exit_free(collect, 2);
+			exit_free(collect, 1);
 		if (!is_builtin(tmp->arr[0]))
 		{
 			execve(path, tmp->arr, *env);
@@ -83,7 +83,7 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 	}
 	if (path)
 		free(path);
-	return pid;
+	return (path = NULL, pid);
 }
 
 int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_free *collect)
@@ -110,9 +110,8 @@ int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_free *collect)
 	waitpid(var.pid[var.pipe_num - 1], &status, 0);
 	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
-	if (WIFEXITED(status))
-    	exit_code = WEXITSTATUS(status);
-	return (free(var.pid), free(var.fd),exit_code);
+    exit_code = WEXITSTATUS(status);
+	return (free(var.pid), free(var.fd), exit_code);
 }
 
 

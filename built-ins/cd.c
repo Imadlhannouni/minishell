@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 11:56:19 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 14:37:03 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int update_PWD(char ***env, t_free *collect)
 			str = get_pwd();
 			if (!str)
 			{
-				putstr_fd("Parent Directory Has Been Deleted\n", 2);
+				putstr_fd(" Parent Directory Has Been Deleted\n", 2);
 				if (chdir("/home"))
 					return (putstr_fd("/home Does Not Exist\n", 2), -1);
 				str = get_pwd();
@@ -86,7 +86,7 @@ int update_PWD(char ***env, t_free *collect)
 int	cd(char **arr, char ***env, t_free *collect)
 {	
 	if (chdir(arr[1]) != 0)
-		return (putstr_fd("No Such a Directory\n", 2), 1);
+		return (putstr_fd(" No such file or directory\n", 2), 1);
 	if (arr[2])
 	{
 		putstr_fd("cd : too many arguments\n", 2);

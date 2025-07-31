@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 20:32:56 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/25 20:49:23 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 12:11:01 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int check_existence(char **env, char *name)
 	int i ,len;
 
 	i = 0;
+	if (!env)
+		return 0;
 	len = ft_strlen((const char*)name);
 	while (env[i])
 	{
