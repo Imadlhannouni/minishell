@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:31:08 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:52:55 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	handle_token_cases(t_token **tokens, int i, char *line,
 	return (i);
 }
 
-t_token	*smart_split(char *line, char *exit_code, char **clone_envi)
+t_token	*smart_split(char *line, char *exit_code)
 {
 	t_token	*tokens;
 	int		i;
@@ -52,24 +52,16 @@ t_token	*smart_split(char *line, char *exit_code, char **clone_envi)
 		if (!line[i])
 			break ;
 		i = handle_token_cases(&tokens, i, line, &flag);
-		if (i == -1)
-		{
-			free(line);
-			free_tokens(tokens);
-			free_2d_arr(clone_envi);
-			free(exit_code);
-			exit(1);
-		}
 	}
 	return (tokens);
 }
 
-static int	handle_heredoc_token(t_pipe *pipe, t_token *current_token, char **clone_envi,
+static int	handle_heredoc_token(t_token *current_token, char **clone_envi,
 		char **exit_code)
 {
 	char	*content;
 
-	content = read_heredoc(pipe, current_token->value, clone_envi,
+	content = read_heredoc(current_token->value, clone_envi,
 			current_token->type, exit_code);
 	if (content)
 	{
@@ -100,7 +92,7 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 					concat_fullstring(compact, NULL);
 					current_token->is_fullstring = 0;
 				}
-				if (!handle_heredoc_token(pipe, current_token, clone_envi, exit_code))
+				if (!handle_heredoc_token(current_token, clone_envi, exit_code))
 					return (0);
 			}
 			current_token = current_token->next;
@@ -117,7 +109,7 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 	t_token	*tokens;
 	t_pipe	*curr;
 
-	tokens = smart_split(line, exit_code, clone_envi);
+	tokens = smart_split(line, exit_code);
 	if (!tokens)
 		return (0);
 	*pipes = group_tokens_into_pipes(tokens);
@@ -131,5 +123,5 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 		compact_fullstrings(&(curr)->full_cmd);
 		curr = curr->nextpipe;
 	}
-	return (1);
+	return (free(line), 1);
 }

@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:31:58 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:38:01 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ typedef struct s_exe
 }	t_exe;
 
 char				*ft_strchr(const char *s, int c);
-size_t				ft_strcpy(char *dst, const char *src);
 char				*ft_strdup(const char *s1);
 size_t				ft_strlen(const char *s);
 int					ft_strcmp(const char *s1, const char *s2);
@@ -123,8 +122,6 @@ int					is_pipe(t_token *tokens, int i,
 						char *line);
 int					is_word(t_token **tokens, int i,
 						char *line, int *flag);
-void				free_tokens(t_token *tokens);
-void				free_pipes(t_pipe **pipes);
 int					replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
@@ -133,7 +130,7 @@ void				print_pipes(t_pipe *pipes);
 t_token				*concat_fullstring(t_token *start, t_token **next);
 int					main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code);
 void				print_cmd_not_found(char *cmd);
-char				*read_heredoc(t_pipe *pipes, char *delimite, char **clone_envi, t_token_type type, char **exit_code);
+char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type, char **exit_code);
 char				*ft_itoa(int n);
 char				*create_heredoc_file(char *content);
 int					append_env_or_chunk(char *str, int i, char **clone_envi,
