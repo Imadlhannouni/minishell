@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:31:52 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:59:58 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void init_help(t_help *help, char **exit_code)
 {
     help->prev_handler_quit = signal(SIGQUIT, SIG_IGN);
     help->prev_handler_int = signal(SIGINT, sighandler);
-	(help->exit_code) = exit_code;
+	help->exit_code = exit_code;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -77,7 +77,7 @@ int	main(int argc, char **argv, char **envp)
             break ;
 		if (main_parsing(line, clone_envi, &pipes, exit_code))
 		{
-			s = execute(pipes, &clone_envi);
+			s = execute(pipes, &clone_envi, &help);
 			exit_code = ft_itoa(s);
 		}
 		cleanup_heredoc_files(pipes);

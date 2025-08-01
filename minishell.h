@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:38:01 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 14:44:47 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,28 +143,29 @@ void				compact_fullstrings(t_token **fullcmd);
 
 void	sighandler(int signum);
 void	*ft_malloc(size_t len, int flag);
+int extract_status(int status);
+
+int		execute(t_pipe *pipes, char ***env, t_help *help);
+int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);
+int 	exec_command(t_exe *var, char **env, t_help *help);
+int		exec_builtin(t_exe *var, char ***env);
+
 
 size_t	var_num(char **arr);
-void	free_arr(char **arr, int j);
 char	**clone_env(char **env);
-int		execute(t_pipe *pipes, char ***env);
 void 	putstr_fd(char *str, int fd);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
 char	*retrieve_path(char *cmd, char **env);
-void	free_2d_arr(char **arr);
 int		count_args(t_token *tok);
 int		count_pipes(t_pipe *pipes);
-int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num);
 void	close_fd(int (*fd)[2], size_t i, size_t total);
 void	switch_fd(int (*fd)[2], size_t i, size_t total);
 void	close_previous(int (*fd)[2], int j);
-int		helper(t_exe *tmp ,char ***env, t_vars var);
+int		helper(t_exe *tmp ,char ***env, t_vars var, t_help *help);
 int		init_var(t_vars *var, size_t pipe_num);
-int 	exec_command(t_exe *var, char **env, int *fd);
 
 int		print_sorted(char **env);
 int		cd(char **arr, char ***env);
-void	exit_free(int exit_code);
 int		pwd(void);
 int		print_env(char **env, char **args);
 int		unset(char ***env, char **var);
@@ -176,7 +177,6 @@ char	*join_strings(char *s1, char *s2, char *s3);
 int		check_existence(char **env, char *name);
 char	*fill_word(int start, int end, char *str);
 void	group_pipes(t_pipe *pipes, t_exe **var);
-int		exec_builtin(t_exe *var, char ***env);
 
 int check_equ(char *str);
 int 	is_builtin(char *cmd);
@@ -184,12 +184,12 @@ int		group_2d_arr(t_exe *var, t_token *tok);
 int		fill_redirection(t_exe *var, t_token *tok);
 t_exe	*creat_node(t_token *tok);
 void	add_node(t_exe **lst, t_exe *node);
-void	free_t_exe(t_exe **var);
 int		handle_redirections(t_exe *var);
 void	reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
 void	add_redirection(t_red **red, t_red *new_red);
 int		fill_redirection(t_exe *var, t_token *tok);
 void	exit_shell(t_exe *var);
+void	exit_free(int exit_code);
 
 #endif
