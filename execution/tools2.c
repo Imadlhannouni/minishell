@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:55:49 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:18:08 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 21:26:07 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,18 @@ void group_pipes(t_pipe *pipes, t_exe **var)
 		add_node(var,creat_node(tmp->full_cmd));
 		tmp = tmp->nextpipe;
 	}
+}
+
+int	ft_isdigit(int a)
+{
+	if (a >= '0' && a <= '9')
+		return (1);
+	return (0);
+}
+
+int	is_space(char c)
+{
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
 }

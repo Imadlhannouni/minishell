@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 15:28:23 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 21:47:33 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	exit_free(int exit_code)
 	exit(exit_code);
 }
 
-static void exec_helper(char *path, t_exe *tmp, char ***env)
+static void exec_helper(char *path, t_exe *tmp, char ***env, t_help *help)
 {
 	if (!path && !is_builtin(tmp->arr[0]))
 	{
@@ -67,7 +67,7 @@ static void exec_helper(char *path, t_exe *tmp, char ***env)
 		perror("Minishell");
 		exit_free(127);
 	}
-	exit_free(exec_builtin(tmp, env));
+	exit_free(exec_builtin(tmp, env, help));
 }
 
 int helper(t_exe *tmp ,char ***env, t_vars var, t_help *help)
@@ -86,7 +86,7 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_help *help)
 		signal(SIGQUIT, help->prev_handler_quit);
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
-		exec_helper(path, tmp, env);
+		exec_helper(path, tmp, env, help);
 	}
 	return (pid);
 }
