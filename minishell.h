@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 17:00:13 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 17:59:55 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int					ft_isalnum(int c);
 t_token				*ft_lstnew(char *value);
 t_token				*ft_lstlast(t_token *lst);
 void				ft_lstadd_back(t_token **lst, t_token *new);
-void				add_token(t_token **head, char *value, t_token_type type,
+int					add_token(t_token **head, char *value, t_token_type type,
 						int is_full);
 char				*substrdup(int start, int end, char *str);
 int					is_simple_quote(t_token **tokens, int i,

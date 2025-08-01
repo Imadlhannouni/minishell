@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 17:13:03 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 17:57:45 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,17 @@ int	is_simple_quote(t_token **tokens, int i, char *line, int *flag)
 	if (line[i] == '\'')
 		i++;
 	value = substrdup(start, end, line);
+	if (!value)
+		return (-1);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'
 		&& line[i] != '>' && line[i] != '\0')
-		add_token(tokens, value, type, 1);
+	{
+		if(!add_token(tokens, value, type, 1))
+			return (free(value), -1);
+	}
 	else
-		add_token(tokens, value, type, 0);
+		if(!add_token(tokens, value, type, 0))
+			return(free(value), -1);
 	last = ft_lstlast(*tokens);
 	apply_flag_to_token(last, flag, 1);
 	return (i);
@@ -62,6 +68,7 @@ int	is_double_quote(t_token **tokens, int i, char *line, int *flag)
 {
 	int				start;
 	int				end;
+	char			*value;
 	t_token_type	type;
 	t_token			*last;
 
@@ -73,11 +80,18 @@ int	is_double_quote(t_token **tokens, int i, char *line, int *flag)
 	end = i;
 	if (line[i] == '"')
 		i++;
+	value = substrdup(start, end, line);
+	if(!value)
+		return (-1);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'
 		&& line[i] != '>' && line[i] != '\0')
-		add_token(tokens, substrdup(start, end, line), type, 1);
+	{
+		if(!add_token(tokens, value, type, 1))
+			return (free(value), -1);
+	}
 	else
-		add_token(tokens, substrdup(start, end, line), type, 0);
+		if(!add_token(tokens, value, type, 0))
+			return(free(value), -1);
 	last = ft_lstlast(*tokens);
 	apply_flag_to_token(last, flag, 0);
 	return (i);
@@ -112,13 +126,18 @@ int	is_pipe(t_token *tokens, int i, char *line)
 {
 	int				start;
 	int				end;
+	char			*value;
 	t_token_type	type;
 
 	type = TOKEN_PIPE;
 	start = i;
 	end = i + 1;
 	i++;
-	add_token(&tokens, substrdup(start, end, line), type, 0);
+	value = substrdup(start, end, line);
+	if(!value)
+		return (-1);
+	if(!add_token(&tokens, value, type, 0))
+			return(free(value), -1);
 	return (i);
 }
 
@@ -126,6 +145,7 @@ int	is_word(t_token **tokens, int i, char *line, int *flag)
 {
 	t_token			*last;
 	int				start;
+	char			*value;
 	int				end;
 	t_token_type	type;
 
@@ -136,11 +156,18 @@ int	is_word(t_token **tokens, int i, char *line, int *flag)
 		&& line[i] != '\0')
 		i++;
 	end = i;
+	value = substrdup(start, end, line);
+	if(!value)
+		return (-1);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'
 		&& line[i] != '>' && line[i] != '\0')
-		add_token(tokens, substrdup(start, end, line), type, 1);
+	{
+		if(!add_token(tokens, value, type, 1))
+			return (free(value), -1);
+	}
 	else
-		add_token(tokens, substrdup(start, end, line), type, 0);
+		if(!add_token(tokens, value, type, 0))
+			return(free(value), -1);
 	last = ft_lstlast(*tokens);
 	apply_flag_to_token(last, flag, 0);
 	return (i);

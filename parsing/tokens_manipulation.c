@@ -6,18 +6,20 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/27 20:39:28 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 18:00:19 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_token(t_token **head, char *value, t_token_type type, int is_full)
+int	add_token(t_token **head, char *value, t_token_type type, int is_full)
 {
 	t_token	*new;
 	t_token	*tmp;
 
 	new = malloc(sizeof(t_token));
+	if (!new)
+		return(0);
 	new->type = type;
 	new->value = value;
 	new->heredoc = 0;
@@ -36,6 +38,7 @@ void	add_token(t_token **head, char *value, t_token_type type, int is_full)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
+	return (1);
 }
 
 static void	concat_fullstring_flags(t_token *start, t_token *curr)

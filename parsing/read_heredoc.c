@@ -6,11 +6,18 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 14:42:33 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:40:37 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void signalhandler(int signum)
+{
+	(void)signum;
+	ft_malloc(0, 1);
+	exit(130);
+}
 
 int	check_delimiter(char *delimiter)
 {
@@ -45,7 +52,7 @@ static void	child_heredoc_loop(t_pipe *pipe, int write_fd, char *delimiter, char
 {
 	char	*line;
 
-	signal(SIGINT, SIG_DFL);
+	signal(SIGINT, signalhandler);
 	while (1)
 	{
 		line = readline("> ");
@@ -71,12 +78,11 @@ static void	child_heredoc_loop(t_pipe *pipe, int write_fd, char *delimiter, char
 	exit(0);
 }
 
-static int	handle_parent_status(int status, char **content, char **exit_code)
+static int	handle_parent_status(int status, char **exit_code)
 {
 	if (status != 0)
 	{
 		write(1, "\n", 1);
-		free(*content);
 		if (*exit_code)
 			free(*exit_code);
 		*exit_code = ft_strdup("130");
@@ -93,8 +99,8 @@ static char	*parent_heredoc_read(int read_fd, pid_t pid, int *status,
 	char	*tmp;
 
 	char buffer[1024]; // change this
+	void *old_handler = signal(SIGINT, SIG_IGN);
 	content = ft_strdup("");
-	signal(SIGINT, SIG_IGN);
 	while ((bytes = read(read_fd, buffer, sizeof(buffer) - 1)) > 0)
 	{
 		buffer[bytes] = '\0';
@@ -109,8 +115,9 @@ static char	*parent_heredoc_read(int read_fd, pid_t pid, int *status,
 		}
 	}
 	close(read_fd);
+	signal(SIGINT, old_handler);
 	waitpid(pid, status, 0);
-	if (handle_parent_status(*status, &content, exit_code))
+	if (handle_parent_status(*status, exit_code))
 		return (NULL);
 	return (content);
 }
