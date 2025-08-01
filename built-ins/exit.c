@@ -6,28 +6,11 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:13:41 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 10:54:29 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// void	exit_free(t_free *collect, int exit_code)
-// {
-// 	if (*(collect->env))
-// 		free_2d_arr(*(collect->env));
-// 	if (collect->exe)
-// 		free_t_exe(&(collect->exe));
-// 	if (collect->fd)
-// 		free(collect->fd);
-// 	if (collect->pid)
-// 		free(collect->pid);
-// 	if (collect->pipes)
-// 		free_pipes(&(collect->pipes));
-// 	if ((collect->exit_code) && *(collect->exit_code))
-// 		free(*(collect->exit_code));
-// 	exit(exit_code);
-// }
 
 static int	is_space(char c)
 {

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:15:11 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 10:56:15 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,7 @@ int	print_sorted(char **env)
 	{
 		var = spec_split(sorted_arr[i]);
 		put_format(var);
-		free_2d_arr(var);
 		i++;
 	}
-	free_2d_arr(sorted_arr);
 	return 0;
 }

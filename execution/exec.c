@@ -6,18 +6,18 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:18:56 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 10:56:33 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void help_exec(t_exe *var, char *path)
+static void help_exec(t_exe *var)
 {
 	if (handle_redirections(var) < 0)
 	{
-		if (path)
-			free(path);
+		// if (path)
+			//free(path);
 	}
 	
 }
@@ -44,7 +44,7 @@ int	exec_command(t_exe *var, char **env, int *fd)
 	{
 		// signal(SIGINT, collect->prev_handler_int);
 		// signal(SIGQUIT, collect->prev_handler_quit);
-		help_exec(var, path);
+		help_exec(var);
 		execve(path, var->arr, env);
 		perror("Minishell");
 		reset_redirections(fd);
@@ -110,6 +110,5 @@ int	execute(t_pipe *pipes, char ***env)
 		}
 		reset_redirections(fd);
 	}
-	free_t_exe(&var);
 	return status;
 }

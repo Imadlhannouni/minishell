@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 21:58:55 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 21:47:50 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:05:53 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,6 @@ static int	count_word(char *s, char c)
 	return (count);
 }
 
-void	free_arr(char **arr, int j)
-{
-	while (j >= 0)
-	{
-		free(arr[j]);
-		j--;
-	}
-	free(arr);
-}
-
 static char	*allocate_word(char *s, int start, int end)
 {
 	int		len;
@@ -52,8 +42,6 @@ static char	*allocate_word(char *s, int start, int end)
 	len = end - start + 1;
 	word = (char *)ft_malloc((len + 1) * sizeof(char), 0);
 	i = 0;
-	if (!word)
-		return (NULL);
 	while (start <= end)
 		word[i++] = s[start++];
 	word[i] = '\0';
@@ -78,8 +66,6 @@ static char	**allocate(char *s, char c)
 		if ((s[i] != c && (s[i + 1] == c || s[i + 1] == '\0')))
 		{
 			arr[j++] = allocate_word(s, start, i);
-			if (!arr[j - 1])
-				return (free_arr(arr, j - 2), NULL);
 			start = -1;
 		}
 	}

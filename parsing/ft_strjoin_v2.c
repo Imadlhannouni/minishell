@@ -19,7 +19,7 @@ char	*ft_strjoin_v2(char *s1, char *s2, int flag)
 {
 	size_t	i;
 	char	*str;
-
+	(void)flag;
 	if (!s1 || !s2)
 		return (NULL);
 	str = allocate(ft_strlen(s1) + ft_strlen(s2));
@@ -35,7 +35,5 @@ char	*ft_strjoin_v2(char *s1, char *s2, int flag)
 		i++;
 	}
 	str[i] = '\0';
-	if (flag)
-		free(s1);
 	return (str);
 }

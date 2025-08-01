@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:18:25 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:15:12 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,14 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }					t_token;
+
+typedef struct s_help
+{
+	void (*prev_handler_int)(int);
+	void (*prev_handler_quit)(int);
+	char **exit_code;
+	int *std_fd;
+}	t_help;
 
 typedef struct s_pipe
 {
