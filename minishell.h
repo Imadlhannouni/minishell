@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 21:50:13 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:26:29 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,14 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }					t_token;
+
+typedef struct s_heredoc
+{
+	char			*delimiter;
+	t_token_type	type;
+	char			*filename;
+	int				write_fd;
+}					t_heredoc;
 
 typedef struct s_help
 {
@@ -133,11 +141,10 @@ int					main_parsing(char *line, char **clone_envi, t_pipe **pipes, char **exit_
 void				print_cmd_not_found(char *cmd);
 char				*read_heredoc(char *delimite, char **clone_envi, t_token_type type, char **exit_code);
 char				*ft_itoa(int n);
-char				*create_heredoc_file(char *content);
 int					append_env_or_chunk(char *str, int i, char **clone_envi,
 						char **result, char *exit_code);
 void				cleanup_heredoc_files(t_pipe *pipes);
-int					handle_errors(char *line, char *exit_code);
+int					handle_errors(char *line, char **exit_code);
 char				*ft_itoa(int n);
 void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 void				compact_fullstrings(t_token **fullcmd);

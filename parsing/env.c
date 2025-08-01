@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 14:14:10 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 17:23:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,10 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	while (tokens->value[i])
 		i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded,
 				exit_code);
+	if(ft_strchr(tokens->value, '$') && ft_strchr(tokens->value, '='))
+		tokens->type = TOKEN_DOUBLE_QUOTE;
+	if (ft_strchr(expanded, '$'))
+		tokens->type = TOKEN_DOUBLE_QUOTE;
 	if (!handle_ambiguous_redirect(tokens, expanded))
 		return (0);
 	if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
