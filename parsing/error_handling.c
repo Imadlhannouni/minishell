@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:38:33 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 16:55:39 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:22:45 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,20 +195,18 @@ static int	check_operators(char *s)
 	return (0);
 }
 
-int	handle_errors(char *line, char *exit_code)
+int	handle_errors(char *line, char **exit_code)
 {
 	if (!line)
 		return (0);
 	if (check_basics(line))
 	{
-		free(exit_code);
-		exit_code = ft_strdup("2");
+		*exit_code = ft_strdup("2");
 		return (1);
 	}
 	if (check_operators(line))
 	{
-		free(exit_code);
-		exit_code = ft_strdup("2");
+		*exit_code = ft_strdup("2");
 		return (1);
 	}
 	return (0);
