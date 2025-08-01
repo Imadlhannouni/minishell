@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 15:11:46 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/19 21:22:09 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 18:02:59 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,5 @@ void	free_pipes(t_pipe **pipes)
 		free_tokens(tmp->full_cmd);
 		free(tmp);
 	}
+	pipes = NULL;
 }

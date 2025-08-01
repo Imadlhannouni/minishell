@@ -6,20 +6,19 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 17:00:21 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:06:01 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*readline_func(char ***clone_envi, char **exit_code)
+char	*readline_func(char ***clone_envi)
 {
 	char	*line;
 
 	line = readline("minishell> ");
 	if (!line)
 	{
-		free(*exit_code);
 		free_2d_arr(*clone_envi);
 		exit(0);
 	}
@@ -66,17 +65,19 @@ int	main(int argc, char **argv, char **envp)
     (void)argv;
     line = NULL;
 	exit_code = ft_strdup("0");
+	if (!exit_code)
+	{
+		free_2d_arr(clone_envi);
+		exit(1);
+	}
 	init_collect(&collect, &exit_code);
     collect.prev_handler_int = signal(SIGINT, sighandler);
     collect.prev_handler_quit = signal(SIGQUIT, SIG_IGN);
-	exit_code = ft_strdup("0");
     while (1)
 	{
-		line = readline_func(&clone_envi, &exit_code);
+		line = readline_func(&clone_envi);
 		if (!line)
             break ;
-        pipes = NULL;
-		
 		if (main_parsing(line, clone_envi, &pipes, exit_code))
 		{
 			s = execute(pipes, &clone_envi, &collect);
@@ -84,7 +85,6 @@ int	main(int argc, char **argv, char **envp)
 			free(exit_code);
 			exit_code = ft_itoa(s);
 		}
-        free(line);
 		cleanup_heredoc_files(pipes);
         free_pipes(&pipes);
     }

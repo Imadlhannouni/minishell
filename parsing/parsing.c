@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 16:45:57 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 20:34:17 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	handle_token_cases(t_token **tokens, int i, char *line,
 	return (i);
 }
 
-t_token	*smart_split(char *line, char *exit_code)
+t_token	*smart_split(char *line, char *exit_code, char **clone_envi)
 {
 	t_token	*tokens;
 	int		i;
@@ -52,6 +52,14 @@ t_token	*smart_split(char *line, char *exit_code)
 		if (!line[i])
 			break ;
 		i = handle_token_cases(&tokens, i, line, &flag);
+		if (i == -1)
+		{
+			free(line);
+			free_tokens(tokens);
+			free_2d_arr(clone_envi);
+			free(exit_code);
+			exit(1);
+		}
 	}
 	return (tokens);
 }
@@ -111,8 +119,7 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 	t_token	*tokens;
 	t_pipe	*curr;
 
-	*pipes = NULL;
-	tokens = smart_split(line, exit_code);
+	tokens = smart_split(line, exit_code, clone_envi);
 	if (!tokens)
 		return (0);
 	*pipes = group_tokens_into_pipes(tokens);
