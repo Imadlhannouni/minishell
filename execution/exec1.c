@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:19:32 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 15:28:23 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,35 @@ int is_path1(char *cmd)
 	}
 	return 0;
 }
+void	exit_free(int exit_code)
+{
+	ft_malloc(0, 1);
+	exit(exit_code);
+}
 
-int helper(t_exe *tmp ,char ***env, t_vars var)
+static void exec_helper(char *path, t_exe *tmp, char ***env)
+{
+	if (!path && !is_builtin(tmp->arr[0]))
+	{
+		putstr_fd("Minishell : command not found\n", 2);
+		exit_free(127);
+	}
+	if (handle_redirections(tmp) < 0)
+		exit_free(1);
+	if (!is_builtin(tmp->arr[0]))
+	{
+		execve(path, tmp->arr, *env);
+		perror("Minishell");
+		exit_free(127);
+	}
+	exit_free(exec_builtin(tmp, env));
+}
+
+int helper(t_exe *tmp ,char ***env, t_vars var, t_help *help)
 {
 	char *path = NULL;
-	int k;
+
+	(void)help;
 	if (!is_builtin(tmp->arr[0]))
 		path = retrieve_path(tmp->arr[0], *env);
 	int pid = fork();
@@ -58,37 +82,18 @@ int helper(t_exe *tmp ,char ***env, t_vars var)
 		return (-1);
 	if (pid == 0)
 	{
+		signal(SIGINT, help->prev_handler_int);
+		signal(SIGQUIT, help->prev_handler_quit);
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
-		if (!path && !is_builtin(tmp->arr[0]))
-		{
-			putstr_fd("Minishell : command not found\n", 2);
-			ft_malloc(0, 1);
-			exit(127);
-		}
-		if (handle_redirections(tmp) < 0)
-		{
-			ft_malloc(0, 1);
-			exit(1);
-		}
-		if (!is_builtin(tmp->arr[0]))
-		{
-			execve(path, tmp->arr, *env);
-			perror("Minishell");
-			ft_malloc(0, 1);
-			exit(127);
-		}
-		k = exec_builtin(tmp, env);
-		ft_malloc(0, 1);
-		exit(k);
+		exec_helper(path, tmp, env);
 	}
-	return (path = NULL, pid);
+	return (pid);
 }
 
-int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num)
+int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_help *help)
 {
 	t_vars 	var;
-	t_exe 	*tmp;
 	int		status;
 	int		exit_code;
 
@@ -96,21 +101,19 @@ int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num)
 		return 1;
 	status = -1;
 	exit_code = -1;
-	tmp = grp;
 	while (var.i < pipe_num) 
 	{
-		var.pid[var.i] = helper(tmp, envp, var);
+		var.pid[var.i] = helper(grp, envp, var, help);
 		if (var.pid[var.i++] < 0)
 			return (1);
-		tmp = tmp->next;
+		grp = grp->next;
 	}
 	close_previous(var.fd, var.pipe_num - 1);
 	var.i = 0;
+	signal(SIGINT, SIG_IGN);
 	waitpid(var.pid[var.pipe_num - 1], &status, 0);
 	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
-    exit_code = WEXITSTATUS(status);
+    exit_code = extract_status(status);
 	return (exit_code);
 }
-
-
