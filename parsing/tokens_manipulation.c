@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 21:47:57 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:01:00 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,11 @@ static t_token	*free_fullstring_tokens(t_token *curr)
 	{
 		to_free = curr;
 		curr = curr->next;
-		free(to_free->value);
-		free(to_free);
 	}
 	if (curr && curr->is_fullstring == 0)
 	{
 		to_free = curr;
 		curr = curr->next;
-		free(to_free->value);
-		free(to_free);
 	}
 	return (curr);
 }
@@ -84,12 +80,10 @@ t_token	*concat_fullstring(t_token *start, t_token **next)
 		curr = curr->next;
 		tmp = joined;
 		joined = ft_strjoin(tmp, curr->value);
-		free(tmp);
 	}
 	concat_fullstring_flags(start, curr);
 	curr = start->next;
 	curr = free_fullstring_tokens(curr);
-	free(start->value);
 	start->value = joined;
 	start->next = curr;
 	if (next)

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 21:42:28 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:02:57 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void replace_variable(char ***env, char **arg)
 	{
 		if (ft_strncmp((*env)[i], arg[0], ft_strlen(arg[0])) == 0)
 		{
-			free((*env)[i]);
+			//free((*env)[i]);
 			(*env)[i] = join_strings(arg[0], "=", arg[1]);
 			return;
 		}
@@ -45,7 +45,6 @@ char	**add_var(char **env, char **arg)
 		clone[i++] = join_strings(arg[0], "=", arg[1]);
 	clone[i] = NULL;
 	i = 0;
-	free_2d_arr(env);
 	return clone;
 }
 
@@ -105,7 +104,6 @@ int	export(char ***env, char **args)
 			else
 				*env = add_var(*env, arg);
 		}
-		free_2d_arr(arg);
 	}
 	return j;
 }

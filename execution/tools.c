@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 21:59:17 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 10:57:05 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,6 @@ int exec_builtin(t_exe *var, char ***env)
 	else if (ft_strcmp(var->arr[0], "env") == 0)
 		return print_env(*env, var->arr);
 	return 0;
-}
-
-void	free_2d_arr(char **arr)
-{
-	int i = 0;
-	if (!arr)
-		return ;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
 }
 
 size_t var_num(char **arr)

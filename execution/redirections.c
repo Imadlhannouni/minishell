@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 21:17:54 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 21:45:41 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:03:55 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ int	fill_redirection(t_exe *var, t_token *tok)
 		|| tok->out_app != 0 || tok->out_red != 0))
 		return 1;
 	new_red = create_redirection(tok);
-	if (!new_red)
-		return 0;
 	add_redirection(&(var->redirections), new_red);
 	return 1;
 }

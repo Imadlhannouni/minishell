@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   //free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,33 +12,3 @@
 
 #include "../minishell.h"
 
-void	free_tokens(t_token *tokens)
-{
-	t_token	*tmp;
-
-	if (!tokens)
-		return ;
-	while (tokens)
-	{
-		tmp = tokens;
-		if (tokens->value)
-			free(tokens->value);
-		// if (tokens->heredoc_filename)
-		// 	free(tokens->heredoc_filename);
-		tokens = tokens->next;
-		free(tmp);
-	}
-}
-
-void	free_pipes(t_pipe **pipes)
-{
-	t_pipe	*tmp;
-
-	while (*pipes)
-	{
-		tmp = *pipes;
-		*pipes = (*pipes)->nextpipe;
-		free_tokens(tmp->full_cmd);
-		free(tmp);
-	}
-}

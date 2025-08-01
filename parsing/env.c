@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 15:33:59 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:04:36 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,6 @@ static char	*get_env_value(const char *key, char **clone_envi)
 		{
 			env_splited = ft_split_env(clone_envi[i], '=');
 			value = ft_strdup(env_splited[1]);
-			free(env_splited[0]);
-			free(env_splited[1]);
-			free(env_splited);
 			return (value);
 		}
 		i++;
@@ -60,9 +57,6 @@ static int	handle_env_var(char *str, int i, char **clone_envi, char **result,
 		env_val = get_env_value(key, clone_envi);
 	tmp = *result;
 	*result = ft_strjoin(tmp, env_val);
-	free(tmp);
-	free(key);
-	free(env_val);
 	return (i);
 }
 
@@ -79,8 +73,6 @@ static int	handle_chunk(char *str, int i, char **result)
 	chunk = substrdup(start, i, str);
 	tmp = *result;
 	*result = ft_strjoin(tmp, chunk);
-	free(tmp);
-	free(chunk);
 	return (i);
 }
 
@@ -100,7 +92,6 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 		&& tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
 			|| tokens->out_red || tokens->inp_red))
 	{
-		free(expanded);
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(tokens->value, 2);
 		ft_putstr_fd(": ambiguous redirect\n", 2);
@@ -123,7 +114,6 @@ static char	*join_splited(char **splited)
 			expanded = ft_strjoin(expanded, " ");
 		j++;
 	}
-	free_arr(splited, j);
 	return (expanded);
 }
 
@@ -158,11 +148,9 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 				exit_code);
 	if (!handle_ambiguous_redirect(tokens, expanded))
 		return (0);
-	free(tokens->value);
 	if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
 	{
 		splited = ft_split(expanded, ' ');
-		free(expanded);
 		expanded = join_splited(splited);
 	}
 	if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
@@ -170,10 +158,7 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	else
 	{
 		if (ft_strlen(expanded) == 1 && tokens->type != TOKEN_DOUBLE_QUOTE && tokens->type != TOKEN_SIMPLE_QUOTE && tokens->next && (tokens->next->type == TOKEN_DOUBLE_QUOTE || tokens->next->type == TOKEN_SIMPLE_QUOTE) && tokens->is_fullstring == 1)
-		{
-			free(expanded);
 			tokens->value = ft_strdup("");
-		}
 		else
 			tokens->value = expanded;
 	}
@@ -221,8 +206,6 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code)
 				prev->nextpipe = current->nextpipe;
 				current = current->nextpipe;
 			}
-			free_tokens(pipe_to_delete->full_cmd);
-			free(pipe_to_delete);
 		}
 		else
 		{
