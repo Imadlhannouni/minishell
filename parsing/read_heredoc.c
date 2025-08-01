@@ -6,17 +6,19 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:47:32 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 14:03:51 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int g_signal_received = 0;
+
 void signalhandler(int signum)
 {
 	(void)signum;
-	ft_malloc(0, 1);
-	exit(130);
+	g_signal_received = 1;
+	close(STDIN_FILENO);
 }
 
 int	check_delimiter(char *delimiter)
@@ -39,12 +41,10 @@ static void	expand_and_write_line(int write_fd, char *line, char **clone_envi,
 		while (line[i])
 			i = append_env_or_chunk(line, i, clone_envi, &expanded_line,
 					*exit_code);
-		//free(line);
 		line = expanded_line;
 	}
 	write(write_fd, line, ft_strlen(line));
 	write(write_fd, "\n", 1);
-	//free(line);
 }
 
 static void	child_heredoc_loop(int write_fd, char *delimiter, char **clone_envi,
@@ -56,6 +56,14 @@ static void	child_heredoc_loop(int write_fd, char *delimiter, char **clone_envi,
 	while (1)
 	{
 		line = readline("> ");
+		if(g_signal_received)
+		{
+			free(line);
+			ft_malloc(0, 1);
+			close(write_fd);
+			open("/dev/tty", O_RDONLY);
+			exit(130);
+		}
 		if (!line)
 		{
 			ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `",
@@ -91,8 +99,8 @@ static char	*parent_heredoc_read(int read_fd, pid_t pid, int *status,
 	ssize_t	bytes;
 	char	*content;
 	char	*tmp;
+	char buffer[4096];
 
-	char buffer[1024]; // change this
 	void *old_handler = signal(SIGINT, SIG_IGN);
 	content = ft_strdup("");
 	while ((bytes = read(read_fd, buffer, sizeof(buffer) - 1)) > 0)

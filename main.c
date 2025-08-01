@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:59:58 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 15:37:40 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int	main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
     line = NULL;
-	exit_code = NULL;
 	exit_code = ft_strdup("0");
 	init_help(&help, &exit_code);
     while (1)
@@ -75,7 +74,7 @@ int	main(int argc, char **argv, char **envp)
 		line = readline_func(&clone_envi);
 		if (!line)
             break ;
-		if (main_parsing(line, clone_envi, &pipes, exit_code))
+		if (main_parsing(line, clone_envi, &pipes, &exit_code))
 		{
 			s = execute(pipes, &clone_envi, &help);
 			exit_code = ft_itoa(s);
