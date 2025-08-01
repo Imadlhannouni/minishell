@@ -6,13 +6,13 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 15:42:21 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:19:32 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	init_var(t_vars *var, size_t pipe_num, t_free *collect)
+int	init_var(t_vars *var, size_t pipe_num)
 {
 	size_t	j;
 
@@ -21,18 +21,12 @@ int	init_var(t_vars *var, size_t pipe_num, t_free *collect)
 	var->pipe_num = pipe_num;
 	if (pipe_num > 1)
 	{
-		var->pid = malloc((pipe_num) * sizeof(__pid_t));
-		if (!var->pid)
-			exit_free(collect, 2);
-		collect->pid = var->pid;
-		var->fd = malloc((pipe_num - 1) * sizeof(int[2]));
-		if (!var->fd)
-			exit_free(collect, 1);
-		collect->fd = var->fd;
+		var->pid = (int*)ft_malloc((pipe_num) * sizeof(__pid_t), 0);
+		var->fd = ft_malloc((pipe_num - 1) * sizeof(int[2]), 0);
 		while (j < var->pipe_num - 1)
 		{
 			if (pipe((var->fd)[j]) == -1)
-				return (close_previous(var->fd, j - 1),free(var->fd),free(var->pid),1);
+				return (close_previous(var->fd, j - 1),1);
 			j++;
 		}
 	}
@@ -53,12 +47,12 @@ int is_path1(char *cmd)
 	return 0;
 }
 
-int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
+int helper(t_exe *tmp ,char ***env, t_vars var)
 {
 	char *path = NULL;
-
+	int k;
 	if (!is_builtin(tmp->arr[0]))
-		path = retrieve_path(tmp->arr[0], *env, collect);
+		path = retrieve_path(tmp->arr[0], *env);
 	int pid = fork();
 	if (pid < 0)
 		return (-1);
@@ -69,40 +63,45 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_free *collect)
 		if (!path && !is_builtin(tmp->arr[0]))
 		{
 			putstr_fd("Minishell : command not found\n", 2);
-			exit_free(collect, 127);
+			ft_malloc(0, 1);
+			exit(127);
 		}
 		if (handle_redirections(tmp) < 0)
-			exit_free(collect, 1);
+		{
+			ft_malloc(0, 1);
+			exit(1);
+		}
 		if (!is_builtin(tmp->arr[0]))
 		{
 			execve(path, tmp->arr, *env);
 			perror("Minishell");
-			exit_free(collect, 127);
+			ft_malloc(0, 1);
+			exit(127);
 		}
-		exit_free(collect, exec_builtin(tmp, env, collect));
+		k = exec_builtin(tmp, env);
+		ft_malloc(0, 1);
+		exit(k);
 	}
-	if (path)
-		free(path);
 	return (path = NULL, pid);
 }
 
-int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_free *collect)
+int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num)
 {
 	t_vars 	var;
 	t_exe 	*tmp;
 	int		status;
 	int		exit_code;
 
-	if (init_var(&var, pipe_num, collect))
+	if (init_var(&var, pipe_num))
 		return 1;
 	status = -1;
 	exit_code = -1;
 	tmp = grp;
 	while (var.i < pipe_num) 
 	{
-		var.pid[var.i] = helper(tmp, envp, var, collect);
+		var.pid[var.i] = helper(tmp, envp, var);
 		if (var.pid[var.i++] < 0)
-			return (free(var.pid), free(var.fd), 1);
+			return (1);
 		tmp = tmp->next;
 	}
 	close_previous(var.fd, var.pipe_num - 1);
@@ -111,7 +110,7 @@ int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_free *collect)
 	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
     exit_code = WEXITSTATUS(status);
-	return (free(var.pid), free(var.fd), exit_code);
+	return (exit_code);
 }
 
 

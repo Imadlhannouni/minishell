@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:01:45 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/30 21:08:33 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:31:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
-	res = malloc(len1 + len2 + 1);
-	if (!res)
-		return (NULL);
+	res = ft_malloc(len1 + len2 + 1, 0);
 	while (i < len1)
 	{
 		res[i] = s1[i];

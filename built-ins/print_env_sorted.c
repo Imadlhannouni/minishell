@@ -6,35 +6,12 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 16:00:36 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 10:56:15 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char **merge_arr(char **env, char **arr)
-{
-	int i = 0, j = 0;
-	char **new = NULL;
-
-	new = malloc((var_num(env) + var_num(arr) + 1) * sizeof(char*));
-	if (!new)
-		return NULL;
-	while (env[i])
-	{
-		new[j++] = ft_strdup(env[i++]);
-	}
-	i = 0;
-	if (arr != NULL)
-	{
-		while (arr[i])
-		{
-			new[j++] = ft_strdup(arr[i++]);
-		}
-	}
-	new[j] = NULL;
-	return new;
-}
 void putstr_fd(char *str, int fd)
 {
 	int d;
@@ -43,6 +20,7 @@ void putstr_fd(char *str, int fd)
 	if (d < 0)
 	{
 		perror("Invalid fd\n");
+		ft_malloc(0, 1);
 		exit(1);
 	}
 }
@@ -61,7 +39,7 @@ static void put_format(char **var)
 	write(1, "\n", 1);
 }
 
-static char **sort_env(char **env, char **arr)
+static char **sort_env(char **env)
 {
 	int i;
 	int len;
@@ -69,10 +47,8 @@ static char **sort_env(char **env, char **arr)
 	char **clone;
 
 	i = 0;
-	len = var_num(env) + var_num(arr);
-	clone = merge_arr(env, arr);
-	if (!clone)
-		return (NULL);
+	len = var_num(env);
+	clone = clone_env(env);
 	while (i < len - 1)
 	{
 		if (strcmp(clone[i] ,clone[i + 1]) > 0)
@@ -88,25 +64,19 @@ static char **sort_env(char **env, char **arr)
 	return clone;
 }
 
-int	print_sorted(char **env, char **arr, t_free *collect)
+int	print_sorted(char **env)
 {
 	int i;
 	char **var;
-	char **merged_arr;
+	char **sorted_arr;
 	
 	i = 0;
-	merged_arr = sort_env(env, arr);
-	if (!merged_arr)
-		exit_free(collect, 1) ;
-	while (merged_arr[i])
+	sorted_arr = sort_env(env);
+	while (sorted_arr[i])
 	{
-		var = spec_split(merged_arr[i]);
-		if (!var)
-			exit_free(collect, 1);
+		var = spec_split(sorted_arr[i]);
 		put_format(var);
-		free_2d_arr(var);
 		i++;
 	}
-	free_2d_arr(merged_arr);
 	return 0;
 }

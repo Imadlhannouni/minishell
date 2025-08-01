@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 16:42:12 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:30:53 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 	t_pipe	*new;
 	t_pipe	*tmp;
 
-	new = malloc(sizeof(t_pipe));
-	if (!new)
-		return ;
+	new = (t_pipe*)ft_malloc(sizeof(t_pipe), 0);
 	new->full_cmd = fullcmd;
 	new->nextpipe = NULL;
 	if (!*head)
@@ -82,12 +80,12 @@ static void	handle_pipe_token(t_pipe **pipes, t_token **start, t_token **curr,
 	next = (*curr)->next;
 	to_free = *curr;
 	if ((*curr)->value)
-		free((*curr)->value);
+		//free((*curr)->value);
 	if (*prev)
 		(*prev)->next = NULL;
 	add_pipe(pipes, *start);
 	*start = next;
-	free(to_free);
+	//free(to_free);
 	*curr = next;
 }
 

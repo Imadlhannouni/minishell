@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:19 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 13:56:24 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 10:54:14 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ static char	*join_vars(char *s1, char *s2)
 	str = NULL;
 	i = 0;
 	j = 0;
-	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 2);
-	if (!str)
-		return (NULL);
+	str = ft_malloc((ft_strlen(s1) + ft_strlen(s2) + 2), 0);
 	if (s1)
 	{
 		while (s1[i])
@@ -37,7 +35,7 @@ static char	*join_vars(char *s1, char *s2)
 			str[j++] = s2[i++];
 	}
 	str[j] = '\0';
-	return (free(s1), str);
+	return (str);
 }
 
 void	put_nl(char **str, int flag)
@@ -49,7 +47,6 @@ void	put_nl(char **str, int flag)
 		putstr_fd(*str, 1);
 		write(1, "\n", 1);
 	}
-	free(*str);
 }
 
 int check_flag(char *arg)

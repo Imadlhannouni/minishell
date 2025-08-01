@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:59 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 12:00:31 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:17:15 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,50 +44,6 @@ static size_t count_to_remove(char **arr, char **arg)
 	return cpt;
 }
 
-// static void help_unset()
-// {
-	
-// }
-
-static void	unset_no_val(char ***no_val, char **arg, t_free *collect)
-{
-	char **clone;
-	int i;
-	int len;
-	int j;
-
-	if (!arg)
-		return;
-	i = 0;
-	j = 0;
-	len = var_num(*no_val) - count_to_remove(*no_val, arg);
-	if (len == 0)
-	{
-		free_2d_arr(*no_val);
-		*no_val = NULL;
-		return ;
-	}	
-	if (!(*no_val))
-		return ;
-	clone = malloc((len + 1) * sizeof(char*));
-	if (!clone)
-		exit_free(collect, 1);
-	while ((*no_val)[i])
-	{
-		if (!check((*no_val)[i], arg))
-		{
-			clone[j++] = ft_strdup((*no_val)[i++]);
-			if (!clone[j - 1])
-				return (free_arr(clone, j - 1), exit_free(collect, 1));
-		}
-		else
-			i++;
-	}
-	clone[j] = NULL;
-	free_2d_arr(*no_val);
-	*no_val = clone;
-}
-
 static int check_exe(char **env, char **arg)
 {
 	int i;
@@ -102,7 +58,7 @@ static int check_exe(char **env, char **arg)
 	return 0;
 }
 
-int	unset(char ***env, char **arg, char ***no_val, t_free *collect)
+int	unset(char ***env, char **arg)
 {
 	char **clone;
 	int i;
@@ -110,12 +66,9 @@ int	unset(char ***env, char **arg, char ***no_val, t_free *collect)
 
 	i = 0;
 	j = 0;
-	if (!arg || (!check_exe(*env, arg) && !check_exe(*no_val, arg)))
+	if (!arg || !check_exe(*env, arg))
 		return 0;
-	unset_no_val(no_val, arg, collect);
-	clone = malloc((var_num(*env) - count_to_remove(*env, arg) + 1) * sizeof(char*));
-	if (!clone)
-		exit_free(collect, 1);
+	clone = (char **)ft_malloc((var_num(*env) - count_to_remove(*env, arg) + 1) * sizeof(char*), 0);
 	while ((*env)[i])
 	{
 		if (!check((*env)[i], arg))
@@ -123,7 +76,7 @@ int	unset(char ***env, char **arg, char ***no_val, t_free *collect)
 		i++;
 	}
 	clone[j] = NULL;
-	free_2d_arr(*env);
 	*env = clone;
 	return 0;
 }
+

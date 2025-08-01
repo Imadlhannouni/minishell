@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 20:34:17 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:31:08 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,8 @@ static int	handle_heredoc_token(t_pipe *pipe, t_token *current_token, char **clo
 			current_token->type, exit_code);
 	if (content)
 	{
-		free(current_token->value);
 		current_token->value = create_heredoc_file(content);
 		current_token->heredoc = 1;
-		free(content);
 		return (1);
 	}
 	return (0);
@@ -133,6 +131,5 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char *exit_code)
 		compact_fullstrings(&(curr)->full_cmd);
 		curr = curr->nextpipe;
 	}
-	//print_pipes(*pipes);
 	return (1);
 }

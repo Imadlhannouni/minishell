@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 21:17:54 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 15:09:54 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:03:55 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,9 @@ static t_red	*create_redirection(t_token *tok)
 {
 	t_red	*red;
 
-	red = malloc(sizeof(t_red));
-	if (!red)
-		return NULL;
+	red = (t_red*)ft_malloc(sizeof(t_red), 0);
 	red->next = NULL;
 	red->file = ft_strdup(tok->value);
-	if (!red->file)
-		return NULL;
 	if (tok->inp_red || tok->heredoc)
 		red->red_type = 0;
 	else if (tok->out_red)
@@ -56,8 +52,6 @@ int	fill_redirection(t_exe *var, t_token *tok)
 		|| tok->out_app != 0 || tok->out_red != 0))
 		return 1;
 	new_red = create_redirection(tok);
-	if (!new_red)
-		return 0;
 	add_redirection(&(var->redirections), new_red);
 	return 1;
 }
@@ -67,9 +61,9 @@ int	dup_output(char *file, int type)
 	int	fd;
 	
 	if (type == 1)
-		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0666);
+		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else
-		fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0666);
+		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 		return (perror("Minishell"), -1);
 	dup2(fd, STDOUT_FILENO);
@@ -89,7 +83,7 @@ int	handle_redirections(t_exe *var)
 	{
 		if (red->red_type == 0)
 		{
-			fd1 = open(red->file, O_RDWR , 0666);
+			fd1 = open(red->file, O_RDONLY , 0644);
 			if (fd1 < 0)
 				return (perror("Minishell"),-1);
 			dup2(fd1, STDIN_FILENO);

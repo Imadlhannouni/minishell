@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils3.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:45:00 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/12 21:03:17 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:47:14 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ char	*substrdup(int start, int end, char *str)
 	char	*new;
 	int		i;
 
-	new = malloc(end - start + 1);
-	if (!new)
-		return (NULL);
+	new = (char*)ft_malloc(end - start + 1, 0);
 	i = 0;
 	while (start < end)
 		new[i++] = str[start++];
@@ -69,9 +67,7 @@ char	*ft_itoa(int n)
 
 	nb = n;
 	len = ft_num_len(nb);
-	s = malloc(len + 1);
-	if (!s)
-		return (NULL);
+	s = (char*)ft_malloc(len + 1, 0);
 	s[len--] = '\0';
 	if (n == 0)
 		s[0] = '0';
