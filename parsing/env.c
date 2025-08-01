@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:30:40 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 14:14:10 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,8 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	{
 		if (ft_strlen(expanded) == 1 && tokens->type != TOKEN_DOUBLE_QUOTE && tokens->type != TOKEN_SIMPLE_QUOTE && tokens->next && (tokens->next->type == TOKEN_DOUBLE_QUOTE || tokens->next->type == TOKEN_SIMPLE_QUOTE) && tokens->is_fullstring == 1)
 			tokens->value = ft_strdup("");
+		else if (expanded[0] == '\0')
+			tokens->value = NULL;
 		else
 			tokens->value = expanded;
 	}
