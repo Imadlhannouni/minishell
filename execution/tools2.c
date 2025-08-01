@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:55:49 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/30 21:53:41 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:18:08 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,16 @@ int	count_args(t_token *tok)
 	return cpt;
 }
 
-void group_pipes(t_pipe *pipes, t_exe **var, t_free *collect, char ***env)
+void group_pipes(t_pipe *pipes, t_exe **var)
 {
 	t_pipe *tmp;
 
 	if (!pipes)
 		return;
-	collect->pipes = pipes;
 	tmp = pipes;
 	while (tmp)
 	{
 		add_node(var,creat_node(tmp->full_cmd));
 		tmp = tmp->nextpipe;
 	}
-	collect->exe = *var;
-	collect->env = env;
 }

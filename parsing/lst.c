@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 17:02:02 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/10 21:50:45 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/07/31 21:46:34 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ t_token	*ft_lstnew(char *value)
 {
 	t_token	*new_noeud;
 
-	new_noeud = malloc(sizeof(new_noeud));
-	if (!new_noeud)
-		return (NULL);
+	new_noeud = (t_token*)ft_malloc(sizeof(new_noeud), 0);
 	new_noeud->value = value;
 	new_noeud->next = NULL;
 	return (new_noeud);

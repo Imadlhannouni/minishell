@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 20:32:56 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 12:11:01 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/07/31 22:14:39 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ char *join_strings(char *s1, char *s2, char *s3)
 
 	temp = ft_strjoin(s1, s2);
 	temp1  = ft_strjoin(temp, s3);
-	free(temp);
 	return (temp1);
 }
 
@@ -71,17 +70,11 @@ char **spec_split(char *str)
 	char **arr = NULL;
 	int i = 0;
 
-	arr = malloc(3 * sizeof(char*));
-	if (!arr)
-		return NULL;
+	arr = ft_malloc(3 * sizeof(char*), 0);
 	while (str[i] && str[i] != '=')
 		i++;
 	arr[0] = fill_word(0, i, str);
-	if (!arr[0])
-		return (NULL);
 	arr[1] = fill_word(++i, ft_strlen(str), str);
-	if (!arr[1])
-		return (free(arr[0]), NULL);
 	arr[2] = NULL;
 	return arr;
 }

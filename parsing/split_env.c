@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 21:59:11 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/11 14:09:30 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:00:31 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@ static char	*allocate_word(const char *s, int start, int end)
 	int		i;
 
 	len = end - start + 1;
-	word = (char *)malloc((len + 1) * sizeof(char));
+	word = (char *)ft_malloc((len + 1) * sizeof(char), 0);
 	i = 0;
-	if (!word)
-		return (NULL);
 	while (start <= end)
 		word[i++] = s[start++];
 	word[i] = '\0';
@@ -35,22 +33,17 @@ static char	**allocate(const char *s, char c)
 	int		i;
 
 	i = 0;
-	arr = malloc(sizeof(char *) * 3);
-	if (!arr)
-		return (NULL);
+	arr = (char**)ft_malloc(sizeof(char *) * 3, 0);
 	while (s[i] && s[i] != c)
 		i++;
 	arr[0] = allocate_word(s, 0, i - 1);
-	if (!arr[0])
-		return (free(arr), NULL);
 	if (s[i] == c)
 		arr[1] = allocate_word(s, i + 1, ft_strlen(s) - 1);
 	else
 		arr[1] = ft_strdup("");
 	if (!arr[1])
 	{
-		free(arr[0]);
-		free(arr);
+
 		return (NULL);
 	}
 	arr[2] = NULL;
