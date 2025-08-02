@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 10:57:05 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 21:49:05 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int is_builtin(char *cmd)
 	return 0;
 }
 
-int exec_builtin(t_exe *var, char ***env)
+int exec_builtin(t_exe *var, char ***env, t_help *help)
 {
 	if (!var->arr || !var->arr[0])
 		return 1;
@@ -48,7 +48,7 @@ int exec_builtin(t_exe *var, char ***env)
 	else if (ft_strcmp(var->arr[0], "unset") == 0)
 		return unset(env, &(var->arr[1]));
 	else if (ft_strcmp(var->arr[0], "exit") == 0)
-		exit_shell(var);
+		return exit_shell(var, help);
 	else if (ft_strcmp(var->arr[0], "env") == 0)
 		return print_env(*env, var->arr);
 	return 0;
