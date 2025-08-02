@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 21:49:05 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:23:35 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int exec_builtin(t_exe *var, char ***env, t_help *help)
 	if (ft_strcmp(var->arr[0], "cd") == 0)
 		return cd(var->arr, env);
 	else if (ft_strcmp(var->arr[0], "pwd") == 0)
-		return pwd();
+		return pwd(*env);
 	else if (ft_strcmp(var->arr[0], "echo") == 0)
 		return (echo(var->arr));
 	else if (ft_strcmp(var->arr[0], "export") == 0)
