@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 17:23:02 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/02 14:40:36 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,10 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi, char **result,
 
 static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 {
-	if ((ft_strchr(expanded, ' ') || ft_strlen(expanded) == 0)
-		&& tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
-			|| tokens->out_red || tokens->inp_red))
+	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t') 
+		|| ft_strchr(expanded, '\n') || ft_strlen(expanded) == 0)
+			&& tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
+				|| tokens->out_red || tokens->inp_red))
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(tokens->value, 2);
@@ -100,36 +101,21 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 	return (1);
 }
 
-static char	*join_splited(char **splited)
-{
-	char	*expanded;
-	int		j;
-
-	expanded = ft_strdup("");
-	j = 0;
-	while (splited[j])
-	{
-		expanded = ft_strjoin(expanded, splited[j]);
-		if (splited[j + 1] != NULL)
-			expanded = ft_strjoin(expanded, " ");
-		j++;
-	}
-	return (expanded);
-}
-
 static void	handle_token_split(t_token *tokens, char *expanded)
 {
-	char			**splited;
-	t_token			*tmp;
-	t_token_type	tmp2;
+	char		**splited;
+	t_token		*tmp;
+	t_token_type	type;
+	int		i;
 
-	splited = ft_split_env(expanded, ' ');
+	splited = ft_split2(expanded, ' ');
 	tmp = tokens->next;
-	tokens->value = splited[0];
-	tmp2 = tokens->type;
+	type = tokens->type;
+	tokens->value = ft_strdup(splited[0]);
 	tokens->next = NULL;
-	add_token(&tokens, splited[1], tmp2, 0);
-	while (strcmp(tokens->value, splited[1]) != 0)
+	for (i = 1; splited[i]; i++)
+		add_token(&tokens, splited[i], type, 0);
+	while (tokens->next)
 		tokens = tokens->next;
 	tokens->next = tmp;
 }
@@ -139,7 +125,6 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 {
 	int		i;
 	char	*expanded;
-	char	**splited;
 
 	i = 0;
 	expanded = ft_strdup("");
@@ -152,12 +137,7 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 		tokens->type = TOKEN_DOUBLE_QUOTE;
 	if (!handle_ambiguous_redirect(tokens, expanded))
 		return (0);
-	if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
-	{
-		splited = ft_split(expanded, ' ');
-		expanded = join_splited(splited);
-	}
-	if (ft_strchr(expanded, ' ') && tokens->type != TOKEN_DOUBLE_QUOTE)
+	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t') || ft_strchr(expanded, '\n')) && tokens->type != TOKEN_DOUBLE_QUOTE)
 		handle_token_split(tokens, expanded);
 	else
 	{
