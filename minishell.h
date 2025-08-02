@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 13:53:39 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/02 16:55:27 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <dirent.h>
+# include <limits.h>
 
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 10
@@ -149,14 +150,17 @@ void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 void				compact_fullstrings(t_token **fullcmd);
 char				**ft_split2(const char *s, char c);
 
+int	ft_isdigit(int a);
+int	is_space(char c);
+
 void	sighandler(int signum);
 void	*ft_malloc(size_t len, int flag);
-int extract_status(int status);
+int		 extract_status(int status);
 
 int		execute(t_pipe *pipes, char ***env, t_help *help);
 int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);
 int 	exec_command(t_exe *var, char **env, t_help *help);
-int		exec_builtin(t_exe *var, char ***env);
+int		exec_builtin(t_exe *var, char ***env, t_help *help);
 
 
 size_t	var_num(char **arr);
@@ -197,7 +201,7 @@ void	reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
 void	add_redirection(t_red **red, t_red *new_red);
 int		fill_redirection(t_exe *var, t_token *tok);
-void	exit_shell(t_exe *var);
+int		exit_shell(t_exe *var, t_help *help);
 void	exit_free(int exit_code);
 
 #endif

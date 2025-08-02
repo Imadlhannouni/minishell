@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 14:44:36 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:04:36 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void help_exec(t_exe *var, t_help *help)
 	{
 		close(help->std_fd[0]);
 		close(help->std_fd[1]);		
-		exit_free(127);
+		exit_free(1);
 	}
 }
 
@@ -106,7 +106,7 @@ int	execute(t_pipe *pipes, char ***env, t_help *help)
 			if (handle_redirections(var) < 0)
 				return (1);
 			if (var->arr)
-				status = exec_builtin(var, env);
+				status = exec_builtin(var, env, help);
 		}
 		reset_redirections(fd);
 	}
