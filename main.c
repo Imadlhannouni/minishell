@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 22:14:56 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/02 17:19:01 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,19 @@
 
 static int g_signal_num = 0;
 
-char	*readline_func(char ***clone_envi)
+char	*readline_func(char ***clone_envi, char *exit_code)
 {
 	char	*line;
+	int		exit_status;
 	(void)clone_envi;
 
 	line = readline("minishell> ");
 	if (!line)
 	{
+		exit_status = atoi(exit_code);
+		ft_putstr_fd("exit\n", 2);
 		ft_malloc(0,1);
-		exit(0);
+		exit(exit_status);
 	}
 	else if (*line)
 		add_history(line);
@@ -67,7 +70,7 @@ int main(int argc, char **argv, char **envp)
 	pipes = NULL;
 	while (1)
 	{
-		line = readline_func(&clone_envi);
+		line = readline_func(&clone_envi, exit_code);
 		if (g_signal_num)
 		{
 			exit_code = ft_itoa(g_signal_num + 128);
