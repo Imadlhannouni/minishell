@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 22:22:18 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/02 13:53:39 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ int					handle_errors(char *line, char **exit_code);
 char				*ft_itoa(int n);
 void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 void				compact_fullstrings(t_token **fullcmd);
+char				**ft_split2(const char *s, char c);
 
 void	sighandler(int signum);
 void	*ft_malloc(size_t len, int flag);
