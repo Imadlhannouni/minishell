@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:04:10 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/02 20:54:01 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,27 +32,32 @@ static char **get_PATH(char **env)
 	}
 	return (paths);
 }
-char	*retrieve_path(char *cmd, char **env)
+int	retrieve_path(char *cmd, char **env, char **path)
 {
 	int i;
-	char *path;
+	char *tmp;
 	char **paths;
 
 	paths = get_PATH(env);
 	if (!*cmd)
-		return (NULL);
-	if (is_path1(cmd) || !paths || !*paths)
-		return (ft_strdup(cmd));
-	i = 0;
-	while (paths[i])
+		return (*path = NULL, 127);
+	if (!paths || !*paths)
+		return (*path = ft_strdup(cmd), 0);
+	i = -1;
+	while (paths[++i])
 	{
-		path = ft_strjoin_v2(paths[i], "/", 0);
-		path = ft_strjoin_v2(path, cmd, 1);
-		if (access(path,F_OK | X_OK) == 0)
-			return (path);
-		i++;
+		tmp = join_strings(paths[i], "/", cmd);
+		if (access(tmp, F_OK) == 0)
+		{
+			if (access(tmp, X_OK) == 0)
+				return (*path = tmp, 0);
+			else if (!*path)
+				*path = tmp;
+		}
 	}
-	return (NULL);
+	if (*path)
+		return (126);
+	return (127);
 }
 
 void close_fd(int (*fd)[2], size_t i, size_t total) 

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 09:40:48 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/02 15:23:28 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int update_OLDPWD(char ***env)
 	return 1;
 }
 
+
 int update_PWD(char ***env)
 {
 	int i;
@@ -59,10 +60,9 @@ int update_PWD(char ***env)
 			str = get_pwd();
 			if (!str)
 			{
-				putstr_fd(" Parent Directory Has Been Deleted\n", 2);
-				if (chdir("/home"))
-					return (putstr_fd("/home Does Not Exist\n", 2), -1);
-				str = get_pwd();
+				putstr_fd("error retrieving current directory\n", 2);
+				(*env)[i] = join_strings((*env)[i], "/", "..");
+				return 1;
 			}
 			(*env)[i] = ft_strjoin("PWD=", str);
 		}
@@ -87,7 +87,6 @@ int	cd(char **arr, char ***env)
 		return (1);
 	}
 	update_OLDPWD(env);
-	if (update_PWD(env) == -1)
-		return (1);
+	update_PWD(env);
 	return (0);
 }

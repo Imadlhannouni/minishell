@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 22:26:29 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/02 18:55:45 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct s_exe
 	struct s_exe *next;
 }	t_exe;
 
+
 char				*ft_strchr(const char *s, int c);
 char				*ft_strdup(const char *s1);
 size_t				ft_strlen(const char *s);
@@ -160,13 +161,13 @@ int		execute(t_pipe *pipes, char ***env, t_help *help);
 int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);
 int 	exec_command(t_exe *var, char **env, t_help *help);
 int		exec_builtin(t_exe *var, char ***env, t_help *help);
-
+void	check_path(char *path);
 
 size_t	var_num(char **arr);
 char	**clone_env(char **env);
 void 	putstr_fd(char *str, int fd);
 char	*ft_strjoin_v2(char *s1, char *s2, int flag);
-char	*retrieve_path(char *cmd, char **env);
+int		retrieve_path(char *cmd, char **env, char **path);
 int		count_args(t_token *tok);
 int		count_pipes(t_pipe *pipes);
 void	close_fd(int (*fd)[2], size_t i, size_t total);
@@ -177,7 +178,7 @@ int		init_var(t_vars *var, size_t pipe_num);
 
 int		print_sorted(char **env);
 int		cd(char **arr, char ***env);
-int		pwd(void);
+int		pwd(char **env);
 int		print_env(char **env, char **args);
 int		unset(char ***env, char **var);
 int		echo(char **arg);
@@ -196,7 +197,7 @@ int		fill_redirection(t_exe *var, t_token *tok);
 t_exe	*creat_node(t_token *tok);
 void	add_node(t_exe **lst, t_exe *node);
 int		handle_redirections(t_exe *var);
-void	reset_redirections(int fd[2]);
+int	reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
 void	add_redirection(t_red **red, t_red *new_red);
 int		fill_redirection(t_exe *var, t_token *tok);
