@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 18:55:45 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/02 21:03:25 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }					t_token;
-
+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
 typedef struct s_heredoc
 {
 	char			*delimiter;
@@ -149,6 +149,7 @@ int					handle_errors(char *line, char **exit_code);
 char				*ft_itoa(int n);
 void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 void				compact_fullstrings(t_token **fullcmd);
+char				**ft_split2(const char *s, char c);
 
 int	ft_isdigit(int a);
 int	is_space(char c);

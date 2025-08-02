@@ -6,11 +6,12 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/02 20:54:01 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/02 21:03:12 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 static char **get_PATH(char **env)
 {
 	char	*path;
