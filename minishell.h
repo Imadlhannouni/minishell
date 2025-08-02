@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 21:03:25 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/02 21:04:12 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }					t_token;
-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
+
 typedef struct s_heredoc
 {
 	char			*delimiter;
