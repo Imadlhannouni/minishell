@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/02 20:22:42 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:30:31 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void help_exec(t_exe *var, t_help *help)
 {
+	help->child = 1;
 	signal(SIGINT, help->prev_handler_int);
 	signal(SIGQUIT, help->prev_handler_quit);
 	if (handle_redirections(var) < 0)
@@ -35,15 +36,29 @@ int extract_status(int status)
 	{
 		exit_code = WTERMSIG(status) + 128;
 		if (exit_code == 130)
-			write(1, "\n", 2);
+			putstr_fd("\n", 1);
 		if (exit_code == 131)
 			putstr_fd("Quit (core dumped)\n", 2);
 	}
 	return exit_code;
 }
 
-void	check_path(char *path)
+void	check_path(char *path, int *e_code)
 {
+	char *str;
+	if (*e_code == 1)
+	{
+		str = join_strings(path, " : ", "is a directory\n");
+		putstr_fd(str, 2);
+		*e_code = 126;
+		return ;
+	}
+	if (*e_code == 2)
+	{
+		*e_code = 127;
+		putstr_fd("Minishell: No such file or directory\n", 2);
+		return ;	
+	}
 	if (!path)
 		putstr_fd("Minishell : command not found\n", 2);
 	else if (access(path, X_OK))
@@ -61,7 +76,7 @@ int	exec_command(t_exe *var, char **env, t_help *help)
 	path = NULL;
 	e_code = retrieve_path(var->arr[0], env, &path);
 	if (e_code > 0)
-		return (check_path(path), e_code);
+		return (check_path(path, &e_code), e_code);
 	pid = fork();
 	if (pid < 0)
 		return (perror("Minishell"), 1);
@@ -79,40 +94,18 @@ int	exec_command(t_exe *var, char **env, t_help *help)
 	return (extract_status(status));
 }
 
-int reset_redirections(int fd[2])
-{
-	if (dup2(fd[0] ,STDIN_FILENO) < 0)
-		return (perror("Minishell"),-1);
-	if (dup2(fd[1] ,STDOUT_FILENO) < 0)
-		return (perror("Minishell"),-1);
-	close(fd[0]);
-	close(fd[1]);
-	return 1;
-}
-
-int dup_std(int fd[2], t_help *help)
-{
-	help->std_fd = fd;
-	fd[0] = dup(STDIN_FILENO);
-	fd[1] =	dup(STDOUT_FILENO);
-	if (fd[0] < 0 || fd[1] < 0)
-		return (perror("Minishell"),-1);
-	return 1;
-}
-
-
 int	execute(t_pipe *pipes, char ***env, t_help *help)
 {
 	t_exe	*var;
 	int fd[2];
-	int status = -1;
+	int status = 0;
 
 	var = NULL;	 
 	group_pipes(pipes, &var);
 	if (count_pipes(pipes) > 1)
 	{
-		int pipi = count_pipes(pipes);
-		status = exec_pipe(var, env, pipi , help);
+		int k = count_pipes(pipes);
+		status = exec_pipe(var, env, k, help);
 	}
 	else if (count_pipes(pipes) == 1)
 	{
@@ -124,7 +117,7 @@ int	execute(t_pipe *pipes, char ***env, t_help *help)
 		{
 			if (handle_redirections(var) < 0)
 				return (1);
-			if (var->arr)
+			if (var->arr && var->arr[0])
 				status = exec_builtin(var, env, help);
 		}
 		if (reset_redirections(fd) < 0)

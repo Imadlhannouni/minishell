@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/02 14:23:35 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 16:08:13 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,16 @@ char **clone_env(char **env)
 	}
 	clone[i] = NULL;
 	return (clone);
+}
+
+
+int reset_redirections(int fd[2])
+{
+	if (dup2(fd[0] ,STDIN_FILENO) < 0)
+		return (perror("Minishell"),-1);
+	if (dup2(fd[1] ,STDOUT_FILENO) < 0)
+		return (perror("Minishell"),-1);
+	close(fd[0]);
+	close(fd[1]);
+	return 1;
 }
