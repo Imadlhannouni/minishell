@@ -6,14 +6,13 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 14:11:46 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:53:41 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	handle_token_cases(t_token **tokens, int i, char *line,
-		int *flag)
+static int	handle_token_cases(t_token **tokens, int i, char *line, int *flag)
 {
 	if (line[i] == '\'')
 		i = is_simple_quote(tokens, i, line, flag);
@@ -104,7 +103,8 @@ int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 	return (1);
 }
 
-int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char **exit_code)
+int	main_parsing(char *line, char **clone_envi, t_pipe **pipes,
+		char **exit_code)
 {
 	t_token	*tokens;
 	t_pipe	*curr;
@@ -123,6 +123,6 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes, char **exit_code
 		compact_fullstrings(&(curr)->full_cmd);
 		curr = curr->nextpipe;
 	}
-	//print_pipes(*pipes);
+	// print_pipes(*pipes);
 	return (free(line), 1);
 }

@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 17:57:45 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 14:00:49 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,13 @@ int	is_simple_quote(t_token **tokens, int i, char *line, int *flag)
 	if (line[i] == '\'')
 		i++;
 	value = substrdup(start, end, line);
-	if (!value)
-		return (-1);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'
 		&& line[i] != '>' && line[i] != '\0')
 	{
-		if(!add_token(tokens, value, type, 1))
-			return (free(value), -1);
+		add_token(tokens, value, type, 1);
 	}
 	else
-		if(!add_token(tokens, value, type, 0))
-			return(free(value), -1);
+		add_token(tokens, value, type, 0);
 	last = ft_lstlast(*tokens);
 	apply_flag_to_token(last, flag, 1);
 	return (i);
@@ -81,20 +77,15 @@ int	is_double_quote(t_token **tokens, int i, char *line, int *flag)
 	if (line[i] == '"')
 		i++;
 	value = substrdup(start, end, line);
-	if(!value)
-		return (-1);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'
 		&& line[i] != '>' && line[i] != '\0')
 	{
-		if(!add_token(tokens, value, type, 1))
-			return (free(value), -1);
+		add_token(tokens, value, type, 1);
 	}
 	else
-		if(!add_token(tokens, value, type, 0))
-			return(free(value), -1);
+		add_token(tokens, value, type, 0);
 	last = ft_lstlast(*tokens);
-	apply_flag_to_token(last, flag, 0);
-	return (i);
+	return (apply_flag_to_token(last, flag, 0), i);
 }
 
 int	is_directions(int i, char *line, int *flag)
@@ -134,10 +125,7 @@ int	is_pipe(t_token *tokens, int i, char *line)
 	end = i + 1;
 	i++;
 	value = substrdup(start, end, line);
-	if(!value)
-		return (-1);
-	if(!add_token(&tokens, value, type, 0))
-			return(free(value), -1);
+	add_token(&tokens, value, type, 0);
 	return (i);
 }
 
@@ -157,17 +145,13 @@ int	is_word(t_token **tokens, int i, char *line, int *flag)
 		i++;
 	end = i;
 	value = substrdup(start, end, line);
-	if(!value)
-		return (-1);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'
 		&& line[i] != '>' && line[i] != '\0')
 	{
-		if(!add_token(tokens, value, type, 1))
-			return (free(value), -1);
+		add_token(tokens, value, type, 1);
 	}
 	else
-		if(!add_token(tokens, value, type, 0))
-			return(free(value), -1);
+		add_token(tokens, value, type, 0);
 	last = ft_lstlast(*tokens);
 	apply_flag_to_token(last, flag, 0);
 	return (i);

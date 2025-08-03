@@ -6,13 +6,20 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 17:19:01 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 16:09:40 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int g_signal_num = 0;
+int	global_var(int new_value)
+{
+	static int value = 0;
+
+	if (new_value != -1)
+		value = new_value;
+	return (value);
+}
 
 char	*readline_func(char ***clone_envi, char *exit_code)
 {
@@ -23,9 +30,10 @@ char	*readline_func(char ***clone_envi, char *exit_code)
 	line = readline("minishell> ");
 	if (!line)
 	{
-		exit_status = atoi(exit_code);
+		exit_status = ft_atoi(exit_code);
 		ft_putstr_fd("exit\n", 2);
 		ft_malloc(0,1);
+		free(line);
 		exit(exit_status);
 	}
 	else if (*line)
@@ -37,7 +45,7 @@ void sighandler(int signum)
 {
 	if (signum == SIGINT)
 	{
-		g_signal_num = signum;
+		signum = global_var(signum);
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -60,6 +68,7 @@ int main(int argc, char **argv, char **envp)
 	static char *exit_code;
 	t_help  help;
 	int s;
+	int test = 0;
 
 	clone_envi = clone_env(envp);
 	(void)argc;
@@ -71,13 +80,11 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline_func(&clone_envi, exit_code);
-		if (g_signal_num)
+		if ((test = global_var(-1)) == SIGINT)
 		{
-			exit_code = ft_itoa(g_signal_num + 128);
-			g_signal_num = 0;
+			exit_code = ft_itoa(SIGINT + 128);
+			test = global_var(0);
 		}
-		if (!line)
-			break ;
 		if (main_parsing(line, clone_envi, &pipes, &exit_code))
 		{
 			s = execute(pipes, &clone_envi, &help);
@@ -85,6 +92,7 @@ int main(int argc, char **argv, char **envp)
 		}
 		cleanup_heredoc_files(pipes);
 	}
+	free(line);
 	ft_malloc(0,1);
 	return (0);
 }
