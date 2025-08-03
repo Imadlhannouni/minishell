@@ -17,7 +17,7 @@ char	*substrdup(int start, int end, char *str)
 	char	*new;
 	int		i;
 
-	new = (char*)ft_malloc(end - start + 1, 0);
+	new = (char *)ft_malloc(end - start + 1, 0);
 	i = 0;
 	while (start < end)
 		new[i++] = str[start++];
@@ -67,7 +67,7 @@ char	*ft_itoa(int n)
 
 	nb = n;
 	len = ft_num_len(nb);
-	s = (char*)ft_malloc(len + 1, 0);
+	s = (char *)ft_malloc(len + 1, 0);
 	s[len--] = '\0';
 	if (n == 0)
 		s[0] = '0';

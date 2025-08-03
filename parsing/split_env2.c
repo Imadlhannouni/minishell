@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 21:58:55 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 14:04:46 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 14:40:26 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	count_word(char *s, char c)
 {
-	int count;
-	int in_word;
+	int	count;
+	int	in_word;
 
 	count = 0;
 	in_word = 0;
@@ -63,8 +63,8 @@ static char	**allocate(char *s, char c)
 	{
 		if (s[i] != c && s[i] != '\t' && s[i] != '\n' && start == -1)
 			start = i;
-		if ((s[i] != c && s[i] != '\t' && s[i] != '\n' &&
-			(s[i + 1] == c || s[i + 1] == '\t' || s[i + 1] == '\n'  || s[i + 1] == '\0')))
+		if ((s[i] != c && s[i] != '\t' && s[i] != '\n' && (s[i + 1] == c || s[i
+						+ 1] == '\t' || s[i + 1] == '\n' || s[i + 1] == '\0')))
 		{
 			arr[j++] = allocate_word(s, start, i);
 			start = -1;

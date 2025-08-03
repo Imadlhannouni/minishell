@@ -16,7 +16,7 @@ t_token	*ft_lstnew(char *value)
 {
 	t_token	*new_noeud;
 
-	new_noeud = (t_token*)ft_malloc(sizeof(new_noeud), 0);
+	new_noeud = (t_token *)ft_malloc(sizeof(new_noeud), 0);
 	new_noeud->value = value;
 	new_noeud->next = NULL;
 	return (new_noeud);

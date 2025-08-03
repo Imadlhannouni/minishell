@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:41:38 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/07/31 21:46:48 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 16:08:57 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,3 @@ int	ft_isalnum(int c)
 	else
 		return (0);
 }
-

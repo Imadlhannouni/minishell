@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 21:59:11 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 14:41:40 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 13:56:12 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	**allocate(const char *s, char c)
 	int		i;
 
 	i = 0;
-	arr = (char**)ft_malloc(sizeof(char *) * 3, 0);
+	arr = (char **)ft_malloc(sizeof(char *) * 3, 0);
 	while (s[i] && s[i] != c)
 		i++;
 	arr[0] = allocate_word(s, 0, i - 1);
@@ -43,7 +43,6 @@ static char	**allocate(const char *s, char c)
 		arr[1] = ft_strdup("");
 	if (!arr[1])
 	{
-
 		return (NULL);
 	}
 	arr[2] = NULL;
