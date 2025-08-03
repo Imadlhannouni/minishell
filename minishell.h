@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 21:04:12 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:52:01 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <fcntl.h>
 # include <dirent.h>
 # include <limits.h>
+#include <sys/stat.h>
 
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 10
@@ -68,6 +69,7 @@ typedef struct s_help
 	void (*prev_handler_quit)(int);
 	char **exit_code;
 	int *std_fd;
+	int child;
 }	t_help;
 
 typedef struct s_pipe
@@ -151,9 +153,8 @@ void				apply_flag_to_token(t_token *last, int *flag, int set_expand);
 void				compact_fullstrings(t_token **fullcmd);
 char				**ft_split2(const char *s, char c);
 
-int	ft_isdigit(int a);
-int	is_space(char c);
-
+int		ft_isdigit(int a);
+int		is_space(char c);
 void	sighandler(int signum);
 void	*ft_malloc(size_t len, int flag);
 int		 extract_status(int status);
@@ -162,7 +163,10 @@ int		execute(t_pipe *pipes, char ***env, t_help *help);
 int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);
 int 	exec_command(t_exe *var, char **env, t_help *help);
 int		exec_builtin(t_exe *var, char ***env, t_help *help);
-void	check_path(char *path);
+int		check_directory(char *path);
+void	check_path(char *path, int *e_code);
+int		is_path1(char *cmd);
+int dup_std(int fd[2], t_help *help);
 
 size_t	var_num(char **arr);
 char	**clone_env(char **env);
@@ -191,14 +195,14 @@ int		check_existence(char **env, char *name);
 char	*fill_word(int start, int end, char *str);
 void	group_pipes(t_pipe *pipes, t_exe **var);
 
-int check_equ(char *str);
+int		check_equ(char *str);
 int 	is_builtin(char *cmd);
 int		group_2d_arr(t_exe *var, t_token *tok);
 int		fill_redirection(t_exe *var, t_token *tok);
 t_exe	*creat_node(t_token *tok);
 void	add_node(t_exe **lst, t_exe *node);
 int		handle_redirections(t_exe *var);
-int	reset_redirections(int fd[2]);
+int		reset_redirections(int fd[2]);
 int		is_path1(char *cmd);
 void	add_redirection(t_red **red, t_red *new_red);
 int		fill_redirection(t_exe *var, t_token *tok);

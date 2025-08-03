@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/02 18:54:35 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 19:36:00 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	init_var(t_vars *var, size_t pipe_num)
 		var->fd = ft_malloc((pipe_num - 1) * sizeof(int[2]), 0);
 		while (j < var->pipe_num - 1)
 		{
-			if (pipe((var->fd)[j]) == -1)
+			if (pipe((var->fd)[j]) < 0)
 			{
 				perror("Minishell");
 				return (close_previous(var->fd, j - 1), -1);
@@ -36,28 +36,11 @@ int	init_var(t_vars *var, size_t pipe_num)
 	return 0;
 }
 
-int is_path1(char *cmd)
-{
-	int i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == '/')
-			return 1;
-		i++;
-	}
-	return 0;
-}
-void	exit_free(int exit_code)
-{
-	ft_malloc(0, 1);
-	exit(exit_code);
-}
-
 static void exec_helper(char *path, t_exe *tmp, char ***env, t_help *help)
 {
 	if (handle_redirections(tmp) < 0)
+		exit_free(1);
+	if (!tmp->arr || !tmp->arr[0])
 		exit_free(0);
 	if (is_builtin(tmp->arr[0]) == 1)
 		exit_free(exec_builtin(tmp, env, help));
@@ -85,14 +68,15 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_help *help)
 	return (perror("Minishell"), -1);
 	if (pid == 0)
 	{
+		help->child = 1;
 		signal(SIGINT, help->prev_handler_int);
 		signal(SIGQUIT, help->prev_handler_quit);
 		close_fd(var.fd, var.i, var.pipe_num);
+		switch_fd(var.fd, var.i, var.pipe_num - 1);
 		if (!is_builtin(tmp->arr[0]))
 			e_code = retrieve_path(tmp->arr[0], *env, &path);
 		if (e_code > 0)
-			return (check_path(path), exit_free(e_code), 0);
-		switch_fd(var.fd, var.i, var.pipe_num - 1);
+			return (check_path(path, &e_code), exit_free(e_code), 0);
 		exec_helper(path, tmp, env, help);
 	}
 	return (pid);
@@ -121,6 +105,7 @@ int exec_pipe(t_exe *grp, char ***envp, size_t pipe_num, t_help *help)
 	waitpid(var.pid[var.pipe_num - 1], &status, 0);
 	while (var.i++ < var.pipe_num - 1)
 		wait(NULL);
+	signal(SIGINT, sighandler);
     exit_code = extract_status(status);
 	return (exit_code);
 }
