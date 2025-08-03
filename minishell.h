@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 16:08:34 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:55:23 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
-# include <unistd.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <dirent.h>
+# include <limits.h>
+#include <sys/stat.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
@@ -63,11 +67,12 @@ typedef struct s_heredoc
 
 typedef struct s_help
 {
-	void			(*prev_handler_int)(int);
-	void			(*prev_handler_quit)(int);
-	char			**exit_code;
-	int				*std_fd;
-}					t_help;
+	void (*prev_handler_int)(int);
+	void (*prev_handler_quit)(int);
+	char **exit_code;
+	int *std_fd;
+	int child;
+}	t_help;
 
 typedef struct s_pipe
 {
@@ -159,19 +164,20 @@ int					check_basics(char *line);
 int					skip_word(char *s, int i);
 int					skip_spaces(char *s, int i);
 
-int					ft_isdigit(int a);
-int					is_space(char c);
+int		ft_isdigit(int a);
+int		is_space(char c);
+void	sighandler(int signum);
+void	*ft_malloc(size_t len, int flag);
+int		 extract_status(int status);
 
-void				sighandler(int signum);
-void				*ft_malloc(size_t len, int flag);
-int					extract_status(int status);
-
-int					execute(t_pipe *pipes, char ***env, t_help *help);
-int					exec_pipe(t_exe *var, char ***envp, size_t pipe_num,
-						t_help *help);
-int					exec_command(t_exe *var, char **env, t_help *help);
-int					exec_builtin(t_exe *var, char ***env, t_help *help);
-void				check_path(char *path);
+int		execute(t_pipe *pipes, char ***env, t_help *help);
+int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);
+int 	exec_command(t_exe *var, char **env, t_help *help);
+int		exec_builtin(t_exe *var, char ***env, t_help *help);
+int		check_directory(char *path);
+void	check_path(char *path, int *e_code);
+int		is_path1(char *cmd);
+int dup_std(int fd[2], t_help *help);
 
 size_t				var_num(char **arr);
 char				**clone_env(char **env);
@@ -200,18 +206,18 @@ int					check_existence(char **env, char *name);
 char				*fill_word(int start, int end, char *str);
 void				group_pipes(t_pipe *pipes, t_exe **var);
 
-int					check_equ(char *str);
-int					is_builtin(char *cmd);
-int					group_2d_arr(t_exe *var, t_token *tok);
-int					fill_redirection(t_exe *var, t_token *tok);
-t_exe				*creat_node(t_token *tok);
-void				add_node(t_exe **lst, t_exe *node);
-int					handle_redirections(t_exe *var);
-int					reset_redirections(int fd[2]);
-int					is_path1(char *cmd);
-void				add_redirection(t_red **red, t_red *new_red);
-int					fill_redirection(t_exe *var, t_token *tok);
-int					exit_shell(t_exe *var, t_help *help);
-void				exit_free(int exit_code);
+int		check_equ(char *str);
+int 	is_builtin(char *cmd);
+int		group_2d_arr(t_exe *var, t_token *tok);
+int		fill_redirection(t_exe *var, t_token *tok);
+t_exe	*creat_node(t_token *tok);
+void	add_node(t_exe **lst, t_exe *node);
+int		handle_redirections(t_exe *var);
+int		reset_redirections(int fd[2]);
+int		is_path1(char *cmd);
+void	add_redirection(t_red **red, t_red *new_red);
+int		fill_redirection(t_exe *var, t_token *tok);
+int		exit_shell(t_exe *var, t_help *help);
+void	exit_free(int exit_code);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:35:32 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 10:23:44 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 13:46:52 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,10 @@ void	*ft_malloc(size_t len, int flag)
 	else
 		add_to_malloc(&head, creat_adress(adress, &head));
 	return adress;
+}
+
+void	exit_free(int exit_code)
+{
+	ft_malloc(0, 1);
+	exit(exit_code);
 }

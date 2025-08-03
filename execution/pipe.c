@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/02 21:03:12 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:44:03 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,38 @@ static char **get_PATH(char **env)
 	}
 	return (paths);
 }
+
+static int check_path1(char *cmd, char **path)
+{
+	if (is_path1(cmd) && access(cmd, F_OK) == 0)
+	{
+		if (check_directory(cmd))
+			return (*path = cmd, 1);
+		if (access(cmd, X_OK) == 0)
+			return (*path = cmd, 0);
+		else
+			return (*path = cmd, 126);
+	}
+	else if (is_path1(cmd))
+		return (*path = cmd, 2);
+	return 0;
+}
+
 int	retrieve_path(char *cmd, char **env, char **path)
 {
-	int i;
 	char *tmp;
 	char **paths;
-
-	paths = get_PATH(env);
+	
 	if (!*cmd)
 		return (*path = NULL, 127);
+	if (is_path1(cmd))
+		return (check_path1(cmd, path));
+	paths = get_PATH(env);
 	if (!paths || !*paths)
 		return (*path = ft_strdup(cmd), 0);
-	i = -1;
-	while (paths[++i])
+	while (*paths)
 	{
-		tmp = join_strings(paths[i], "/", cmd);
+		tmp = join_strings(*paths, "/", cmd);
 		if (access(tmp, F_OK) == 0)
 		{
 			if (access(tmp, X_OK) == 0)
@@ -55,6 +72,7 @@ int	retrieve_path(char *cmd, char **env, char **path)
 			else if (!*path)
 				*path = tmp;
 		}
+		paths++;
 	}
 	if (*path)
 		return (126);
@@ -108,32 +126,4 @@ void	switch_fd(int (*fd)[2], size_t i, size_t total)
 		close(fd[i - 1][0]);
 		close(fd[i][1]);
 	}
-}
-
-void close_previous(int (*fd)[2], int j)
-{
-	int	i;
-
-	i = 0;
-	while (i < j)
-	{
-		close(fd[i][0]);
-		close(fd[i][1]);
-		i++;
-	}
-}
-
-int count_pipes(t_pipe *pipes)
-{
-	t_pipe *temp;
-	int cpt;
-
-	temp = pipes;
-	cpt = 0;
-	while (temp)
-	{
-		cpt++;
-		temp = temp->nextpipe;
-	}
-	return cpt;
 }

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:55:49 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 21:26:07 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 13:41:28 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,19 @@ int	is_space(char c)
 	if ((c >= 9 && c <= 13) || c == 32)
 		return (1);
 	return (0);
+}
+
+int count_pipes(t_pipe *pipes)
+{
+	t_pipe *temp;
+	int cpt;
+
+	temp = pipes;
+	cpt = 0;
+	while (temp)
+	{
+		cpt++;
+		temp = temp->nextpipe;
+	}
+	return cpt;
 }
