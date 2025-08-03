@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 10:56:15 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 14:06:02 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ void putstr_fd(char *str, int fd)
 	if (d < 0)
 	{
 		perror("Invalid fd\n");
-		ft_malloc(0, 1);
-		exit(1);
+		exit_free(1);
 	}
 }
 
@@ -32,11 +31,11 @@ static void put_format(char **var)
 		putstr_fd(var[0], 1);
 	if (*var[1])
 	{
-		write(1, "=\"", 2);
+		putstr_fd("=\"", 1);
 		putstr_fd(var[1], 1);
-		write(1, "\"", 1);
+		putstr_fd("\"", 1);
 	}
-	write(1, "\n", 1);
+	putstr_fd("\n", 1);
 }
 
 static char **sort_env(char **env)

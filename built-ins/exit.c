@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 21:56:31 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 17:54:58 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,26 +86,26 @@ int	exit_shell(t_exe *var, t_help *help)
 	long i;
 
 	i = 0;
-	if (var->arr[1] == NULL)
-	{
+	if (!help->child)
 		putstr_fd("exit\n", 2);
+	if (var->arr[1] == NULL)
 		exit_free(ft_atoi(*(help->exit_code)));
-	}
 	if (var_num(var->arr) > 2)
 	{
-		putstr_fd("exit\n too many arguments\n", 2);
 		if (!ft_isnum(var->arr[1]))
-			exit_free(1);
+		{
+			putstr_fd("Minishell : numeric argument required\n", 2);
+			exit_free(2);
+		}
 		else if (ft_isnum(var->arr[1]))
-			return 1;
+			return (putstr_fd("Minishell : too many arguments\n", 2), 1);
 	}
 	if ((var->arr)[1] && !ft_isnum((var->arr)[1]))
 	{
-		putstr_fd("exit\n numeric argument required\n", 2);
+		putstr_fd("Minishell : numeric argument required\n", 2);
 		exit_free(2);
 	}
 	i = ft_atoi((var->arr)[1]);
-	putstr_fd("exit\n", 2);
 	exit_free((i % 256));
 	return 0;
 }
