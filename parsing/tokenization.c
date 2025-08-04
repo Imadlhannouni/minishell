@@ -6,30 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 14:00:49 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 21:05:51 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	apply_flag_to_token(t_token *last, int *flag, int set_expand)
-{
-	if (*flag == 1)
-		last->heredoc = 1;
-	else if (*flag == 2)
-		last->out_app = 1;
-	else if (*flag == 3)
-		last->inp_red = 1;
-	else if (*flag == 4)
-		last->out_red = 1;
-	if (*flag > 0)
-	{
-		*flag = 0;
-		last->type = TOKEN_PATH;
-		if (set_expand)
-			last->expand = 1;
-	}
-}
 
 int	is_simple_quote(t_token **tokens, int i, char *line, int *flag)
 {

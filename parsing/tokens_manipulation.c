@@ -6,11 +6,30 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:31:30 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 21:05:53 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	apply_flag_to_token(t_token *last, int *flag, int set_expand)
+{
+	if (*flag == 1)
+		last->heredoc = 1;
+	else if (*flag == 2)
+		last->out_app = 1;
+	else if (*flag == 3)
+		last->inp_red = 1;
+	else if (*flag == 4)
+		last->out_red = 1;
+	if (*flag > 0)
+	{
+		*flag = 0;
+		last->type = TOKEN_PATH;
+		if (set_expand)
+			last->expand = 1;
+	}
+}
 
 int	add_token(t_token **head, char *value, t_token_type type, int is_full)
 {

@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 13:45:31 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 22:33:39 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	signalhandler(int signum)
 static void	child_heredoc_loop(struct s_heredoc *heredoc, char **exit_code,
 		char **clone_envi)
 {
+	char	*line1;
 	char	*line;
 	int		i;
 
@@ -35,21 +36,22 @@ static void	child_heredoc_loop(struct s_heredoc *heredoc, char **exit_code,
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		line = readline("> ");
+		line1 = readline("> ");
 		i = global_var2(heredoc->write_fd);
-		if (!line)
+		if (!line1)
 		{
-			ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `",
-				2);
+			ft_putstr_fd("warning: here-document delimited ", 2);
+			ft_putstr_fd("by end-of-file (wanted `", 2);
 			ft_putstr_fd(heredoc->delimiter, 2);
 			ft_putstr_fd("')\n", 2);
 			break ;
 		}
+		line = ft_strdup(line1);
+		free(line1);
 		if (ft_strcmp(line, heredoc->delimiter) == 0)
 			break ;
 		expand_and_write_line(heredoc, line, exit_code, clone_envi);
 	}
-	free(line);
 	close(heredoc->write_fd);
 	ft_malloc(0, 1);
 	exit(0);

@@ -6,34 +6,35 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 14:20:12 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:40:17 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	check_null(t_token **fullcmd)
+void	check_null(t_token **fullcmd, t_token **fullcmd_v)
 {
-	if ((*fullcmd)->value == NULL && (*fullcmd)->next)
-		(*fullcmd) = (*fullcmd)->next;
+	t_token	*head;
+
+	head = *fullcmd_v;
+	if (head == *fullcmd)
+	{
+		if ((*fullcmd)->value == NULL && (*fullcmd)->next)
+			(*fullcmd) = (*fullcmd)->next;
+	}
 }
 
 void	compact_fullstrings(t_token **fullcmd)
 {
 	t_token	*curr;
-	int		flag;
 	t_token	*prev;
 	t_token	*compact;
-	t_token	*head;
 
-	head = *fullcmd;
 	curr = *fullcmd;
 	prev = NULL;
-	flag = 0;
 	while (curr)
 	{
-		if (head == curr)
-			check_null(&curr);
+		check_null(&curr, fullcmd);
 		if (curr->is_fullstring == 1)
 		{
 			compact = concat_fullstring(curr, &curr);
@@ -59,6 +60,7 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 
 	new = (t_pipe *)ft_malloc(sizeof(t_pipe), 0);
 	new->full_cmd = fullcmd;
+	new->ambigious = 0;
 	new->nextpipe = NULL;
 	if (!*head)
 		*head = new;
@@ -108,25 +110,4 @@ t_pipe	*group_tokens_into_pipes(t_token *tokens)
 	if (start)
 		add_pipe(&pipes, start);
 	return (pipes);
-}
-
-void	print_pipes(t_pipe *pipes)
-{
-	t_pipe	*curr_pipe;
-	t_token	*curr_token;
-
-	curr_pipe = pipes;
-	while (curr_pipe)
-	{
-		printf("=== New Pipe Command ===\n");
-		curr_token = curr_pipe->full_cmd;
-		while (curr_token)
-		{
-			printf("%s : %d : %d | inp_red : %d, out_red : %d,  heredoc : %d, out_app : %d\n", curr_token->value, curr_token->type,
-				curr_token->is_fullstring, curr_token->inp_red,
-				curr_token->out_red, curr_token->heredoc, curr_token->out_app);
-			curr_token = curr_token->next;
-		}
-		curr_pipe = curr_pipe->nextpipe;
-	}
 }
