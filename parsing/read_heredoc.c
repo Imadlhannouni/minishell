@@ -6,18 +6,35 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 22:33:39 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 16:03:34 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+char	*free_line(char *new_value, int i)
+{
+	static char	*value = NULL;
+
+	if (i != -1)
+	{
+		if (value)
+			free(value);
+		value = new_value;
+	}
+	return (value);
+}
+
 void	signalhandler(int signum)
 {
-	int	i;
+	int		i;
+	char	*line;
 
 	(void)signum;
 	i = global_var2(-1);
+	line = free_line(NULL, -1);
+	if (line)
+		free(line);
 	close(i);
 	ft_malloc(0, 1);
 	write(1, "\n", 1);
@@ -36,7 +53,7 @@ static void	child_heredoc_loop(struct s_heredoc *heredoc, char **exit_code,
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		line1 = readline("> ");
+		free_line(line1 = readline("> "), 1);
 		i = global_var2(heredoc->write_fd);
 		if (!line1)
 		{
@@ -47,11 +64,11 @@ static void	child_heredoc_loop(struct s_heredoc *heredoc, char **exit_code,
 			break ;
 		}
 		line = ft_strdup(line1);
-		free(line1);
 		if (ft_strcmp(line, heredoc->delimiter) == 0)
 			break ;
 		expand_and_write_line(heredoc, line, exit_code, clone_envi);
 	}
+	free(free_line(NULL, -1));
 	close(heredoc->write_fd);
 	ft_malloc(0, 1);
 	exit(0);
