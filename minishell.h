@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 20:57:43 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 11:29:37 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,7 @@ int		is_space(char c);
 void	sighandler(int signum);
 void	*ft_malloc(size_t len, int flag);
 int		 extract_status(int status);
+int check_equ(char *str);
 
 int		execute(t_pipe *pipes, char ***env, t_help *help);
 int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);

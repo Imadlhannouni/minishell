@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:59 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:17:15 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 11:40:51 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,20 @@ static size_t count_to_remove(char **arr, char **arg)
 		i++;			
 	}
 	return cpt;
+}
+
+int check_equ(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '=')
+			return 0;
+		i++;
+	}
+	return 1;
 }
 
 static int check_exe(char **env, char **arg)
