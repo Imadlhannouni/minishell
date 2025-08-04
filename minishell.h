@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 20:55:23 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:39:26 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <unistd.h>
 # include <fcntl.h>
 # include <dirent.h>
 # include <limits.h>
@@ -77,6 +78,7 @@ typedef struct s_help
 typedef struct s_pipe
 {
 	t_token			*full_cmd;
+	int				ambigious;
 	struct s_pipe	*nextpipe;
 }					t_pipe;
 
@@ -134,7 +136,7 @@ int					is_directions(int i, char *line, int *flag);
 int					is_pipe(t_token *tokens, int i, char *line);
 int					is_word(t_token **tokens, int i, char *line, int *flag);
 int					replace_env_variables(t_pipe **pipes, char **clone_envi,
-						char *exit_code);
+						char **exit_code);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
