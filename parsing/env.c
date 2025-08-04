@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 20:51:06 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 12:42:44 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,6 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 		&& tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
 			|| tokens->out_red || tokens->inp_red))
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(tokens->value, 2);
-		ft_putstr_fd(": ambiguous redirect\n", 2);
 		return (0);
 	}
 	return (1);
@@ -121,7 +118,7 @@ static void	handle_token_split(t_token *tokens, char *expanded)
 }
 
 static int	expand_token_value(t_token *tokens, char **clone_envi,
-		char *exit_code)
+		char **exit_code)
 {
 	int		i;
 	char	*expanded;
@@ -130,7 +127,7 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	expanded = ft_strdup("");
 	while (tokens->value[i])
 		i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded,
-				exit_code);
+				*exit_code);
 	if (ft_strchr(tokens->value, '$') && ft_strchr(tokens->value, '='))
 		tokens->type = TOKEN_DOUBLE_QUOTE;
 	if (ft_strchr(expanded, '$'))
@@ -156,45 +153,16 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	return (1);
 }
 
-void	check_delete_pipe(int should_delete_pipe, t_pipe **pipes,
-		t_pipe **current, t_pipe **prev)
-{
-	t_pipe *pipe_to_delete;
-	
-	pipe_to_delete = NULL;
-	if (should_delete_pipe)
-	{
-		pipe_to_delete = *current;
-		if (*prev == NULL)
-		{
-			*pipes = (*current)->nextpipe;
-			*current = *pipes;
-		}
-		else
-		{
-			(*prev)->nextpipe = (*current)->nextpipe;
-			*current = (*current)->nextpipe;
-		}
-	}
-	else
-	{
-		*prev = *current;
-		*current = (*current)->nextpipe;
-	}
-}
-
-int	replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code)
+int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 {
 	t_pipe	*current;
 	t_pipe	*prev;
 	t_token	*tokens;
-	int		should_delete_pipe;
 
 	current = *pipes;
 	prev = NULL;
 	while (current)
 	{
-		should_delete_pipe = 0;
 		tokens = current->full_cmd;
 		while (tokens)
 		{
@@ -204,13 +172,13 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code)
 			{
 				if (!expand_token_value(tokens, clone_envi, exit_code))
 				{
-					should_delete_pipe = 1;
+					current->ambigious = 1;
 					break ;
 				}
 			}
 			tokens = tokens->next;
 		}
-		check_delete_pipe(should_delete_pipe, pipes, &current, &prev);
+		current = current->nextpipe;
 	}
 	return (1);
 }
