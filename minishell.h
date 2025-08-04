@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 15:48:00 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 16:19:44 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_exe
 {
 	char			**arr;
 	t_red			*redirections;
+	int				is_ambiguis;
 	struct s_exe	*next;
 }					t_exe;
 
@@ -209,6 +210,7 @@ char				*join_strings(char *s1, char *s2, char *s3);
 int					check_existence(char **env, char *name);
 char				*fill_word(int start, int end, char *str);
 void				group_pipes(t_pipe *pipes, t_exe **var);
+void	check_ambigious(t_exe *var);
 
 int		check_equ(char *str);
 int 	is_builtin(char *cmd);
