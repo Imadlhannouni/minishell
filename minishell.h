@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 12:39:26 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 13:31:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
+#include <unistd.h>
 # include <errno.h>
 # include <unistd.h>
 # include <fcntl.h>
@@ -171,6 +172,7 @@ int		is_space(char c);
 void	sighandler(int signum);
 void	*ft_malloc(size_t len, int flag);
 int		 extract_status(int status);
+int check_equ(char *str);
 
 int		execute(t_pipe *pipes, char ***env, t_help *help);
 int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);
