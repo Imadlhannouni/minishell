@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 12:17:30 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 13:27:34 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_exe
 {
 	char			**arr;
 	t_red			*redirections;
+	int				is_ambiguis;
 	struct s_exe	*next;
 }					t_exe;
 
