@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 17:05:43 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 21:10:11 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,7 @@ int					handle_env_var(char *str, int i, t_expand_ctx *ctx,
 int					handle_chunk(char *str, int i, char **result);
 void				handle_token_split(t_token *tokens, char *expanded);
 char				*get_env_value(const char *key, char **clone_envi);
+int					randomid(void);
 
 int					ft_isdigit(int a);
 int					is_space(char c);
