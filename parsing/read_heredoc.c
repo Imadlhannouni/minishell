@@ -6,24 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 16:03:34 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 16:41:36 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	*free_line(char *new_value, int i)
-{
-	static char	*value = NULL;
-
-	if (i != -1)
-	{
-		if (value)
-			free(value);
-		value = new_value;
-	}
-	return (value);
-}
 
 void	signalhandler(int signum)
 {
@@ -45,16 +32,14 @@ static void	child_heredoc_loop(struct s_heredoc *heredoc, char **exit_code,
 		char **clone_envi)
 {
 	char	*line1;
-	char	*line;
 	int		i;
 
-	i = 0;
 	signal(SIGINT, signalhandler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		free_line(line1 = readline("> "), 1);
 		i = global_var2(heredoc->write_fd);
+		free_line(line1 = readline("> "), 1);
 		if (!line1)
 		{
 			ft_putstr_fd("warning: here-document delimited ", 2);
@@ -63,10 +48,9 @@ static void	child_heredoc_loop(struct s_heredoc *heredoc, char **exit_code,
 			ft_putstr_fd("')\n", 2);
 			break ;
 		}
-		line = ft_strdup(line1);
-		if (ft_strcmp(line, heredoc->delimiter) == 0)
+		if (ft_strcmp(line1, heredoc->delimiter) == 0)
 			break ;
-		expand_and_write_line(heredoc, line, exit_code, clone_envi);
+		expand_and_write_line(heredoc, line1, exit_code, clone_envi);
 	}
 	free(free_line(NULL, -1));
 	close(heredoc->write_fd);

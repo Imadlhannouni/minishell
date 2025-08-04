@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 13:44:24 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 13:53:26 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 17:05:10 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,35 @@ int	global_var2(int new_value)
 	return (value);
 }
 
+char	*free_line(char *new_value, int i)
+{
+	static char	*value = NULL;
+
+	if (i != -1)
+	{
+		if (value)
+			free(value);
+		value = new_value;
+	}
+	return (value);
+}
+
 void	expand_and_write_line(struct s_heredoc *heredoc, char *line,
 		char **exit_code, char **clone_envi)
 {
-	char	*expanded_line;
-	int		i;
+	char			*expanded_line;
+	int				i;
+	t_expand_ctx	ctx;
 
+	ctx.clone_envi = clone_envi;
+	ctx.exit_code = *exit_code;
 	i = 0;
 	if (heredoc->type != 9 && heredoc->type != 3 && heredoc->type != 4
 		&& ft_strchr(line, '$'))
 	{
 		expanded_line = ft_strdup("");
 		while (line[i])
-			i = append_env_or_chunk(line, i, clone_envi, &expanded_line,
-					*exit_code);
+			i = append_env_or_chunk(line, i, &ctx, &expanded_line);
 		line = expanded_line;
 	}
 	write(heredoc->write_fd, line, ft_strlen(line));

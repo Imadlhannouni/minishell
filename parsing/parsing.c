@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:50:19 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 16:11:20 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 16:39:54 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_token	*smart_split(char *line, char **exit_code)
 	return (tokens);
 }
 
-static int	handle_heredoc_token(t_token *current_token, char **clone_envi,
+int	handle_heredoc_token(t_token *current_token, char **clone_envi,
 		char **exit_code)
 {
 	char	*filename;
@@ -74,55 +74,17 @@ static int	handle_heredoc_token(t_token *current_token, char **clone_envi,
 int	handle_heredocs(t_pipe *pipe, char **clone_envi, char **exit_code)
 {
 	t_pipe	*current;
-	t_token	*current_token;
-	t_token	*compact;
 
 	current = pipe;
 	while (current)
 	{
-		current_token = current->full_cmd;
-		while (current_token)
-		{
-			if (current_token->heredoc == 1)
-			{
-				compact = current_token;
-				if (current_token->is_fullstring == 1)
-				{
-					concat_fullstring(compact, NULL);
-					current_token->is_fullstring = 0;
-				}
-				if (!handle_heredoc_token(current_token, clone_envi, exit_code))
-					return (0);
-			}
-			current_token = current_token->next;
-		}
+		if (!handle_heredoc_tokens(current->full_cmd, clone_envi, exit_code))
+			return (0);
 		if (current->nextpipe == NULL)
 			break ;
 		current = current->nextpipe;
 	}
 	return (1);
-}
-
-void	print_pipes(t_pipe *pipes)
-{
-	t_pipe	*curr_pipe;
-	t_token	*curr_token;
-
-	curr_pipe = pipes;
-	while (curr_pipe)
-	{
-		printf("=== New Pipe Command ===\n");
-		curr_token = curr_pipe->full_cmd;
-		printf("ambigious: %d\n", curr_pipe->ambigious);
-		while (curr_token)
-		{
-			printf("%s : %d : %d | inp_red : %d, out_red : %d,  heredoc : %d, out_app : %d\n", curr_token->value, curr_token->type,
-				curr_token->is_fullstring, curr_token->inp_red,
-				curr_token->out_red, curr_token->heredoc, curr_token->out_app);
-			curr_token = curr_token->next;
-		}
-		curr_pipe = curr_pipe->nextpipe;
-	}
 }
 
 int	main_parsing(char *line, char **clone_envi, t_pipe **pipes,
@@ -146,6 +108,5 @@ int	main_parsing(char *line, char **clone_envi, t_pipe **pipes,
 		compact_fullstrings(&(curr)->full_cmd);
 		curr = curr->nextpipe;
 	}
-	// print_pipes(*pipes);
 	return (1);
 }
