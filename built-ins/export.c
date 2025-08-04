@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:02:57 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 11:53:30 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void replace_variable(char ***env, char **arg)
 	{
 		if (ft_strncmp((*env)[i], arg[0], ft_strlen(arg[0])) == 0)
 		{
-			//free((*env)[i]);
 			(*env)[i] = join_strings(arg[0], "=", arg[1]);
 			return;
 		}
@@ -63,28 +62,26 @@ char *fill_word(int start, int end, char *str)
 	return s;
 }
 
-int check_equ(char *str)
+static void export_helper(char ***env, char *args, char **arg)
 {
-	int i;
-
-	i = 0;
-	while (str[i])
+	if (check_existence(*env, arg[0]))
 	{
-		if (str[i] == '=')
-			return 0;
-		i++;
+		if (!check_equ(args))
+			replace_variable(env, arg);
 	}
-	return 1;
+		else
+			*env = add_var(*env, arg);	
 }
 
 int	export(char ***env, char **args)
 {
-	char	**arg = NULL;
+	char	**arg;
 	int		j;
 	int		i;
 
 	i = -1;
 	j = 0;
+	arg = NULL;
 	if (*args == NULL)
 		return (print_sorted(*env));
 	while (args[++i])
@@ -98,12 +95,7 @@ int	export(char ***env, char **args)
 			continue;
 		}
 		else
-		{
-			if (check_existence(*env, arg[0]))
-				replace_variable(env, arg);
-			else
-				*env = add_var(*env, arg);
-		}
+			export_helper(env, args[i], arg);
 	}
 	return j;
 }

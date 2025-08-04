@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 20:32:56 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/07/31 22:14:39 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 11:34:13 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int check_existence(char **env, char *name)
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], name, len) == 0)
-			return 1;
+				return 1;
 		i++;
 	}
 	return 0;
