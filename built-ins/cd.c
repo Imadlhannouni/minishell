@@ -6,24 +6,24 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/02 15:23:28 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:57:19 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char *get_pwd(void)
+static char	*get_pwd(void)
 {
-	char *buff;
+	char	*buff;
 	
 	buff = getcwd(NULL, 0);
-	return buff;
+	return (buff);
 }
 
-int update_OLDPWD(char ***env)
+int	update_OLDPWD(char ***env)
 {
-	int i;
-	char *oldpwd;
+	int		i;
+	char	*oldpwd;
 
 	i = -1;
 	oldpwd = NULL;
@@ -33,7 +33,7 @@ int update_OLDPWD(char ***env)
 			oldpwd = ft_strdup((*env)[i] + 4);
 	}
 	if (!oldpwd)
-		return -1;
+		return (-1);
 	i = -1;
 	while ((*env)[++i])
 	{
@@ -42,7 +42,7 @@ int update_OLDPWD(char ***env)
 			(*env)[i] = ft_strjoin("OLDPWD=", oldpwd);
 		}
 	}
-	return 1;
+	return (1);
 }
 
 
