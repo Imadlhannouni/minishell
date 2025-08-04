@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 13:44:24 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 17:05:10 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 21:09:55 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,21 @@ void	cleanup_heredoc_files(t_pipe *pipes)
 		}
 		current_pipe = current_pipe->nextpipe;
 	}
+}
+
+int	randomid(void)
+{
+	int	fd;
+	int	val;
+
+	fd = open("/dev/urandom", O_RDONLY);
+	if (fd == -1)
+		return (putstr_fd("Error When Opening file\n", 2), 0);
+	read(fd, &val, sizeof(int));
+	if (val < 0)
+		val = -val;
+	if (val == 0)
+		val = 1;
+	close(fd);
+	return (val);
 }

@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 16:41:36 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 21:12:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,15 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type,
 		char **exit_code)
 {
 	pid_t				pid;
-	static int			heredoc_num = 0;
 	struct s_heredoc	*heredoc;
 	char				*num_str;
+	int					random_id;
 
+	random_id = randomid();
+	if (!random_id)
+		return (NULL);
+	num_str = ft_itoa(random_id);
 	heredoc = (t_heredoc *)ft_malloc(sizeof(struct s_heredoc), 0);
-	num_str = ft_itoa(heredoc_num++);
 	heredoc->filename = ft_strjoin("/tmp/.heredoc_", num_str);
 	heredoc->write_fd = open(heredoc->filename, O_CREAT | O_WRONLY | O_TRUNC,
 			0600);
@@ -115,6 +118,5 @@ char	*read_heredoc(char *delimiter, char **clone_envi, t_token_type type,
 		child_heredoc_loop(heredoc, exit_code, clone_envi);
 	if (!parent_heredoc_read(pid, exit_code))
 		return (close(heredoc->write_fd), NULL);
-	close(heredoc->write_fd);
-	return (heredoc->filename);
+	return (close(heredoc->write_fd), heredoc->filename);
 }
