@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 16:19:44 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/04 17:05:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,10 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/stat.h>
 # include <sys/wait.h>
-#include <unistd.h>
-# include <errno.h>
 # include <unistd.h>
-# include <fcntl.h>
-# include <dirent.h>
-# include <limits.h>
-#include <sys/stat.h>
+# include <unistd.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
@@ -67,14 +63,20 @@ typedef struct s_heredoc
 	int				write_fd;
 }					t_heredoc;
 
+typedef struct s_expand_ctx
+{
+	char			**clone_envi;
+	char			*exit_code;
+}					t_expand_ctx;
+
 typedef struct s_help
 {
-	void (*prev_handler_int)(int);
-	void (*prev_handler_quit)(int);
-	char **exit_code;
-	int *std_fd;
-	int child;
-}	t_help;
+	void			(*prev_handler_int)(int);
+	void			(*prev_handler_quit)(int);
+	char			**exit_code;
+	int				*std_fd;
+	int				child;
+}					t_help;
 
 typedef struct s_pipe
 {
@@ -150,8 +152,8 @@ void				print_cmd_not_found(char *cmd);
 char				*read_heredoc(char *delimite, char **clone_envi,
 						t_token_type type, char **exit_code);
 char				*ft_itoa(int n);
-int					append_env_or_chunk(char *str, int i, char **clone_envi,
-						char **result, char *exit_code);
+int					append_env_or_chunk(char *str, int i, t_expand_ctx *ctx,
+						char **result);
 void				cleanup_heredoc_files(t_pipe *pipes);
 int					handle_errors(char *line, char **exit_code);
 char				*ft_itoa(int n);
@@ -167,22 +169,35 @@ int					handle_pipe_error(char *s, int i, int has_cmd);
 int					check_basics(char *line);
 int					skip_word(char *s, int i);
 int					skip_spaces(char *s, int i);
+char				*free_line(char *new_value, int i);
+int					process_heredoc_token(t_token *current_token,
+						char **clone_envi, char **exit_code);
+int					handle_heredoc_tokens(t_token *token, char **clone_envi,
+						char **exit_code);
+int					handle_heredoc_token(t_token *current_token,
+						char **clone_envi, char **exit_code);
+int					handle_env_var(char *str, int i, t_expand_ctx *ctx,
+						char **result);
+int					handle_chunk(char *str, int i, char **result);
+void				handle_token_split(t_token *tokens, char *expanded);
+char				*get_env_value(const char *key, char **clone_envi);
 
-int		ft_isdigit(int a);
-int		is_space(char c);
-void	sighandler(int signum);
-void	*ft_malloc(size_t len, int flag);
-int		 extract_status(int status);
-int check_equ(char *str);
+int					ft_isdigit(int a);
+int					is_space(char c);
+void				sighandler(int signum);
+void				*ft_malloc(size_t len, int flag);
+int					extract_status(int status);
+int					check_equ(char *str);
 
-int		execute(t_pipe *pipes, char ***env, t_help *help);
-int		exec_pipe(t_exe *var, char ***envp, size_t pipe_num, t_help *help);
-int 	exec_command(t_exe *var, char **env, t_help *help);
-int		exec_builtin(t_exe *var, char ***env, t_help *help);
-int		check_directory(char *path);
-void	check_path(char *path, int *e_code);
-int		is_path1(char *cmd);
-int dup_std(int fd[2], t_help *help);
+int					execute(t_pipe *pipes, char ***env, t_help *help);
+int					exec_pipe(t_exe *var, char ***envp, size_t pipe_num,
+						t_help *help);
+int					exec_command(t_exe *var, char **env, t_help *help);
+int					exec_builtin(t_exe *var, char ***env, t_help *help);
+int					check_directory(char *path);
+void				check_path(char *path, int *e_code);
+int					is_path1(char *cmd);
+int					dup_std(int fd[2], t_help *help);
 
 size_t				var_num(char **arr);
 char				**clone_env(char **env);
@@ -210,20 +225,20 @@ char				*join_strings(char *s1, char *s2, char *s3);
 int					check_existence(char **env, char *name);
 char				*fill_word(int start, int end, char *str);
 void				group_pipes(t_pipe *pipes, t_exe **var);
-void	check_ambigious(t_exe *var);
+void				check_ambigious(t_exe *var);
 
-int		check_equ(char *str);
-int 	is_builtin(char *cmd);
-int		group_2d_arr(t_exe *var, t_token *tok);
-int		fill_redirection(t_exe *var, t_token *tok);
-t_exe	*creat_node(t_token *tok);
-void	add_node(t_exe **lst, t_exe *node);
-int		handle_redirections(t_exe *var);
-int		reset_redirections(int fd[2]);
-int		is_path1(char *cmd);
-void	add_redirection(t_red **red, t_red *new_red);
-int		fill_redirection(t_exe *var, t_token *tok);
-int		exit_shell(t_exe *var, t_help *help);
-void	exit_free(int exit_code);
+int					check_equ(char *str);
+int					is_builtin(char *cmd);
+int					group_2d_arr(t_exe *var, t_token *tok);
+int					fill_redirection(t_exe *var, t_token *tok);
+t_exe				*creat_node(t_token *tok);
+void				add_node(t_exe **lst, t_exe *node);
+int					handle_redirections(t_exe *var);
+int					reset_redirections(int fd[2]);
+int					is_path1(char *cmd);
+void				add_redirection(t_red **red, t_red *new_red);
+int					fill_redirection(t_exe *var, t_token *tok);
+int					exit_shell(t_exe *var, t_help *help);
+void				exit_free(int exit_code);
 
 #endif
