@@ -6,96 +6,11 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:38:33 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 16:58:34 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 14:36:17 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	print_cmd_not_found(char *cmd)
-{
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", 2);
-}
-
-#define ERR_NOT_REQ "minishell: syntax error: not required character\n"
-#define ERR_UNCLOSED "minishell: syntax error: unclosed quote\n"
-#define ERR_PIPE "minishell: syntax error near unexpected token `|'\n"
-#define ERR_MISSFILE "minishell: syntax error near unexpected token `newline'\n"
-
-static int	skip_spaces(char *s, int i)
-{
-	while (s[i] && (s[i] == ' ' || (s[i] >= 9 && s[i] <= 13)))
-		i++;
-	return (i);
-}
-
-static int	skip_word(char *s, int i)
-{
-	int	sq;
-	int	dq;
-
-	sq = 0;
-	dq = 0;
-	while (s[i])
-	{
-		if (!dq && s[i] == '\'')
-			sq = !sq;
-		else if (!sq && s[i] == '"')
-			dq = !dq;
-		else if (!sq && !dq && (s[i] == ' ' || (s[i] >= 9 && s[i] <= 13)
-				|| s[i] == '|' || s[i] == '<' || s[i] == '>'))
-			break ;
-		i++;
-	}
-	return (i);
-}
-
-static int	check_basics(char *line)
-{
-	int	i;
-	int	sq;
-	int	dq;
-
-	i = 0;
-	sq = 0;
-	dq = 0;
-	while (line[i])
-	{
-		if (!sq && !dq && (line[i] == '\\' || line[i] == ';'))
-		{
-			ft_putstr_fd(ERR_NOT_REQ, 2);
-			return (1);
-		}
-		if (!dq && line[i] == '\'')
-			sq = !sq;
-		else if (!sq && line[i] == '"')
-			dq = !dq;
-		i++;
-	}
-	if (sq || dq)
-		return (ft_putstr_fd(ERR_UNCLOSED, 2), 1);
-	return (0);
-}
-
-static int	handle_pipe_error(char *s, int i, int has_cmd)
-{
-	i = skip_spaces(s, i + 1);
-	if (!has_cmd || !s[i] || s[i] == '|')
-	{
-		ft_putstr_fd(ERR_PIPE, 2);
-		return (1);
-	}
-	return (0);
-}
-
-static int	handle_redir_token_error(char *s, int i)
-{
-	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-	ft_putchar_fd(s[i], 2);
-	ft_putstr_fd("'\n", 2);
-	return (1);
-}
 
 static int	handle_redir_error(char *s, int *i_ptr)
 {
@@ -107,23 +22,19 @@ static int	handle_redir_error(char *s, int *i_ptr)
 	c = s[i];
 	cnt = 0;
 	if (s[i] == '<' && s[i + 1] == '>')
-		return (ft_putstr_fd(ERR_MISSFILE, 2), 1);
+		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	while (s[i] == c)
 	{
 		cnt++;
 		i++;
 	}
 	if (cnt > 2)
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-		ft_putchar_fd(s[i - 1], 2);
-		return (ft_putstr_fd("'\n", 2), 1);
-	}
+		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	i = skip_spaces(s, i);
 	if (!s[i])
-		return (ft_putstr_fd(ERR_MISSFILE, 2), 1);
+		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	if (s[i] == '|' || s[i] == '<' || s[i] == '>')
-		return (handle_redir_token_error(s, i));
+		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	*i_ptr = i;
 	return (0);
 }
@@ -181,17 +92,11 @@ static int	check_operators(char *s)
 	if (!s[i])
 		return (0);
 	if (s[i] == '|')
-	{
-		ft_putstr_fd(ERR_PIPE, 2);
-		return (1);
-	}
+		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	if (check_operators_loop(s, &i, &has_cmd, &expect_word))
 		return (1);
 	if (expect_word)
-	{
-		ft_putstr_fd(ERR_MISSFILE, 2);
-		return (1);
-	}
+		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	return (0);
 }
 

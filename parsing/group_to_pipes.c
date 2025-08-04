@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:30:53 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 14:20:12 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	compact_fullstrings(t_token **fullcmd)
 	int		flag;
 	t_token	*prev;
 	t_token	*compact;
-	t_token *head;
+	t_token	*head;
 
 	head = *fullcmd;
 	curr = *fullcmd;
@@ -57,7 +57,7 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 	t_pipe	*new;
 	t_pipe	*tmp;
 
-	new = (t_pipe*)ft_malloc(sizeof(t_pipe), 0);
+	new = (t_pipe *)ft_malloc(sizeof(t_pipe), 0);
 	new->full_cmd = fullcmd;
 	new->nextpipe = NULL;
 	if (!*head)
@@ -75,17 +75,12 @@ static void	handle_pipe_token(t_pipe **pipes, t_token **start, t_token **curr,
 		t_token **prev)
 {
 	t_token	*next;
-	t_token	*to_free;
 
 	next = (*curr)->next;
-	to_free = *curr;
-	if ((*curr)->value)
-		//free((*curr)->value);
 	if (*prev)
 		(*prev)->next = NULL;
 	add_pipe(pipes, *start);
 	*start = next;
-	//free(to_free);
 	*curr = next;
 }
 
