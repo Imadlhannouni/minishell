@@ -17,7 +17,7 @@ int	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	t_token	*new;
 	t_token	*tmp;
 
-	new = (t_token*)ft_malloc(sizeof(t_token), 0);
+	new = (t_token *)ft_malloc(sizeof(t_token), 0);
 	new->type = type;
 	new->value = value;
 	new->heredoc = 0;

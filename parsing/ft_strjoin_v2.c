@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strjoin_v2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/03 13:51:28 by ilhannou          #+#    #+#             */
+/*   Updated: 2025/08/03 13:51:29 by ilhannou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static char	*allocate(size_t size)
@@ -19,6 +31,7 @@ char	*ft_strjoin_v2(char *s1, char *s2, int flag)
 {
 	size_t	i;
 	char	*str;
+
 	(void)flag;
 	if (!s1 || !s2)
 		return (NULL);

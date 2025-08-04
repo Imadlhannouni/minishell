@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/02 14:40:36 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/03 20:51:06 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ int	append_env_or_chunk(char *str, int i, char **clone_envi, char **result,
 
 static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 {
-	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t') 
-		|| ft_strchr(expanded, '\n') || ft_strlen(expanded) == 0)
-			&& tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
-				|| tokens->out_red || tokens->inp_red))
+	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
+			|| ft_strchr(expanded, '\n') || ft_strlen(expanded) == 0)
+		&& tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
+			|| tokens->out_red || tokens->inp_red))
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(tokens->value, 2);
@@ -103,10 +103,10 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 
 static void	handle_token_split(t_token *tokens, char *expanded)
 {
-	char		**splited;
-	t_token		*tmp;
+	char			**splited;
+	t_token			*tmp;
 	t_token_type	type;
-	int		i;
+	int				i;
 
 	splited = ft_split2(expanded, ' ');
 	tmp = tokens->next;
@@ -131,17 +131,22 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	while (tokens->value[i])
 		i = append_env_or_chunk(tokens->value, i, clone_envi, &expanded,
 				exit_code);
-	if(ft_strchr(tokens->value, '$') && ft_strchr(tokens->value, '='))
+	if (ft_strchr(tokens->value, '$') && ft_strchr(tokens->value, '='))
 		tokens->type = TOKEN_DOUBLE_QUOTE;
 	if (ft_strchr(expanded, '$'))
 		tokens->type = TOKEN_DOUBLE_QUOTE;
 	if (!handle_ambiguous_redirect(tokens, expanded))
 		return (0);
-	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t') || ft_strchr(expanded, '\n')) && tokens->type != TOKEN_DOUBLE_QUOTE)
+	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
+			|| ft_strchr(expanded, '\n')) && tokens->type != TOKEN_DOUBLE_QUOTE)
 		handle_token_split(tokens, expanded);
 	else
 	{
-		if (ft_strlen(expanded) == 1 && tokens->type != TOKEN_DOUBLE_QUOTE && tokens->type != TOKEN_SIMPLE_QUOTE && tokens->next && (tokens->next->type == TOKEN_DOUBLE_QUOTE || tokens->next->type == TOKEN_SIMPLE_QUOTE) && tokens->is_fullstring == 1)
+		if (ft_strlen(expanded) == 1 && tokens->type != TOKEN_DOUBLE_QUOTE
+			&& tokens->type != TOKEN_SIMPLE_QUOTE && tokens->next
+			&& (tokens->next->type == TOKEN_DOUBLE_QUOTE
+				|| tokens->next->type == TOKEN_SIMPLE_QUOTE)
+			&& tokens->is_fullstring == 1)
 			tokens->value = ft_strdup("");
 		else if (expanded[0] == '\0')
 			tokens->value = NULL;
@@ -151,12 +156,38 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	return (1);
 }
 
+void	check_delete_pipe(int should_delete_pipe, t_pipe **pipes,
+		t_pipe **current, t_pipe **prev)
+{
+	t_pipe *pipe_to_delete;
+	
+	pipe_to_delete = NULL;
+	if (should_delete_pipe)
+	{
+		pipe_to_delete = *current;
+		if (*prev == NULL)
+		{
+			*pipes = (*current)->nextpipe;
+			*current = *pipes;
+		}
+		else
+		{
+			(*prev)->nextpipe = (*current)->nextpipe;
+			*current = (*current)->nextpipe;
+		}
+	}
+	else
+	{
+		*prev = *current;
+		*current = (*current)->nextpipe;
+	}
+}
+
 int	replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code)
 {
 	t_pipe	*current;
 	t_pipe	*prev;
 	t_token	*tokens;
-	t_pipe	*pipe_to_delete;
 	int		should_delete_pipe;
 
 	current = *pipes;
@@ -179,25 +210,7 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char *exit_code)
 			}
 			tokens = tokens->next;
 		}
-		if (should_delete_pipe)
-		{
-			pipe_to_delete = current;
-			if (prev == NULL)
-			{
-				*pipes = current->nextpipe;
-				current = *pipes;
-			}
-			else
-			{
-				prev->nextpipe = current->nextpipe;
-				current = current->nextpipe;
-			}
-		}
-		else
-		{
-			prev = current;
-			current = current->nextpipe;
-		}
+		check_delete_pipe(should_delete_pipe, pipes, &current, &prev);
 	}
 	return (1);
 }
