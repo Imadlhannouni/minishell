@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:36 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/01 11:03:39 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 15:20:59 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,13 @@ int	group_2d_arr(t_exe *var,t_token *tok)
 	}
 	(var)->arr[i] = NULL;
 	return 1;
+}
+
+void	check_ambigious(t_exe *var)
+{
+	if (var->is_ambiguis)
+	{
+		putstr_fd("Minishell : ambiguous redirect\n", 2);
+		exit_free(1);
+	}
 }

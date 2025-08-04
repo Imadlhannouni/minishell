@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/03 19:36:00 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 15:20:36 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ int helper(t_exe *tmp ,char ***env, t_vars var, t_help *help)
 	if (pid == 0)
 	{
 		help->child = 1;
-		signal(SIGINT, help->prev_handler_int);
-		signal(SIGQUIT, help->prev_handler_quit);
 		close_fd(var.fd, var.i, var.pipe_num);
 		switch_fd(var.fd, var.i, var.pipe_num - 1);
+		check_ambigious(tmp);
+		signal(SIGINT, help->prev_handler_int);
+		signal(SIGQUIT, help->prev_handler_quit);
 		if (!is_builtin(tmp->arr[0]))
 			e_code = retrieve_path(tmp->arr[0], *env, &path);
 		if (e_code > 0)

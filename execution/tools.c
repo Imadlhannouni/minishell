@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:26 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/03 16:08:13 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 15:09:28 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ int exec_builtin(t_exe *var, char ***env, t_help *help)
 {
 	if (!var->arr || !var->arr[0])
 		return 1;
+	if (var->is_ambiguis)
+	{
+		putstr_fd("Minishell : ambiguous redirect\n", 2);
+		return (1);
+	}
+	if (handle_redirections(var) < 0)
+		return (1);
 	if (ft_strcmp(var->arr[0], "cd") == 0)
 		return cd(var->arr, env);
 	else if (ft_strcmp(var->arr[0], "pwd") == 0)

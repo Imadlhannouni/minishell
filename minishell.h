@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 13:43:28 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/04 15:21:20 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,6 +210,7 @@ char				*join_strings(char *s1, char *s2, char *s3);
 int					check_existence(char **env, char *name);
 char				*fill_word(int start, int end, char *str);
 void				group_pipes(t_pipe *pipes, t_exe **var);
+void	check_ambigious(t_exe *var);
 
 int		check_equ(char *str);
 int 	is_builtin(char *cmd);
