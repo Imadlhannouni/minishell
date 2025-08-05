@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 21:05:51 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:58:33 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,23 +72,20 @@ int	is_double_quote(t_token **tokens, int i, char *line, int *flag)
 int	is_directions(int i, char *line, int *flag)
 {
 	if (line[i] == '>' && line[i + 1] != '>')
-	{
 		*flag = 4;
+	else if (line[i] == '<' && line[i + 1] != '<' && line[i + 1] != '>')
+		*flag = 3;
+	else if (line[i] == '>' && line[i + 1] == '>')
+		*flag = 2;
+	else if (line[i] == '<' && line[i + 1] == '<')
+		*flag = 1;
+	if (*flag == 4 || *flag == 3)
 		i++;
-	}
-	else if (line[i] == '<' && line[i + 1] != '<')
+	else if (*flag == 1 || *flag == 2)
+		i += 2;
+	if (line[i] == '<' && line[i + 1] == '>')
 	{
 		*flag = 3;
-		i++;
-	}
-	else if (line[i] == '>' && line[i + 1] == '>')
-	{
-		*flag = 2;
-		i += 2;
-	}
-	else if (line[i] == '<' && line[i + 1] == '<')
-	{
-		*flag = 1;
 		i += 2;
 	}
 	return (i);

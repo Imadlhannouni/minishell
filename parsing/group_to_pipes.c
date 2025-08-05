@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 12:40:17 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:52:24 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	compact_fullstrings(t_token **fullcmd)
 		if (curr->is_fullstring == 1)
 		{
 			compact = concat_fullstring(curr, &curr);
-			compact->type = 9;
+			compact->type = TOKEN_LINKEDSTRING;
 			if (prev)
 				prev->next = compact;
 			else

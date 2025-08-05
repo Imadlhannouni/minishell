@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:38:33 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 14:36:17 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/05 17:08:30 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	handle_redir_error(char *s, int *i_ptr)
 	c = s[i];
 	cnt = 0;
 	if (s[i] == '<' && s[i + 1] == '>')
-		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
+		return (handle_redir_error_angle_bracket(s, i_ptr, i));
 	while (s[i] == c)
 	{
 		cnt++;
@@ -31,9 +31,7 @@ static int	handle_redir_error(char *s, int *i_ptr)
 	if (cnt > 2)
 		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	i = skip_spaces(s, i);
-	if (!s[i])
-		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
-	if (s[i] == '|' || s[i] == '<' || s[i] == '>')
+	if (!s[i] || s[i] == '|' || s[i] == '<' || s[i] == '>')
 		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
 	*i_ptr = i;
 	return (0);
