@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 13:44:24 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 21:09:55 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:28:17 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	expand_and_write_line(struct s_heredoc *heredoc, char *line,
 	ctx.clone_envi = clone_envi;
 	ctx.exit_code = *exit_code;
 	i = 0;
-	if (heredoc->type != 9 && heredoc->type != 3 && heredoc->type != 4
+	if (heredoc->type != 6 && heredoc->type != 2 && heredoc->type != 1
 		&& ft_strchr(line, '$'))
 	{
 		expanded_line = ft_strdup("");

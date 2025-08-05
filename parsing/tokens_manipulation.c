@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/03 21:05:53 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/05 16:47:31 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ t_token	*concat_fullstring(t_token *start, t_token **next)
 	curr = free_fullstring_tokens(curr);
 	start->value = joined;
 	start->next = curr;
+	start->type = TOKEN_LINKEDSTRING;
 	if (next)
 		*next = curr;
 	return (start);
