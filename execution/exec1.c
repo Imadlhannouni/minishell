@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/04 15:20:36 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/05 19:56:10 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,24 @@ int	init_var(t_vars *var, size_t pipe_num)
 		}
 	}
 	return 0;
+}
+
+int extract_status(int status)
+{
+	int exit_code;
+
+	exit_code = -1;
+	if (WIFEXITED(status))
+	    exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		exit_code = WTERMSIG(status) + 128;
+		if (exit_code == 130)
+			putstr_fd("\n", 1);
+		if (exit_code == 131)
+			putstr_fd("Quit (core dumped)\n", 2);
+	}
+	return exit_code;
 }
 
 static void exec_helper(char *path, t_exe *tmp, char ***env, t_help *help)

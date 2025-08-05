@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/03 20:57:19 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/05 20:01:07 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 static char	*get_pwd(void)
 {
 	char	*buff;
-	
+
 	buff = getcwd(NULL, 0);
 	return (buff);
 }
 
-int	update_OLDPWD(char ***env)
+int	update_oldpwd(char ***env)
 {
 	int		i;
 	char	*oldpwd;
@@ -45,11 +45,10 @@ int	update_OLDPWD(char ***env)
 	return (1);
 }
 
-
-int update_PWD(char ***env)
+int	update_pwd(char ***env)
 {
-	int i;
-	char *str;
+	int		i;
+	char	*str;
 
 	str = NULL;
 	i = -1;
@@ -62,14 +61,14 @@ int update_PWD(char ***env)
 			{
 				putstr_fd("error retrieving current directory\n", 2);
 				(*env)[i] = join_strings((*env)[i], "/", "..");
-				return 1;
+				return (1);
 			}
 			(*env)[i] = ft_strjoin("PWD=", str);
 		}
 	}
 	if (str)
 		free(str);
-	return 1;
+	return (1);
 }
 
 int	cd(char **arr, char ***env)
@@ -86,7 +85,7 @@ int	cd(char **arr, char ***env)
 		putstr_fd("cd : too many arguments\n", 2);
 		return (1);
 	}
-	update_OLDPWD(env);
-	update_PWD(env);
+	update_oldpwd(env);
+	update_pwd(env);
 	return (0);
 }
