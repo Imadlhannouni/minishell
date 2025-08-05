@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 16:47:31 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/05 18:01:38 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ void	apply_flag_to_token(t_token *last, int *flag, int set_expand)
 	if (*flag > 0)
 	{
 		*flag = 0;
-		last->type = TOKEN_PATH;
+		if (*flag > 1)
+			last->type = TOKEN_PATH;
 		if (set_expand)
 			last->expand = 1;
 	}
