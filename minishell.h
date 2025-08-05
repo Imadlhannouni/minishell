@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 17:09:09 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/05 19:53:31 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,5 +242,6 @@ void				add_redirection(t_red **red, t_red *new_red);
 int					fill_redirection(t_exe *var, t_token *tok);
 int					exit_shell(t_exe *var, t_help *help);
 void				exit_free(int exit_code);
+int					helper_built_in(t_exe *var, char ***env, t_help *help);
 
 #endif

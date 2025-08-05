@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/04 15:24:50 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/05 19:55:59 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,6 @@ static void help_exec(t_exe *var, t_help *help)
 		close(help->std_fd[1]);		
 		exit_free(1);
 	}
-}
-
-int extract_status(int status)
-{
-	int exit_code;
-
-	exit_code = -1;
-	if (WIFEXITED(status))
-	    exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-	{
-		exit_code = WTERMSIG(status) + 128;
-		if (exit_code == 130)
-			putstr_fd("\n", 1);
-		if (exit_code == 131)
-			putstr_fd("Quit (core dumped)\n", 2);
-	}
-	return exit_code;
 }
 
 void	check_path(char *path, int *e_code)
@@ -100,6 +82,15 @@ int	exec_command(t_exe *var, char **env, t_help *help)
 	return (extract_status(status));
 }
 
+int helper_built_in(t_exe *var, char ***env, t_help *help)
+{
+	if (handle_redirections(var) < 0)
+		return (1);
+	if (var->arr && var->arr[0])
+		return (exec_builtin(var, env, help));
+	return 0;
+}
+
 int	execute(t_pipe *pipes, char ***env, t_help *help)
 {
 	t_exe	*var;
@@ -118,10 +109,7 @@ int	execute(t_pipe *pipes, char ***env, t_help *help)
 		if (!is_builtin(var->arr[0]))
 			status = exec_command(var, *env, help);
 		else
-		{
-			if (var->arr && var->arr[0])
-				status = exec_builtin(var, env, help);
-		}
+			status = helper_built_in(var, env, help);
 		if (reset_redirections(fd) < 0)
 			return 1;
 	}
