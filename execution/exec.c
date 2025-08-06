@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/05 19:55:59 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 22:41:33 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 static void help_exec(t_exe *var, t_help *help)
 {
 	help->child = 1;
-	if (var->is_ambiguis)
-	{
-		reset_redirections(help->std_fd);
-		putstr_fd("Minishell : ambiguous redirect\n", 2);
-		exit_free(1);
-	}
 	signal(SIGINT, help->prev_handler_int);
 	signal(SIGQUIT, help->prev_handler_quit);
 	if (handle_redirections(var) < 0)
