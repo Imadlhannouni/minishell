@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/06 21:51:09 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 22:42:14 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ typedef struct s_vars
 typedef struct s_red
 {
 	int				red_type;
+	int				is_ambigious;
 	char			*file;
 	struct s_red	*next;
 }					t_red;
@@ -110,7 +111,6 @@ typedef struct s_exe
 {
 	char			**arr;
 	t_red			*redirections;
-	int				is_ambiguis;
 	struct s_exe	*next;
 }					t_exe;
 
