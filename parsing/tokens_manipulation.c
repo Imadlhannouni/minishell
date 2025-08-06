@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 18:01:38 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/06 22:46:27 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	new->out_app = 0;
 	new->out_red = 0;
 	new->expand = 0;
+	new->ambigious = 0;
 	new->is_fullstring = is_full;
 	new->next = NULL;
 	if (!*head)
