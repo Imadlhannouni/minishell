@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 19:53:31 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:51:09 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,5 +243,5 @@ int					fill_redirection(t_exe *var, t_token *tok);
 int					exit_shell(t_exe *var, t_help *help);
 void				exit_free(int exit_code);
 int					helper_built_in(t_exe *var, char ***env, t_help *help);
-
+int					equal_pos(char *str);
 #endif

@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:59 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/04 11:40:51 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 22:07:47 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 static int check(char *env, char **arg)
 {
 	int i;
+	char **tmp;
 	
 	i = 0;
+	tmp = ft_split(env, '=');
 	while (arg[i])
 	{
-		if (ft_strncmp(arg[i], env, ft_strlen(arg[i])) == 0)
+		if (ft_strcmp(arg[i], tmp[0]) == 0)
 			return 1;
 		i++;
 	}
