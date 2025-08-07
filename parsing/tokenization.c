@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 16:58:33 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 21:04:32 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,11 @@ int	is_word(t_token **tokens, int i, char *line, int *flag)
 	while (line[i] && line[i] != ' ' && line[i] != '\t' && line[i] != '\''
 		&& line[i] != '"' && line[i] != '|' && line[i] != '<' && line[i] != '>'
 		&& line[i] != '\0')
+	{
+		if (line[i] == '$' && i != start)
+			break;
 		i++;
+	}
 	end = i;
 	value = substrdup(start, end, line);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'

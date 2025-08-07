@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 12:10:17 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 21:06:29 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,20 @@ t_token	*concat_fullstring(t_token *start, t_token **next)
 	t_token	*curr;
 
 	curr = start;
-	joined = ft_strdup(curr->value);
+	if (!curr->value)
+		joined = ft_strdup("");
+	else
+		joined = ft_strdup(curr->value);
 	while (curr->is_fullstring == 1 && curr->next)
 	{
 		curr = curr->next;
+		if (!curr->value)
+			curr->value = ft_strdup("");
 		tmp = joined;
-		joined = ft_strjoin(tmp, curr->value);
+		if (ft_strlen(joined) == 0 && ft_strlen(curr->value) == 0)
+			joined = ft_strdup("");
+		else
+			joined = ft_strjoin(tmp, curr->value);
 	}
 	concat_fullstring_flags(start, curr);
 	curr = start->next;
