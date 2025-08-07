@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 12:10:24 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:14:39 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_token
 	int				heredoc;
 	int				out_app;
 	int				expand;
-	int				ambigious;
 	char			*value;
 	int				ambigious;
 	struct s_token	*next;
@@ -83,7 +82,6 @@ typedef struct s_help
 typedef struct s_pipe
 {
 	t_token			*full_cmd;
-	int				ambigious;
 	struct s_pipe	*nextpipe;
 }					t_pipe;
 

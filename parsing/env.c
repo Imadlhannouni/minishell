@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 12:10:10 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:16:02 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 				if (!expand_token_value(tokens, clone_envi, exit_code))
 				{
 					break ;
+				}
 			}
 			tokens = tokens->next;
 		}
