@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 17:02:39 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:07:52 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 		&& tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
 			|| tokens->out_red || tokens->inp_red))
 	{
+		tokens->ambigious = 1;
 		return (0);
 	}
 	return (1);
@@ -96,10 +97,7 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 				&& tokens->expand == 0)
 			{
 				if (!expand_token_value(tokens, clone_envi, exit_code))
-				{
-					current->ambigious = 1;
 					break ;
-				}
 			}
 			tokens = tokens->next;
 		}

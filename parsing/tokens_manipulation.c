@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 18:01:38 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:55:58 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	add_token(t_token **head, char *value, t_token_type type, int is_full)
 	new->out_app = 0;
 	new->out_red = 0;
 	new->expand = 0;
+	new->ambigious = 0;
 	new->is_fullstring = is_full;
 	new->next = NULL;
 	if (!*head)
@@ -73,16 +74,12 @@ static void	concat_fullstring_flags(t_token *start, t_token *curr)
 
 static t_token	*free_fullstring_tokens(t_token *curr)
 {
-	t_token	*to_free;
-
 	while (curr && curr->is_fullstring == 1)
 	{
-		to_free = curr;
 		curr = curr->next;
 	}
 	if (curr && curr->is_fullstring == 0)
 	{
-		to_free = curr;
 		curr = curr->next;
 	}
 	return (curr);

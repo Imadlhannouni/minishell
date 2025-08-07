@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 19:53:31 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:55:43 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_token
 	int				out_app;
 	int				expand;
 	char			*value;
+	int				ambigious;
 	struct s_token	*next;
 }					t_token;
 
@@ -121,8 +122,6 @@ size_t				ft_strlen(const char *s);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char				*ft_strjoin(char const *s1, char const *s2);
-void				ft_putstr_fd(char *s, int fd);
-void				ft_putchar_fd(char c, int fd);
 int					character_count(char *s);
 int					ft_isalpha(char *s);
 int					ft_isalnum(int c);
