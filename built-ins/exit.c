@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/06 20:34:27 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:02:43 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	ft_isnum(char *str)
 		return (0);
 	while (str[i])
 	{
-		if (!(ft_isdigit(str[i]) || str[i] == '-' || str[i] == '+' || is_space(str[i])))
+		if (!(ft_isdigit(str[i]) || str[i] == '-'
+				|| str[i] == '+' || is_space(str[i])))
 			return (0);
 		if (ft_isdigit(str[i]))
 			break ;
@@ -83,7 +84,7 @@ long	ft_atoi(const char *str)
 
 int	exit_shell(t_exe *var, t_help *help)
 {
-	long i;
+	long	i;
 
 	i = 0;
 	if (!help->child)

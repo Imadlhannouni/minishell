@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 20:35:32 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/03 13:46:52 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:55:33 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void	free_malloc(t_malloc **help)
 {
-	t_malloc *tmp;
-	t_malloc *tmp1;
-	
+	t_malloc	*tmp;
+	t_malloc	*tmp1;
+
 	if (!*help)
 		return ;
 	tmp1 = *help;
@@ -29,12 +29,12 @@ static void	free_malloc(t_malloc **help)
 	}
 }
 
-static t_malloc *creat_adress(void *adress, t_malloc **head)
+static t_malloc	*creat_adress(void *adress, t_malloc **head)
 {
-	t_malloc *node;
+	t_malloc	*node;
 
 	if (!adress)
-		return NULL;
+		return (NULL);
 	node = malloc(sizeof(t_malloc));
 	if (!node)
 	{
@@ -43,19 +43,19 @@ static t_malloc *creat_adress(void *adress, t_malloc **head)
 	}
 	node->adress = adress;
 	node->next = NULL;
-	return node;
+	return (node);
 }
- 
-static void add_to_malloc(t_malloc **lst, t_malloc *node)
+
+static void	add_to_malloc(t_malloc **lst, t_malloc *node)
 {
-	t_malloc *temp;
+	t_malloc	*temp;
 
 	if (!lst || !node)
-		return;
+		return ;
 	if (!*lst)
 	{
 		*lst = node;
-		return;
+		return ;
 	}
 	temp = *lst;
 	while (temp->next)
@@ -66,12 +66,12 @@ static void add_to_malloc(t_malloc **lst, t_malloc *node)
 void	*ft_malloc(size_t len, int flag)
 {
 	static t_malloc	*head = NULL;
-	void *adress;
+	void			*adress;
 
 	if (flag)
 	{
 		free_malloc(&head);
-		return NULL;
+		return (NULL);
 	}
 	adress = malloc(len);
 	if (!adress)
@@ -81,7 +81,7 @@ void	*ft_malloc(size_t len, int flag)
 	}
 	else
 		add_to_malloc(&head, creat_adress(adress, &head));
-	return adress;
+	return (adress);
 }
 
 void	exit_free(int exit_code)
