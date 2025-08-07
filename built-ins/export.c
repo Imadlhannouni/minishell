@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/04 14:57:30 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 22:21:36 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,17 @@
 
 void replace_variable(char ***env, char **arg)
 {
-	int i = 0;
+	int i;
+	char **tmp;
 
+	i = 0;
 	while ((*env)[i])
 	{
-		if (ft_strncmp((*env)[i], arg[0], ft_strlen(arg[0])) == 0)
+		tmp = spec_split((*env)[i]);
+		if (ft_strcmp(tmp[0], arg[0]) == 0)
 		{
 			(*env)[i] = join_strings(arg[0], "=", arg[1]);
-			return;
+			return ;
 		}
 		i++;
 	}
@@ -30,28 +33,29 @@ void replace_variable(char ***env, char **arg)
 char	**add_var(char **env, char **arg)
 {
 	char	**clone;
-	int i = 0;
+	int		i;
 
+	i = 0;
 	clone = ft_malloc((var_num(env) + 2) * sizeof(char*), 0);
 	while (env[i])
 	{
 		clone[i] = ft_strdup(env[i]);
 		i++;
 	}
-	if (!arg[1] || !*arg[1])
+	if (!arg[1])
 		clone[i++] = ft_strdup(arg[0]);
 	else
 		clone[i++] = join_strings(arg[0], "=", arg[1]);
 	clone[i] = NULL;
-	i = 0;
-	return clone;
+	return (clone);
 }
 
 char *fill_word(int start, int end, char *str)
 {
 	char *s;
-	int i = 0;
+	int i;
 
+	i = 0;
 	s = ft_malloc((end - start + 2) * sizeof(char), 0);
 	while (i < end - start)
 	{
@@ -59,7 +63,7 @@ char *fill_word(int start, int end, char *str)
 		i++;
 	}
 	s[i] = '\0';
-	return s;
+	return (s);
 }
 
 static void export_helper(char ***env, char *args, char **arg)
@@ -69,8 +73,8 @@ static void export_helper(char ***env, char *args, char **arg)
 		if (!check_equ(args))
 			replace_variable(env, arg);
 	}
-		else
-			*env = add_var(*env, arg);	
+	else
+		*env = add_var(*env, arg);	
 }
 
 int	export(char ***env, char **args)
@@ -92,10 +96,10 @@ int	export(char ***env, char **args)
 		{
 			putstr_fd("export : not a valid identifier\n", 2);
 			j = 1;
-			continue;
+			continue ;
 		}
 		else
 			export_helper(env, args[i], arg);
 	}
-	return j;
+	return (j);
 }
