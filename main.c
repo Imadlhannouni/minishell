@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/06 20:28:10 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 20:46:05 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int main(int argc, char **argv, char **envp)
 	char    **clone_envi;
 	static char *exit_code;
 	t_help  help;
-	int s;
 	int test = 0;
 
 	clone_envi = clone_env(envp);
@@ -86,10 +85,7 @@ int main(int argc, char **argv, char **envp)
 			test = global_var(0);
 		}
 		if (main_parsing(line, clone_envi, &pipes, &exit_code))
-		{
-			s = execute(pipes, &clone_envi, &help);
-			exit_code = ft_itoa(s);
-		}
+			exit_code = ft_itoa(execute(pipes, &clone_envi, &help));
 		cleanup_heredoc_files(pipes);
 	}
 	free(line);
