@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/06 21:21:50 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:11:06 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	put_format(char **var)
 	putstr_fd("\n", 1);
 }
 
-static char **sort_env(char **env)
+static char	**sort_env(char **env)
 {
 	int		i;
 	int		len;
@@ -50,7 +50,7 @@ static char **sort_env(char **env)
 	clone = clone_env(env);
 	while (i < len - 1)
 	{
-		if (strcmp(clone[i] ,clone[i + 1]) > 0)
+		if (strcmp(clone[i], clone[i + 1]) > 0)
 		{
 			temp = clone[i];
 			clone[i] = clone[i + 1];
@@ -60,15 +60,15 @@ static char **sort_env(char **env)
 		else
 			i++;
 	}
-	return clone;
+	return (clone);
 }
 
 int	print_sorted(char **env)
 {
-	int i;
-	char **var;
-	char **sorted_arr;
-	
+	int		i;
+	char	**var;
+	char	**sorted_arr;
+
 	i = 0;
 	sorted_arr = sort_env(env);
 	while (sorted_arr[i])
@@ -77,5 +77,5 @@ int	print_sorted(char **env)
 		put_format(var);
 		i++;
 	}
-	return 0;
+	return (0);
 }

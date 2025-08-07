@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:19 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/06 20:31:09 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 13:59:27 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	put_nl(char **str, int flag)
 
 int	check_flag(char *arg)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!arg)
@@ -61,7 +61,7 @@ int	check_flag(char *arg)
 	while (arg[i])
 	{
 		if (arg[i] != 'n')
-			return 0;
+			return (0);
 		i++;
 	}
 	return (1);
