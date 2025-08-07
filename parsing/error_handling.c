@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 13:38:33 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 17:08:30 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:26:01 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ static int	handle_redir_error(char *s, int *i_ptr)
 		i++;
 	}
 	if (cnt > 2)
-		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
+		return (putstr_fd("minishell: syntax error\n", 2), 1);
 	i = skip_spaces(s, i);
 	if (!s[i] || s[i] == '|' || s[i] == '<' || s[i] == '>')
-		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
+		return (putstr_fd("minishell: syntax error\n", 2), 1);
 	*i_ptr = i;
 	return (0);
 }
@@ -90,11 +90,11 @@ static int	check_operators(char *s)
 	if (!s[i])
 		return (0);
 	if (s[i] == '|')
-		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
+		return (putstr_fd("minishell: syntax error\n", 2), 1);
 	if (check_operators_loop(s, &i, &has_cmd, &expect_word))
 		return (1);
 	if (expect_word)
-		return (ft_putstr_fd("minishell: syntax error\n", 2), 1);
+		return (putstr_fd("minishell: syntax error\n", 2), 1);
 	return (0);
 }
 
