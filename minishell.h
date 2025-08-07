@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 12:02:12 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 16:25:00 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef struct s_token
 	int				heredoc;
 	int				out_app;
 	int				expand;
-	int				ambigious;
 	char			*value;
+	int				ambigious;
 	struct s_token	*next;
 }					t_token;
 
@@ -82,7 +82,6 @@ typedef struct s_help
 typedef struct s_pipe
 {
 	t_token			*full_cmd;
-	int				ambigious;
 	struct s_pipe	*nextpipe;
 }					t_pipe;
 
@@ -122,8 +121,6 @@ size_t				ft_strlen(const char *s);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char				*ft_strjoin(char const *s1, char const *s2);
-void				ft_putstr_fd(char *s, int fd);
-void				ft_putchar_fd(char c, int fd);
 int					character_count(char *s);
 int					ft_isalpha(char *s);
 int					ft_isalnum(int c);

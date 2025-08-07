@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 14:31:36 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 21:12:02 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/06 21:14:25 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	signalhandler(int signum)
 		free(line);
 	close(i);
 	ft_malloc(0, 1);
-	write(1, "\n", 1);
+	putstr_fd("\n", 1);
 	exit(130);
 }
 
@@ -32,20 +32,19 @@ static void	child_heredoc_loop(struct s_heredoc *heredoc, char **exit_code,
 		char **clone_envi)
 {
 	char	*line1;
-	int		i;
 
 	signal(SIGINT, signalhandler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		i = global_var2(heredoc->write_fd);
+		global_var2(heredoc->write_fd);
 		free_line(line1 = readline("> "), 1);
 		if (!line1)
 		{
-			ft_putstr_fd("warning: here-document delimited ", 2);
-			ft_putstr_fd("by end-of-file (wanted `", 2);
-			ft_putstr_fd(heredoc->delimiter, 2);
-			ft_putstr_fd("')\n", 2);
+			putstr_fd("warning: here-document delimited ", 2);
+			putstr_fd("by end-of-file (wanted `", 2);
+			putstr_fd(heredoc->delimiter, 2);
+			putstr_fd("')\n", 2);
 			break ;
 		}
 		if (ft_strcmp(line1, heredoc->delimiter) == 0)
@@ -65,7 +64,7 @@ static int	handle_parent_status(int status)
 	exit_code = -1;
 	if (WIFSIGNALED(status))
 	{
-		write(1, "\n", 1);
+		putstr_fd("\n", 1);
 		exit_code = WTERMSIG(status) + 128;
 	}
 	else if (WIFEXITED(status))

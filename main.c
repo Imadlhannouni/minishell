@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 16:10:47 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:28:10 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*readline_func(char ***clone_envi, char *exit_code)
 	if (!line)
 	{
 		exit_status = ft_atoi(exit_code);
-		ft_putstr_fd("exit\n", 2);
+		putstr_fd("exit\n", 2);
 		ft_malloc(0,1);
 		free(line);
 		exit(exit_status);
@@ -46,7 +46,7 @@ void sighandler(int signum)
 	if (signum == SIGINT)
 	{
 		signum = global_var(signum);
-		write(1, "\n", 1);
+		putstr_fd("\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();

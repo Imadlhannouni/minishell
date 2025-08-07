@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 16:52:24 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:14:18 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	add_pipe(t_pipe **head, t_token *fullcmd)
 
 	new = (t_pipe *)ft_malloc(sizeof(t_pipe), 0);
 	new->full_cmd = fullcmd;
-	new->ambigious = 0;
 	new->nextpipe = NULL;
 	if (!*head)
 		*head = new;
