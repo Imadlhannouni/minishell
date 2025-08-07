@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/07 22:12:55 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 22:35:29 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	check_path(char *path, int *e_code)
 	if (*e_code == 2)
 	{
 		str = ft_strdup(path);
-		str[ft_strlen(str) - 1] = 0;
+		if (str[ft_strlen(str) - 1] == '/')
+			str[ft_strlen(str) - 1] = 0;
 		if (!check_directory(str) && access(str, F_OK) == 0)
 		{
 			str = join_strings(str, " : ", "is not a directory\n");
