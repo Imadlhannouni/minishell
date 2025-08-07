@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 13:44:24 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/05 17:56:14 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:30:13 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	expand_and_write_line(struct s_heredoc *heredoc, char *line,
 			i = append_env_or_chunk(line, i, &ctx, &expanded_line);
 		line = expanded_line;
 	}
-	write(heredoc->write_fd, line, ft_strlen(line));
-	write(heredoc->write_fd, "\n", 1);
+	putstr_fd(line, heredoc->write_fd);
+	putstr_fd("\n", heredoc->write_fd);
 }
 
 void	cleanup_heredoc_files(t_pipe *pipes)

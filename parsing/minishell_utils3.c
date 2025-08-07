@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:45:00 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/04 21:01:59 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:35:08 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,6 @@ char	*substrdup(int start, int end, char *str)
 		new[i++] = str[start++];
 	new[i] = '\0';
 	return (new);
-}
-
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	size_t	i;
-
-	i = 0;
-	if (!s)
-		return ;
-	while (s[i])
-	{
-		ft_putchar_fd(s[i], fd);
-		i++;
-	}
 }
 
 static int	ft_num_len(int n)
