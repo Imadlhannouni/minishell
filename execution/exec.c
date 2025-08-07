@@ -6,13 +6,13 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/06 22:41:33 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 16:22:01 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void help_exec(t_exe *var, t_help *help)
+static void	help_exec(t_exe *var, t_help *help)
 {
 	help->child = 1;
 	signal(SIGINT, help->prev_handler_int);
@@ -20,26 +20,32 @@ static void help_exec(t_exe *var, t_help *help)
 	if (handle_redirections(var) < 0)
 	{
 		close(help->std_fd[0]);
-		close(help->std_fd[1]);		
+		close(help->std_fd[1]);
 		exit_free(1);
 	}
 }
 
 void	check_path(char *path, int *e_code)
 {
-	char *str;
+	char	*str;
+
 	if (*e_code == 1)
 	{
 		str = join_strings(path, " : ", "is a directory\n");
-		putstr_fd(str, 2);
 		*e_code = 126;
-		return ;
+		return (putstr_fd(str, 2));
 	}
 	if (*e_code == 2)
 	{
+		str = ft_strdup(path);
+		str[ft_strlen(str) - 1] = 0;
+		if (!check_directory(str))
+		{
+			str = join_strings(str, " : ", "is not a directory\n");
+			return (*e_code = 126, putstr_fd(str, 2));
+		}
 		*e_code = 127;
-		putstr_fd("Minishell: No such file or directory\n", 2);
-		return ;	
+		return (putstr_fd("Minishell: No such file or directory\n", 2));
 	}
 	if (!path)
 		putstr_fd("Minishell : command not found\n", 2);
@@ -52,7 +58,7 @@ int	exec_command(t_exe *var, char **env, t_help *help)
 	int		pid;
 	int		e_code;
 	int		status;
-	char 	*path;
+	char	*path;
 
 	status = -1;
 	path = NULL;
@@ -76,36 +82,36 @@ int	exec_command(t_exe *var, char **env, t_help *help)
 	return (extract_status(status));
 }
 
-int helper_built_in(t_exe *var, char ***env, t_help *help)
+int	helper_built_in(t_exe *var, char ***env, t_help *help)
 {
 	if (handle_redirections(var) < 0)
 		return (1);
 	if (var->arr && var->arr[0])
 		return (exec_builtin(var, env, help));
-	return 0;
+	return (0);
 }
 
 int	execute(t_pipe *pipes, char ***env, t_help *help)
 {
 	t_exe	*var;
-	int fd[2];
-	int status;
+	int		fd[2];
+	int		status;
 
 	var = NULL;
-	status = 0;	 
+	status = 0;
 	group_pipes(pipes, &var);
 	if (count_pipes(pipes) > 1)
 		status = exec_pipe(var, env, count_pipes(pipes), help);
 	else if (count_pipes(pipes) == 1)
 	{
 		if (dup_std(fd, help) < 0)
-			return 1;
+			return (1);
 		if (!is_builtin(var->arr[0]))
 			status = exec_command(var, *env, help);
 		else
 			status = helper_built_in(var, env, help);
 		if (reset_redirections(fd) < 0)
-			return 1;
+			return (1);
 	}
-	return status;
+	return (status);
 }

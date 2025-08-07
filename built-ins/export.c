@@ -6,16 +6,16 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:16 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/06 22:21:36 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 14:09:31 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void replace_variable(char ***env, char **arg)
+void	replace_variable(char ***env, char **arg)
 {
-	int i;
-	char **tmp;
+	int		i;
+	char	**tmp;
 
 	i = 0;
 	while ((*env)[i])
@@ -36,7 +36,7 @@ char	**add_var(char **env, char **arg)
 	int		i;
 
 	i = 0;
-	clone = ft_malloc((var_num(env) + 2) * sizeof(char*), 0);
+	clone = ft_malloc((var_num(env) + 2) * sizeof(char *), 0);
 	while (env[i])
 	{
 		clone[i] = ft_strdup(env[i]);
@@ -50,10 +50,10 @@ char	**add_var(char **env, char **arg)
 	return (clone);
 }
 
-char *fill_word(int start, int end, char *str)
+char	*fill_word(int start, int end, char *str)
 {
-	char *s;
-	int i;
+	char	*s;
+	int		i;
 
 	i = 0;
 	s = ft_malloc((end - start + 2) * sizeof(char), 0);
@@ -66,7 +66,7 @@ char *fill_word(int start, int end, char *str)
 	return (s);
 }
 
-static void export_helper(char ***env, char *args, char **arg)
+static void	export_helper(char ***env, char *args, char **arg)
 {
 	if (check_existence(*env, arg[0]))
 	{
@@ -74,7 +74,7 @@ static void export_helper(char ***env, char *args, char **arg)
 			replace_variable(env, arg);
 	}
 	else
-		*env = add_var(*env, arg);	
+		*env = add_var(*env, arg);
 }
 
 int	export(char ***env, char **args)

@@ -6,35 +6,35 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:46 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/04 15:15:56 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 13:47:10 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char **get_PATH(char **env)
+static char	**get_path(char **env)
 {
 	char	*path;
 	char	**paths;
-	int	i;
+	int		i;
 
 	i = 0;
 	path = NULL;
 	paths = NULL;
 	while (env[i])
 	{
-		if (ft_strncmp(env[i],"PATH=",5) == 0)
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 		{
 			path = ft_strdup(env[i] + 5);
 			paths = ft_split(path, ':');
-			break;
+			break ;
 		}
-		i++; 
+		i++;
 	}
 	return (paths);
 }
 
-static int check_path1(char *cmd, char **path)
+static int	check_path1(char *cmd, char **path)
 {
 	if (is_path1(cmd) && access(cmd, F_OK) == 0)
 	{
@@ -47,19 +47,19 @@ static int check_path1(char *cmd, char **path)
 	}
 	else if (is_path1(cmd))
 		return (*path = cmd, 2);
-	return 0;
+	return (0);
 }
 
 int	retrieve_path(char *cmd, char **env, char **path)
 {
-	char *tmp;
-	char **paths;
-	
+	char	*tmp;
+	char	**paths;
+
 	if (!*cmd)
 		return (*path = NULL, 127);
 	if (is_path1(cmd))
 		return (check_path1(cmd, path));
-	paths = get_PATH(env);
+	paths = get_path(env);
 	if (!paths || !*paths)
 		return (*path = ft_strdup(cmd), 0);
 	while (*paths)
@@ -79,7 +79,7 @@ int	retrieve_path(char *cmd, char **env, char **path)
 	return (127);
 }
 
-void close_fd(int (*fd)[2], size_t i, size_t total) 
+void	close_fd(int (*fd)[2], size_t i, size_t total)
 {
 	size_t	j;
 

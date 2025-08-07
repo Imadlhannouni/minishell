@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:55:49 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/06 22:53:36 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:41:54 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 int	count_args(t_token *tok)
 {
-	t_token *temp;
-	int cpt;
+	t_token	*temp;
+	int		cpt;
 
 	if (!tok)
-		return 0;
+		return (0);
 	temp = tok;
 	cpt = 0;
-
 	while (temp != NULL)
 	{
 		if ((temp->inp_red == 0) && (temp->heredoc == 0)
@@ -29,16 +28,16 @@ int	count_args(t_token *tok)
 			cpt++;
 		temp = temp->next;
 	}
-	return cpt;
+	return (cpt);
 }
 
-void group_pipes(t_pipe *pipes, t_exe **var)
+void	group_pipes(t_pipe *pipes, t_exe **var)
 {
-	t_pipe *tmp;
-	t_exe *node;
+	t_pipe	*tmp;
+	t_exe	*node;
 
 	if (!pipes)
-		return;
+		return ;
 	tmp = pipes;
 	while (tmp)
 	{
@@ -62,10 +61,10 @@ int	is_space(char c)
 	return (0);
 }
 
-int count_pipes(t_pipe *pipes)
+int	count_pipes(t_pipe *pipes)
 {
-	t_pipe *temp;
-	int cpt;
+	t_pipe	*temp;
+	int		cpt;
 
 	temp = pipes;
 	cpt = 0;
@@ -74,5 +73,5 @@ int count_pipes(t_pipe *pipes)
 		cpt++;
 		temp = temp->nextpipe;
 	}
-	return cpt;
+	return (cpt);
 }
