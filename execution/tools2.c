@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:55:49 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/04 14:45:25 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 22:53:36 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void group_pipes(t_pipe *pipes, t_exe **var)
 	while (tmp)
 	{
 		node = creat_node(tmp->full_cmd);
-		node->is_ambiguis = tmp->ambigious;
 		add_node(var, node);
 		tmp = tmp->nextpipe;
 	}

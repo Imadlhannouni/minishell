@@ -6,19 +6,19 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/03 17:54:58 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 20:34:27 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int ft_isnum(char *str)
+int	ft_isnum(char *str)
 {
 	int	i;
 
 	i = 0;
 	if (str[0] == 0)
-		return 0;
+		return (0);
 	while (str[i])
 	{
 		if (!(ft_isdigit(str[i]) || str[i] == '-' || str[i] == '+' || is_space(str[i])))
@@ -30,13 +30,13 @@ int ft_isnum(char *str)
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
-			return 0;
+			return (0);
 		i++;
 	}
-	return 1;
+	return (1);
 }
 
-static void	check_val(long long val, char c, int sign)
+static void	check_val(long val, char c, int sign)
 {
 	if (sign < 0)
 	{
@@ -58,9 +58,9 @@ static void	check_val(long long val, char c, int sign)
 
 long	ft_atoi(const char *str)
 {
-	long long	val;
-	int	sign;
-	int	i;
+	long	val;
+	int		sign;
+	int		i;
 
 	i = 0;
 	val = 0;
@@ -100,12 +100,12 @@ int	exit_shell(t_exe *var, t_help *help)
 		else if (ft_isnum(var->arr[1]))
 			return (putstr_fd("Minishell : too many arguments\n", 2), 1);
 	}
-	if ((var->arr)[1] && !ft_isnum((var->arr)[1]))
+	if (var->arr[1] && !ft_isnum(var->arr[1]))
 	{
 		putstr_fd("Minishell : numeric argument required\n", 2);
 		exit_free(2);
 	}
 	i = ft_atoi((var->arr)[1]);
 	exit_free((i % 256));
-	return 0;
+	return (0);
 }

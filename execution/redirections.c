@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 21:17:54 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/02 16:26:20 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/06 22:54:12 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static t_red	*create_redirection(t_token *tok)
 
 	red = (t_red*)ft_malloc(sizeof(t_red), 0);
 	red->next = NULL;
+	red->is_ambigious = tok->ambigious;
 	red->file = ft_strdup(tok->value);
 	if (tok->inp_red || tok->heredoc)
 		red->red_type = 0;
@@ -82,6 +83,8 @@ int	handle_redirections(t_exe *var)
 	red = var->redirections;
 	while (red)
 	{
+		if (red->is_ambigious)
+			return (putstr_fd("Minishell : ambiguous redirect\n", 2), -1);
 		if (red->red_type == 0)
 		{
 			fd1 = open(red->file, O_RDONLY , 0644);
