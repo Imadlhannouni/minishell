@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:40:28 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 12:14:18 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 20:29:54 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	check_null(t_token **fullcmd, t_token **fullcmd_v)
 	head = *fullcmd_v;
 	if (head == *fullcmd)
 	{
-		if ((*fullcmd)->value == NULL && (*fullcmd)->next)
+		if ((*fullcmd)->value == NULL && (*fullcmd)->next && (*fullcmd)->is_fullstring != 1)
 			(*fullcmd) = (*fullcmd)->next;
 	}
 }

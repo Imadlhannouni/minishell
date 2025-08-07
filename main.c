@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/06 20:28:10 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/07 20:52:52 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,37 +62,29 @@ void init_help(t_help *help, char **exit_code)
 
 int main(int argc, char **argv, char **envp)
 {
-	char    *line;
-	t_pipe  *pipes;
-	char    **clone_envi;
-	static char *exit_code;
-	t_help  help;
-	int s;
-	int test = 0;
+	char		*line;
+	t_pipe		*pipes;
+	char		**clone_envi;
+	static char	*exit_code;
+	t_help		help;
 
 	clone_envi = clone_env(envp);
 	(void)argc;
 	(void)argv;
-	line = NULL;
 	exit_code = ft_strdup("0");
-	init_help(&help, &exit_code);
 	pipes = NULL;
+	init_help(&help, &exit_code);
 	while (1)
 	{
 		line = readline_func(&clone_envi, exit_code);
-		if ((test = global_var(-1)) == SIGINT)
+		if ((global_var(-1)) == SIGINT)
 		{
 			exit_code = ft_itoa(SIGINT + 128);
-			test = global_var(0);
+			global_var(0);
 		}
 		if (main_parsing(line, clone_envi, &pipes, &exit_code))
-		{
-			s = execute(pipes, &clone_envi, &help);
-			exit_code = ft_itoa(s);
-		}
+			exit_code = ft_itoa(execute(pipes, &clone_envi, &help));
 		cleanup_heredoc_files(pipes);
 	}
-	free(line);
-	ft_malloc(0,1);
 	return (0);
 }
