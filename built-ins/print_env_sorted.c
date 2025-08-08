@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/08 15:39:25 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 18:46:49 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	put_format(char **var)
 {
 	printf("declare -x ");
 	if (var[0])
-		printf("%s", var[0]);
+		printf("%s=", var[0]);
 	if (var[1])
 	{
 		printf("\"%s\"", var[1]);
