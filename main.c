@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 21:18:10 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 12:37:23 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void init_help(t_help *help, char **exit_code)
 	help->prev_handler_quit = signal(SIGQUIT, SIG_IGN);
 	help->prev_handler_int = signal(SIGINT, sighandler);
 	help->exit_code = exit_code;
+	help->child = 0;
 }
 
 int main(int argc, char **argv, char **envp)

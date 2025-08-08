@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:21 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/07 22:04:09 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 12:25:43 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	exec_helper(char *path, t_exe *tmp, char ***env, t_help *help)
 		perror("Minishell");
 		exit_free(127);
 	}
-}	
+}
 
 int	helper(t_exe *tmp, char ***env, t_vars var, t_help *help)
 {
