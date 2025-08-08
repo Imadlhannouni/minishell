@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:01:51 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 18:38:57 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 20:47:12 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,41 +35,16 @@ char	*get_env_value(const char *key, char **clone_envi)
 
 void	handle_token_split(t_token *tokens, char *expanded, t_token *prev)
 {
-	char			**splited;
-	t_token			*tmp;
-	t_token_type	type;
-	int				i;
-	int				flag;
+	char		**splited;
+	t_token		*tmp;
 
-	if ((expanded[0] == ' ' || expanded[0] == '\t' || expanded[0] == '\n') && prev)
+	if ((expanded[0] == ' ' || expanded[0] == '\t'
+			|| expanded[0] == '\n') && prev)
 		prev->is_fullstring = 0;
 	splited = ft_split2(expanded, ' ');
 	tmp = tokens->next;
-	type = tokens->type;
-	tokens->value = ft_strdup(splited[0]);
-	tokens->next = NULL;
-	i = 1;
-	flag = 0;
 	if (splited && *splited)
-	{
-		if (tokens->is_fullstring == 1)
-		{
-			tokens->is_fullstring = 0;
-			flag = 1;
-		}
-		while (splited && splited[i])
-			add_token(&tokens, splited[i++], type, 0);
-	}
-	int w = ft_strlen(expanded) - 1;
-	if (expanded[w] == ' ')
-	{	
-		flag = 0;
-	}
-	while (tokens->next)
-		tokens = tokens->next;
-	if (flag == 1)
-		tokens->is_fullstring = 1;
-	tokens->next = tmp;
+		handle_token_split_internal(tokens, splited, expanded, tmp);
 }
 
 int	handle_chunk(char *str, int i, char **result)
@@ -112,4 +87,11 @@ int	handle_env_var(char *str, int i, t_expand_ctx *ctx, char **result)
 	tmp = *result;
 	*result = ft_strjoin(tmp, env_val);
 	return (i);
+}
+
+void	check_dollar_sign(t_token **tokens)
+{
+	if (ft_strlen((*tokens)->value) == 1 && ft_strchr((*tokens)->value, '$')
+		&& (*tokens)->is_fullstring == 1 && (*tokens)->type == TOKEN_WORD)
+		(*tokens)->value = ft_strdup("");
 }

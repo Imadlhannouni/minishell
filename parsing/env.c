@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 15:36:01 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 20:46:17 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 	return (1);
 }
 
-static void	expand_split_or_assign(t_token *tokens, char *expanded, t_token *prev)
+static void	expand_split_or_assign(t_token *tokens, char *expanded,
+			t_token *prev)
 {
 	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
 			|| ft_strchr(expanded, '\n')) && tokens->type != TOKEN_DOUBLE_QUOTE)
@@ -43,15 +44,7 @@ static void	expand_split_or_assign(t_token *tokens, char *expanded, t_token *pre
 	}
 	else
 	{
-		if (ft_strlen(expanded) == 1 && tokens->type != TOKEN_DOUBLE_QUOTE
-			&& tokens->type != TOKEN_SIMPLE_QUOTE && tokens->next
-			&& (tokens->next->type == TOKEN_DOUBLE_QUOTE
-				|| tokens->next->type == TOKEN_SIMPLE_QUOTE)
-			&& tokens->is_fullstring == 1)
-		{
-			tokens->value = ft_strdup("");
-		}
-		else if (expanded[0] == '\0')
+		if (expanded[0] == '\0')
 			tokens->value = NULL;
 		else
 			tokens->value = expanded;
@@ -81,7 +74,8 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 	return (1);
 }
 
-int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
+void	replace_env_variables(t_pipe **pipes, char **clone_envi,
+		char **exit_code)
 {
 	t_pipe	*current;
 	t_token	*tokens;
@@ -98,11 +92,9 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 				&& ft_strchr(tokens->value, '$') && tokens->heredoc == 0
 				&& tokens->expand == 0)
 			{
-				if (ft_strlen(tokens->value) == 1
-					&& ft_strchr(tokens->value, '$')
-					&& tokens->is_fullstring == 1)
-					tokens->value = ft_strdup("");
-				else if (!expand_token_value(tokens, clone_envi, exit_code, prev))
+				check_dollar_sign(&tokens);
+				if (!expand_token_value(tokens, clone_envi,
+						exit_code, prev))
 					break ;
 			}
 			prev = tokens;
@@ -110,5 +102,4 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 		}
 		current = current->nextpipe;
 	}
-	return (1);
 }
