@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:01:51 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 13:59:28 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 15:45:04 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_env_value(const char *key, char **clone_envi)
 	return (ft_strdup(""));
 }
 
-void	handle_token_split(t_token *tokens, char *expanded)
+void	handle_token_split(t_token *tokens, char *expanded, t_token *prev)
 {
 	char			**splited;
 	t_token			*tmp;
@@ -41,6 +41,8 @@ void	handle_token_split(t_token *tokens, char *expanded)
 	int				i;
 	int				flag;
 
+	if (expanded[0] == ' ' || expanded[0] == '\t' || expanded[0] == '\n')
+		prev->is_fullstring = 0;
 	splited = ft_split2(expanded, ' ');
 	tmp = tokens->next;
 	type = tokens->type;
@@ -52,9 +54,12 @@ void	handle_token_split(t_token *tokens, char *expanded)
 	{
 		tokens->is_fullstring = 0;
 		flag = 1;
+		while (splited && splited[i])
+			add_token(&tokens, splited[i++], type, 0);
 	}
-	while (splited && splited[i])
-		add_token(&tokens, splited[i++], type, 0);
+	int w = ft_strlen(expanded) - 1;
+	if (expanded[w] == ' ')
+		flag = 0;
 	while (tokens->next)
 		tokens = tokens->next;
 	if (flag == 1)
