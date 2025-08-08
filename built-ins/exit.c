@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:54:58 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/07 14:02:43 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 12:44:00 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,12 @@ long	ft_atoi(const char *str)
 	return ((long)(val * sign));
 }
 
+void	close_opened(int *fd)
+{
+	close(fd[0]);
+	close(fd[1]);
+}
+
 int	exit_shell(t_exe *var, t_help *help)
 {
 	long	i;
@@ -90,13 +96,14 @@ int	exit_shell(t_exe *var, t_help *help)
 	if (!help->child)
 		putstr_fd("exit\n", 2);
 	if (var->arr[1] == NULL)
-		exit_free(ft_atoi(*(help->exit_code)));
+		return (close_opened(help->std_fd)
+			, exit_free(ft_atoi(*(help->exit_code))), 0);
 	if (var_num(var->arr) > 2)
 	{
 		if (!ft_isnum(var->arr[1]))
 		{
 			putstr_fd("Minishell : numeric argument required\n", 2);
-			exit_free(2);
+			return (close_opened(help->std_fd), exit_free(2), 1);
 		}
 		else if (ft_isnum(var->arr[1]))
 			return (putstr_fd("Minishell : too many arguments\n", 2), 1);
@@ -104,9 +111,8 @@ int	exit_shell(t_exe *var, t_help *help)
 	if (var->arr[1] && !ft_isnum(var->arr[1]))
 	{
 		putstr_fd("Minishell : numeric argument required\n", 2);
-		exit_free(2);
+		return (close_opened(help->std_fd), exit_free(2), 1);
 	}
 	i = ft_atoi((var->arr)[1]);
-	exit_free((i % 256));
-	return (0);
+	return (close_opened(help->std_fd), exit_free((i % 256)), 0);
 }
