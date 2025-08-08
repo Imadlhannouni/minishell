@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:51:08 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/07 14:11:06 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 15:39:25 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,14 @@ void	putstr_fd(char *str, int fd)
 
 static void	put_format(char **var)
 {
-	putstr_fd("declare -x ", 1);
+	printf("declare -x ");
 	if (var[0])
-		putstr_fd(var[0], 1);
+		printf("%s", var[0]);
 	if (var[1])
 	{
-		putstr_fd("=\"", 1);
-		putstr_fd(var[1], 1);
-		putstr_fd("\"", 1);
+		printf("\"%s\"", var[1]);
 	}
-	putstr_fd("\n", 1);
+	printf("\n");
 }
 
 static char	**sort_env(char **env)
