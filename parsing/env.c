@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 20:46:17 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 22:00:24 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ static void	expand_split_or_assign(t_token *tokens, char *expanded,
 	}
 	else
 	{
-		if (expanded[0] == '\0')
+		if (expanded[0] == '\0' && tokens->type == TOKEN_WORD)
 			tokens->value = NULL;
+		else if (expanded[0] == '\0' && tokens->type != TOKEN_WORD)
+			tokens->value = ft_strdup("");
 		else
 			tokens->value = expanded;
 	}
