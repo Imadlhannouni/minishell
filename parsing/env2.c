@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:01:51 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 15:45:04 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 18:38:57 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	handle_token_split(t_token *tokens, char *expanded, t_token *prev)
 	int				i;
 	int				flag;
 
-	if (expanded[0] == ' ' || expanded[0] == '\t' || expanded[0] == '\n')
+	if ((expanded[0] == ' ' || expanded[0] == '\t' || expanded[0] == '\n') && prev)
 		prev->is_fullstring = 0;
 	splited = ft_split2(expanded, ' ');
 	tmp = tokens->next;
@@ -50,16 +50,21 @@ void	handle_token_split(t_token *tokens, char *expanded, t_token *prev)
 	tokens->next = NULL;
 	i = 1;
 	flag = 0;
-	if (splited && *splited && tokens->is_fullstring == 1)
+	if (splited && *splited)
 	{
-		tokens->is_fullstring = 0;
-		flag = 1;
+		if (tokens->is_fullstring == 1)
+		{
+			tokens->is_fullstring = 0;
+			flag = 1;
+		}
 		while (splited && splited[i])
 			add_token(&tokens, splited[i++], type, 0);
 	}
 	int w = ft_strlen(expanded) - 1;
 	if (expanded[w] == ' ')
+	{	
 		flag = 0;
+	}
 	while (tokens->next)
 		tokens = tokens->next;
 	if (flag == 1)
