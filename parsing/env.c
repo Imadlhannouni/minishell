@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 21:06:22 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 13:57:57 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 {
 	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
 			|| ft_strchr(expanded, '\n') || ft_strlen(expanded) == 0)
-		&& tokens->is_fullstring != 1 && tokens->type != TOKEN_DOUBLE_QUOTE && (tokens->out_app
-			|| tokens->out_red || tokens->inp_red))
+		&& tokens->is_fullstring != 1 && tokens->type != TOKEN_DOUBLE_QUOTE
+		&& (tokens->out_app || tokens->out_red || tokens->inp_red))
 	{
 		tokens->ambigious = 1;
 		return (0);
@@ -96,10 +96,12 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 				&& ft_strchr(tokens->value, '$') && tokens->heredoc == 0
 				&& tokens->expand == 0)
 			{
-				if (!expand_token_value(tokens, clone_envi, exit_code))
-				{
+				if (ft_strlen(tokens->value) == 1
+					&& ft_strchr(tokens->value, '$')
+					&& tokens->is_fullstring == 1)
+					tokens->value = ft_strdup("");
+				else if (!expand_token_value(tokens, clone_envi, exit_code))
 					break ;
-				}
 			}
 			tokens = tokens->next;
 		}

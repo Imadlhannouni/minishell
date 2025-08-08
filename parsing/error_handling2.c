@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 14:35:41 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/06 20:26:12 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 12:23:40 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ int	check_basics(char *line)
 	dq = 0;
 	while (line[i])
 	{
-		if (!sq && !dq && (line[i] == '\\' || line[i] == ';'))
-			return (putstr_fd("minishell: not required characters\n", 2), 1);
 		if (!dq && line[i] == '\'')
 			sq = !sq;
 		else if (!sq && line[i] == '"')

@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 15:02:17 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 21:04:32 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 13:52:55 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,19 +122,16 @@ int	is_word(t_token **tokens, int i, char *line, int *flag)
 		&& line[i] != '\0')
 	{
 		if (line[i] == '$' && i != start)
-			break;
+			break ;
 		i++;
 	}
 	end = i;
 	value = substrdup(start, end, line);
 	if (line[i] != ' ' && line[i] != '\t' && line[i] != '|' && line[i] != '<'
 		&& line[i] != '>' && line[i] != '\0')
-	{
 		add_token(tokens, value, type, 1);
-	}
 	else
 		add_token(tokens, value, type, 0);
 	last = ft_lstlast(*tokens);
-	apply_flag_to_token(last, flag, 0);
-	return (i);
+	return (apply_flag_to_token(last, flag, 0), i);
 }
