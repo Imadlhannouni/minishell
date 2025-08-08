@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:06 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/05 20:01:07 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 16:14:52 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,11 @@ int	cd(char **arr, char ***env)
 {
 	if (arr && var_num(arr) > 2)
 		return (putstr_fd(" too many arguments\n", 2), 1);
+	if (!arr[1])
+		return (0);
 	if (chdir(arr[1]) != 0)
 	{
-		putstr_fd(" No such file or directory\n", 2);
+		perror("Minishell");
 		return (1);
 	}
 	if (arr[2])
