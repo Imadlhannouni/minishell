@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:36:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 13:57:57 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 15:36:01 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ static int	handle_ambiguous_redirect(t_token *tokens, char *expanded)
 	return (1);
 }
 
-static void	expand_split_or_assign(t_token *tokens, char *expanded)
+static void	expand_split_or_assign(t_token *tokens, char *expanded, t_token *prev)
 {
 	if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t')
 			|| ft_strchr(expanded, '\n')) && tokens->type != TOKEN_DOUBLE_QUOTE)
 	{
-		handle_token_split(tokens, expanded);
+		handle_token_split(tokens, expanded, prev);
 	}
 	else
 	{
@@ -59,7 +59,7 @@ static void	expand_split_or_assign(t_token *tokens, char *expanded)
 }
 
 static int	expand_token_value(t_token *tokens, char **clone_envi,
-		char **exit_code)
+		char **exit_code, t_token *prev)
 {
 	int				i;
 	char			*expanded;
@@ -77,7 +77,7 @@ static int	expand_token_value(t_token *tokens, char **clone_envi,
 		tokens->type = TOKEN_DOUBLE_QUOTE;
 	if (!handle_ambiguous_redirect(tokens, expanded))
 		return (0);
-	expand_split_or_assign(tokens, expanded);
+	expand_split_or_assign(tokens, expanded, prev);
 	return (1);
 }
 
@@ -85,7 +85,9 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 {
 	t_pipe	*current;
 	t_token	*tokens;
+	t_token	*prev;
 
+	prev = NULL;
 	current = *pipes;
 	while (current)
 	{
@@ -100,9 +102,10 @@ int	replace_env_variables(t_pipe **pipes, char **clone_envi, char **exit_code)
 					&& ft_strchr(tokens->value, '$')
 					&& tokens->is_fullstring == 1)
 					tokens->value = ft_strdup("");
-				else if (!expand_token_value(tokens, clone_envi, exit_code))
+				else if (!expand_token_value(tokens, clone_envi, exit_code, prev))
 					break ;
 			}
+			prev = tokens;
 			tokens = tokens->next;
 		}
 		current = current->nextpipe;
