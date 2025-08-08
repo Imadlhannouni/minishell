@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 16:25:00 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 14:22:58 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # include <string.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
-# include <unistd.h>
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
@@ -95,7 +94,7 @@ typedef struct s_vars
 {
 	size_t			i;
 	size_t			pipe_num;
-	int (*fd)[2];
+	int				(*fd)[2];
 	__pid_t			*pid;
 }					t_vars;
 
@@ -180,7 +179,8 @@ int					handle_chunk(char *str, int i, char **result);
 void				handle_token_split(t_token *tokens, char *expanded);
 char				*get_env_value(const char *key, char **clone_envi);
 int					randomid(void);
-int					handle_redir_error_angle_bracket(char *s, int *i_ptr, int i);
+int					handle_redir_error_angle_bracket(char *s, int *i_ptr,
+						int i);
 
 int					ft_isdigit(int a);
 int					is_space(char c);
@@ -242,6 +242,6 @@ int					exit_shell(t_exe *var, t_help *help);
 void				exit_free(int exit_code);
 int					helper_built_in(t_exe *var, char ***env, t_help *help);
 int					is_redirection(t_token *tok);
-t_red	*create_redirection(t_token *tok);
+t_red				*create_redirection(t_token *tok);
 
 #endif

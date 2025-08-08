@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 12:37:23 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/08 14:24:47 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	global_var(int new_value)
 {
-	static int value = 0;
+	static int	value = 0;
 
 	if (new_value != -1)
 		value = new_value;
@@ -25,14 +25,14 @@ char	*readline_func(char ***clone_envi, char *exit_code)
 {
 	char	*line;
 	int		exit_status;
-	(void)clone_envi;
 
+	(void)clone_envi;
 	line = readline("minishell> ");
 	if (!line)
 	{
 		exit_status = ft_atoi(exit_code);
 		putstr_fd("exit\n", 2);
-		ft_malloc(0,1);
+		ft_malloc(0, 1);
 		free(line);
 		exit(exit_status);
 	}
@@ -41,7 +41,7 @@ char	*readline_func(char ***clone_envi, char *exit_code)
 	return (line);
 }
 
-void sighandler(int signum)
+void	sighandler(int signum)
 {
 	if (signum == SIGINT)
 	{
@@ -53,7 +53,7 @@ void sighandler(int signum)
 	}
 }
 
-void init_help(t_help *help, char **exit_code)
+void	init_help(t_help *help, char **exit_code)
 {
 	help->prev_handler_quit = signal(SIGQUIT, SIG_IGN);
 	help->prev_handler_int = signal(SIGINT, sighandler);
@@ -61,7 +61,7 @@ void init_help(t_help *help, char **exit_code)
 	help->child = 0;
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_pipe		*pipes;
