@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:01:51 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 16:21:10 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 13:59:28 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	handle_token_split(t_token *tokens, char *expanded)
 		tokens->is_fullstring = 1;
 	tokens->next = tmp;
 }
-
 
 int	handle_chunk(char *str, int i, char **result)
 {

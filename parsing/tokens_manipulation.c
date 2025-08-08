@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 16:49:01 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/07 21:06:29 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 14:04:27 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,11 @@ static void	concat_fullstring_flags(t_token *start, t_token *curr)
 		start->out_app = 1;
 	else if (curr->heredoc == 1)
 		start->heredoc = 1;
+	curr = start->next;
 }
 
-static t_token	*free_fullstring_tokens(t_token *curr)
+static t_token	*free_fullstring_tokens(t_token *curr,
+		t_token *start, char *joined)
 {
 	while (curr && curr->is_fullstring == 1)
 	{
@@ -82,6 +84,9 @@ static t_token	*free_fullstring_tokens(t_token *curr)
 	{
 		curr = curr->next;
 	}
+	start->value = joined;
+	start->next = curr;
+	start->type = TOKEN_LINKEDSTRING;
 	return (curr);
 }
 
@@ -108,11 +113,7 @@ t_token	*concat_fullstring(t_token *start, t_token **next)
 			joined = ft_strjoin(tmp, curr->value);
 	}
 	concat_fullstring_flags(start, curr);
-	curr = start->next;
-	curr = free_fullstring_tokens(curr);
-	start->value = joined;
-	start->next = curr;
-	start->type = TOKEN_LINKEDSTRING;
+	curr = free_fullstring_tokens(curr, start, joined);
 	if (next)
 		*next = curr;
 	return (start);
