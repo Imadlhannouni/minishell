@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 20:46:29 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 21:09:44 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,8 @@ int					handle_heredoc_token(t_token *current_token,
 int					handle_env_var(char *str, int i, t_expand_ctx *ctx,
 						char **result);
 int					handle_chunk(char *str, int i, char **result);
-void				handle_token_split(t_token *tokens, char *expanded, t_token *prev);
+void				handle_token_split(t_token *tokens, char *expanded,
+						t_token *prev);
 char				*get_env_value(const char *key, char **clone_envi);
 int					randomid(void);
 int					handle_redir_error_angle_bracket(char *s, int *i_ptr,
