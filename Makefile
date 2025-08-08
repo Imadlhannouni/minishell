@@ -11,7 +11,7 @@ SRC = main.c \
       execution/exec.c execution/exec1.c execution/ft_malloc.c \
       execution/lst_tools.c execution/pipe.c execution/redirections.c \
       execution/tools.c execution/tools2.c execution/tools3.c \
-      parsing/env.c parsing/env2.c parsing/error_handling.c \
+      parsing/env.c parsing/env2.c parsing/env3.c parsing/error_handling.c \
       parsing/error_handling2.c parsing/error_handling3.c \
       parsing/ft_strjoin_v2.c parsing/group_to_pipes.c \
       parsing/heredoc_parsing.c parsing/lst.c parsing/minishell_utils.c \

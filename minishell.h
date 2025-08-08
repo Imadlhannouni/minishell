@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 15:36:47 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 20:46:29 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,12 +136,11 @@ int					is_double_quote(t_token **tokens, int i, char *line,
 int					is_directions(int i, char *line, int *flag);
 int					is_pipe(t_token *tokens, int i, char *line);
 int					is_word(t_token **tokens, int i, char *line, int *flag);
-int					replace_env_variables(t_pipe **pipes, char **clone_envi,
+void				replace_env_variables(t_pipe **pipes, char **clone_envi,
 						char **exit_code);
 char				**ft_split(const char *s, char c);
 char				**ft_split_env(const char *s, char c);
 t_pipe				*group_tokens_into_pipes(t_token *tokens);
-void				print_pipes(t_pipe *pipes);
 t_token				*concat_fullstring(t_token *start, t_token **next);
 int					main_parsing(char *line, char **clone_envi, t_pipe **pipes,
 						char **exit_code);
@@ -181,6 +180,9 @@ char				*get_env_value(const char *key, char **clone_envi);
 int					randomid(void);
 int					handle_redir_error_angle_bracket(char *s, int *i_ptr,
 						int i);
+void				check_dollar_sign(t_token **tokens);
+void				handle_token_split_internal(t_token *tokens, char **splited,
+						char *expanded, t_token *tmp);
 
 int					ft_isdigit(int a);
 int					is_space(char c);
