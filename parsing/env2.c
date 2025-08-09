@@ -6,7 +6,7 @@
 /*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:01:51 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 20:47:12 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/09 12:09:25 by ilhannou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	handle_token_split(t_token *tokens, char *expanded, t_token *prev)
 	tmp = tokens->next;
 	if (splited && *splited)
 		handle_token_split_internal(tokens, splited, expanded, tmp);
+	else
+		tokens->value = ft_strdup("");
 }
 
 int	handle_chunk(char *str, int i, char **result)
