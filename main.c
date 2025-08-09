@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 14:58:22 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 14:24:47 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/08 21:39:16 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*readline_func(char ***clone_envi, char *exit_code)
 	int		exit_status;
 
 	(void)clone_envi;
-	line = readline("minishell> ");
+	line = readline("Minishell> ");
 	if (!line)
 	{
 		exit_status = ft_atoi(exit_code);

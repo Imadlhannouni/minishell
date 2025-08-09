@@ -6,7 +6,7 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 22:50:31 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/08 16:20:46 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/09 11:55:21 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ int	helper_built_in(t_exe *var, char ***env, t_help *help)
 int	execute(t_pipe *pipes, char ***env, t_help *help)
 {
 	t_exe	*var;
-	int		fd[2];
 	int		status;
 
 	var = NULL;
@@ -104,10 +103,10 @@ int	execute(t_pipe *pipes, char ***env, t_help *help)
 			status = exec_command(var, *env, help);
 		else
 		{
-			if (dup_std(fd, help) < 0)
+			if (dup_std(help) < 0)
 				return (1);
 			status = helper_built_in(var, env, help);
-			if (reset_redirections(fd) < 0)
+			if (reset_redirections(help->std_fd) < 0)
 				return (1);
 		}
 	}

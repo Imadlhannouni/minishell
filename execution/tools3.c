@@ -6,18 +6,17 @@
 /*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/03 13:41:51 by abbenmou          #+#    #+#             */
-/*   Updated: 2025/08/07 16:09:06 by abbenmou         ###   ########.fr       */
+/*   Updated: 2025/08/09 11:54:44 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	dup_std(int fd[2], t_help *help)
+int	dup_std(t_help *help)
 {
-	help->std_fd = fd;
-	fd[0] = dup(STDIN_FILENO);
-	fd[1] = dup(STDOUT_FILENO);
-	if (fd[0] < 0 || fd[1] < 0)
+	help->std_fd[0] = dup(STDIN_FILENO);
+	help->std_fd[1] = dup(STDOUT_FILENO);
+	if (help->std_fd[0] < 0 || help->std_fd[1] < 0)
 		return (perror("Minishell"), -1);
 	return (1);
 }

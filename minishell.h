@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ilhannou <ilhannou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abbenmou <abbenmou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:42:05 by ilhannou          #+#    #+#             */
-/*   Updated: 2025/08/08 21:09:44 by ilhannou         ###   ########.fr       */
+/*   Updated: 2025/08/09 11:56:54 by abbenmou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_help
 	void			(*prev_handler_int)(int);
 	void			(*prev_handler_quit)(int);
 	char			**exit_code;
-	int				*std_fd;
+	int				std_fd[2];
 	int				child;
 }					t_help;
 
@@ -200,7 +200,7 @@ int					exec_builtin(t_exe *var, char ***env, t_help *help);
 int					check_directory(char *path);
 void				check_path(char *path, int *e_code);
 int					is_path1(char *cmd);
-int					dup_std(int fd[2], t_help *help);
+int					dup_std(t_help *help);
 
 size_t				var_num(char **arr);
 char				**clone_env(char **env);
